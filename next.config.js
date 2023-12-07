@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
-  runtime: 'edge',
   reactStrictMode: true,
   async redirects() {
     return [
