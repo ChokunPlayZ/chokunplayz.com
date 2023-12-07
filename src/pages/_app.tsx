@@ -30,14 +30,40 @@ function MyApp({ Component, pageProps, router }: AppProps) {
                 <title>Chokun Rojanapron</title>
                 <link rel="icon" href="/favicon.ico" />
                 <meta name="viewport" content="width=device-width,initial-scale=1" />
-                <meta name="theme-color" content="#000000" />
-                <meta
-                    name="keywords"
-                    content=""
-                />
+                
+                <meta name="theme-color" content="#DBF2FC">
+
+                <!--Start Tags-->
+                <meta name="title" content="ChokunPlayZ Website">
+                <meta name="description" content="ChokunPlayZ Web">
+                <meta name="robots" content="index, follow">
+                <meta name="googlebot" content="index, follow">
+                <meta name="google-site-verification" content="mDFmdnk2pfHaCJFL2uDn4QfsLpyIxa1k3XxD1xEqJl4">
+                <meta name="author" content="ChokunPlayZ">
+                <meta name="keywords" content="chokunplayz, ChokunPlayZ, chokun, chokunplayz tiktok, tiktok, chokunplayz youtube, naelike, naelike tiktok, chokunplayz_100k, tiktok, naelike youtube, tiktok counter, personal website, tiktoker, youtuber">
+                <meta http-equiv="content-language" content="th">
+                <meta name="distribution" content="Global">
+                <meta http-equiv="content-type" content="text/html; charset=UTF-8?">
+
+                <!--Open Graph | Facebook-->
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://www.chokunplayz.com/" />
+                <meta property="og:title" content="ChokunPlayZ" />
+                <meta property="og:description" content="ChokunPlayZ Web" />
+                <meta property="og:keywords" content="chokunplayz, ChokunPlayZ, chokun, chokunplayz tiktok, tiktok, chokunplayz youtube, naelike, naelike tiktok, chokunplayz_100k, tiktok, naelike youtube, tiktok counter, personal website, tiktoker, youtuber" />
+
+                <!--Twitter-->
+                <meta name="twitter:card" content="summary_large_image">
+                <meta name="twitter:url" content="https://www.chokunplayz.com/">
+                <meta name="twitter:title" content="ChokunPlayZ Web">
+                <meta name="twitter:description" content="Hi, This is my site nothing much here just a static site">
+
+                <meta name="generator" content="Microsoft Visual Studio">
+
+                <script type="application/ld+json" class="yoast-schema-graph"></script>
+                
                 <meta name="description" content="Yanavut Rojanapron - Full Stack Engineer" />
                 <meta name="author" content="Yanavut Rojanapron" />
-                <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
             </Head>
 
             <div className="text-black dark:text-white flex flex-row justify-center w-full h-full bg-gradient-to-bl from-[#f7c7d5] to-[#9995ee] dark:from-[#5e4d56] dark:to-[#3e3c5f] min-h-screen">
