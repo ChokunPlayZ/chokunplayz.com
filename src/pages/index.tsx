@@ -35,22 +35,23 @@ const Index = ({ stats, topRepos }: AppProps) => {
             <h1 className="mt-36 font-bold text-4xl md:text-5xl mb-4">Hi, I'm Chokun</h1>
             <p className="text-gray-800 dark:text-gray-300 leading-6 tracking-wide mb-12">
                 I'm a self-taught fullstack engineer from Thailand🇹🇭. I'm currently pursuing infrastructure planing and
-                network engineering, to create powerful, secure, reliable infrastructure for my clients
+                network engineering, to create powerful, secure, reliable infrastructure
             </p>
 
             <h2 className="font-medium text-3xl mb-4">What I Do</h2>
             <p className="text-gray-800 dark:text-gray-300 leading-6 font-light tracking-wide mb-12">
-                I'm passionate about everything in technology, since engineering is not only in software, my field expand beyond that, from mechanical, network, software, etc, I love finding out
-                new things, knowledge exists all arround us, I'm all about finding these knowledge, learn from other's
-                mistake and improve on it, it's what give me the power to get up every morning
+                I'm passionate about everything in technology, since engineering is not only in software, my field
+                expand beyond that, from mechanical, network, software, etc, I love finding out new things, knowledge
+                exists all arround us, I'm all about finding these knowledge, learn from other's mistake and improve on
+                it, it's what give me the power to get up every morning
             </p>
 
             <h2 className="font-medium text-3xl mb-4">Technologies</h2>
             <p className="text-gray-800 dark:text-gray-300 leading-6 font-light tracking-wide mb-6">
-                I use a variety of tools to help my every day-to-day work, Below is a list of technologies I've had
+                I use a variety of tools to help my day-to-day work, Below is a list of technologies I've had
                 experience with in the past, or use currently.
             </p>
-            <div className="w-full flex flex-wrap flex-row p-1 bg-white/10 dark:bg-black/10 mb-12">
+            <div className="w-full flex flex-wrap flex-row p-1 mb-12">
                 <TechItem icon={SiTypescript} name="TypeScript" />
                 <TechItem icon={SiJavascript} name="JavaScript" />
                 <TechItem icon={SiPython} name="Python" />
@@ -70,7 +71,7 @@ const Index = ({ stats, topRepos }: AppProps) => {
 
             <h2 className="font-medium text-3xl mb-4">Projects 🛠️</h2>
             <p className="text-gray-800 dark:text-gray-300 leading-6 font-light tracking-wide mb-6">
-                I enjoy creating projects and sharing it on {" "}
+                I enjoy creating projects and sharing it on{" "}
                 <a
                     href="https://github.com/chokunplayz"
                     rel="noreferrer"
@@ -78,10 +79,7 @@ const Index = ({ stats, topRepos }: AppProps) => {
                 >
                     GitHub
                 </a>
-                ,so I can share what I know and learn from others, my projects so far has{" "}
-                <span className="font-bold text-black dark:text-slate-200">{stats.stars}</span> stars on GitHub, and{" "}
-                <span className="font-bold text-black dark:text-slate-200">{stats.forks}</span> forks. Below are some of
-                my repo.
+                , so I can share what I know and learn from others, here are some of my projects
             </p>
             <div className="w-full grid grid-cols-1 md:grid-cols-2 grid-rows-2 md:grid-rows-1 mb-12 gap-2">
                 {topRepos.map((repo: Record<string, any>) => {
@@ -100,15 +98,14 @@ const Index = ({ stats, topRepos }: AppProps) => {
 
             <h2 className="font-medium text-3xl mb-4">Pictures </h2>
             <p className="text-gray-800 dark:text-gray-300 leading-6 font-light tracking-wide mb-6">
-                I enjoy taking pictures, the ability to just capture a moment is just so exciting, picture portfolio (comming soon)
+                I enjoy taking pictures, the ability to just capture a moment is just so exciting, picture portfolio
+                (comming soon)
             </p>
-
         </motion.div>
     );
 };
 
 export async function getStaticProps() {
-    const stats = await fetch(`https://api.github-star-counter.workers.dev/user/chokunplayz`).then(res => res.json());
     const repos = await fetch(`https://api.github.com/users/chokunplayz/repos?type=owner&per_page=100`).then(res =>
         res.json()
     );
@@ -118,7 +115,7 @@ export async function getStaticProps() {
         .slice(0, 4);
 
     return {
-        props: { stats, topRepos },
+        props: { topRepos },
         revalidate: 3600,
     };
 }

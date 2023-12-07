@@ -1,6 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { SiTwitter, SiGithub, SiLinkedin } from "react-icons/si";
+import { SiGithub, SiInstagram } from "react-icons/si";
 import { FiMail } from "react-icons/fi";
+import { FaTiktok } from "react-icons/fa";
+import { BsTwitterX } from "react-icons/bs";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ThemeToggle from "./ThemeToggle";
@@ -76,6 +78,7 @@ const Nav = () => {
                 <div className="flex flex-row items-center justify-between gap-2">
                     <ThemeToggle />
                     <LandingButton name="Home" link="/" selected={router.pathname === "/"} />
+                    <LandingButton name="ChokunLabs" link="/ckl" selected={router.pathname === "/ckl"} />
                 </div>
 
                 <div className="flex flex-row items-center justify-center gap-2 xs:gap-4">
@@ -87,10 +90,24 @@ const Nav = () => {
                         }
                     />
                     <LinkButton
-                        title="Twitter"
-                        href={"https://twitter.com/chokuntweets"}
+                        title="X (Twitter)"
+                        href={"https://x.com/chokuntweets"}
                         icon={
-                            <SiTwitter className="w-6 h-6 cursor-pointer hover:fill-white fill-gray-400 transition-colors" />
+                            <BsTwitterX className="w-6 h-6 cursor-pointer hover:fill-white fill-gray-400 transition-colors" />
+                        }
+                    />
+                    <LinkButton
+                        title="Instagram"
+                        href={"https://instagram.com/chokunplayz"}
+                        icon={
+                            <SiInstagram className="w-6 h-6 cursor-pointer hover:fill-white fill-gray-400 transition-colors" />
+                        }
+                    />
+                    <LinkButton
+                        title="TokTok"
+                        href={"https://tiktok.com/@realchokunplayz"}
+                        icon={
+                            <FaTiktok className="w-6 h-6 cursor-pointer hover:fill-white fill-gray-400 transition-colors" />
                         }
                     />
                     <LinkButton
@@ -150,8 +167,16 @@ const Nav = () => {
                                     icon={<SiGithub className="w-6 h-6 cursor-pointer" />}
                                 />
                                 <LinkButton
-                                    href={"https://twitter.com/chokuntweets"}
-                                    icon={<SiTwitter className="w-6 h-6 cursor-pointer" />}
+                                    href={"https://x.com/chokuntweets"}
+                                    icon={<BsTwitterX className="w-6 h-6 cursor-pointer" />}
+                                />
+                                <LinkButton
+                                    href={"https://instagram.com/chokunplayz"}
+                                    icon={<SiInstagram className="w-6 h-6 cursor-pointer" />}
+                                />
+                                <LinkButton
+                                    href={"https://tiktok.com/@realchokunplayz"}
+                                    icon={<FaTiktok className="w-6 h-6 cursor-pointer" />}
                                 />
                                 <LinkButton
                                     href={"mailto:chokunplayz@ckl.moe"}
