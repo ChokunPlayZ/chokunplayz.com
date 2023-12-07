@@ -69,7 +69,7 @@ const Index = ({ stats, topRepos }: AppProps) => {
                 <TechItem icon={FaLinux} name="Ubuntu" />
             </div>
 
-            <h2 className="font-medium text-3xl mb-4">Projects 🛠️</h2>
+            <h2 className="font-medium text-3xl mb-4">Projects</h2>
             <p className="text-gray-800 dark:text-gray-300 leading-6 font-light tracking-wide mb-6">
                 I enjoy creating projects and sharing it on{" "}
                 <a

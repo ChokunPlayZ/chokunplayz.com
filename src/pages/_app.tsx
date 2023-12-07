@@ -16,7 +16,7 @@ Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
-function MyApp({ Component, pageProps, router }: AppProps) {
+function MySite({ Component, pageProps, router }: AppProps) {
     useEffect(() => {
         if (typeof window === "undefined") {
             return;
@@ -75,4 +75,4 @@ function MyApp({ Component, pageProps, router }: AppProps) {
         </>
     );
 }
-export default MyApp;
+export default MySite;

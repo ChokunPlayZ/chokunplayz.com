@@ -34,12 +34,9 @@ const Index = ({ stats, topRepos }: AppProps) => {
         >
             <h1 className="mt-36 font-bold text-4xl md:text-5xl mb-4">What is it?</h1>
             <p className="text-gray-800 dark:text-gray-300 leading-6 tracking-wide mb-12">
-                Project ChokunLabs, born as a result of my passion for homelabbing, has evolved beyond a mere hobby.
-                Instead of allowing it to solely consume power from my outlet. CKL, residing at *.ckl.moe, is a domain
-                housing a diverse collection of hosted applications. It serves as an alternative platform for various
-                applications, such as ntfy.ckl.moe, hosted ntfy app that is accessible to anyone. Additionally,
-                prism.ckl.moe is serving as an image hosting application for events I capture, particularly school
-                events, an app list is on the way. Stay tuned for updates!
+                Project ChokunLabs, born as a result of my passion for homelabbing, it houses some of the hosted apps,
+                free to use, for everyone, no censorship, and this means I'm not responsible for every picture hosted on
+                ckl static host, and message sent in the hosted ntfy server, contact lab@ckl.moe for DMCA and other notice
             </p>
         </motion.div>
     );
