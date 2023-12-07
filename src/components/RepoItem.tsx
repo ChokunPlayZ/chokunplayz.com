@@ -7,7 +7,9 @@ const Languages = {
     Python: "#3572A5",
     Shell: "#89e051",
     JavaScript: "#f1e05a",
-    C: "#f34b7d"
+    C: "#f34b7d",
+    PHP: "#4f5d95",
+    HTML: "#e34c26"
 };
 
 interface RepoProps {
