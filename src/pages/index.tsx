@@ -67,6 +67,7 @@ const Index = ({ stats, topRepos }: AppProps) => {
                 <TechItem icon={SiDocker} name="Docker" />
                 <TechItem icon={GrVmware} name="VMware vSphere" />
                 <TechItem icon={FaLinux} name="Ubuntu" />
+                
             </div>
 
             <h2 className="font-medium text-3xl mb-4">Projects</h2>

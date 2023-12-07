@@ -29,6 +29,7 @@ const ThemeToggle = () => {
     return (
         <button
             className="p-2 rounded-md bg-transparent hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer"
+            aria-label="theme toggle"
             onClick={() => changeTheme(theme)}
         >
             {theme === "light" && <FiSun className="text-black w-6 h-6 xs:w-5 xs:h-5" />}
