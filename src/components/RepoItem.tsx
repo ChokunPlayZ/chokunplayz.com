@@ -5,6 +5,9 @@ import { BiGitRepoForked } from "react-icons/bi";
 const Languages = {
     TypeScript: "#2b7489",
     Python: "#3572A5",
+    Shell: "#89e051",
+    JavaScript: "#f1e05a",
+    C: "#f34b7d"
 };
 
 interface RepoProps {
