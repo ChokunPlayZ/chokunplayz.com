@@ -57,7 +57,7 @@ const MobileLandingButton = ({
 const LinkButton = ({ title, icon, href }: any) => {
     return (
         <Tooltip title={title} position={"top"} duration={250}>
-            <a target="_blank" rel="noreferrer" href={href}>
+            <a target="_blank" rel="noreferrer" href={href} aria-label={title}>
                 {icon}
             </a>
         </Tooltip>
