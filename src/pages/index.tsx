@@ -51,23 +51,39 @@ const Index = ({ stats, topRepos }: AppProps) => {
                 I use a variety of tools to help my day-to-day work, Below is a list of technologies I've had
                 experience with in the past, or use currently.
             </p>
-            <div className="w-full flex flex-wrap flex-row p-1 mb-12">
+            <div className="w-full flex flex-wrap flex-row p-1 bg-white/10 dark:bg-black/10">
+                {/* {Languages} */}
                 <TechItem icon={SiTypescript} name="TypeScript" />
                 <TechItem icon={SiJavascript} name="JavaScript" />
                 <TechItem icon={SiPython} name="Python" />
+                {/* {Runtime} */}
+                <TechItem icon={SiNodeJs} name="Node.js" />
+                <TechItem icon={SiBun} name="Bun" />
 
+                {/* {Frameworks} */}
+                <TechItem icon={SiNextJs} name="Next.js" />
+
+                {/* {Libs} */}
                 <TechItem icon={SiTailwindCSS} name="TailwindCSS" />
                 <TechItem icon={SiReact} name="React.js" />
-                <TechItem icon={SiNodeJs} name="Node.js" />
-                <TechItem icon={SiNextJs} name="Next.js" />
                 <TechItem icon={SiPrisma} name="Prisma" />
+            </div>
+            <div className="w-full flex flex-wrap flex-row p-1 bg-white/10 dark:bg-black/10 mb-12">
+                {/* {DBs} */}
                 <TechItem icon={SiRedis} name="Redis" />
                 <TechItem icon={SiPostgresql} name="Postgres" />
                 <TechItem icon={SiGit} name="Git" />
+
+                {/* {Enviorment} */}
                 <TechItem icon={SiDocker} name="Docker" />
                 <TechItem icon={GrVmware} name="VMware vSphere" />
                 <TechItem icon={FaLinux} name="Ubuntu" />
-                
+
+                {/* {Programs} */}
+                <TechItem icon={SiMicrosoftexcel} name="Microsoft Excel" />
+                <TechItem icon={SiAdobepremierepro} name="Adobe Premiere Pro" />
+                <TechItem icon={SiAdobephotoshop} name="Adobe Photoshop" />
+                <TechItem icon={SiAdobelightroom} name="Adobe Lightroom" />
             </div>
 
             <h2 className="font-medium text-3xl mb-4">Projects</h2>
