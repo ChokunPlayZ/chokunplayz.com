@@ -40,9 +40,9 @@ function MySite({ Component, pageProps, router }: AppProps) {
                 <meta name="google-site-verification" content="mDFmdnk2pfHaCJFL2uDn4QfsLpyIxa1k3XxD1xEqJl4" />
                 <meta name="author" content="ChokunPlayZ" />
                 <meta name="keywords" content="chokunplayz, ChokunPlayZ, chokun, chokunplayz tiktok, tiktok, chokunplayz youtube, naelike, naelike tiktok, chokunplayz_100k, tiktok, naelike youtube, tiktok counter, personal website, tiktoker, youtuber" />
-                <meta http-equiv="content-language" content="th" />
+                <meta httpEquiv="content-language" content="th" />
                 <meta name="distribution" content="Global" />
-                <meta http-equiv="content-type" content="text/html; charset=UTF-8?" />
+                <meta httpEquiv="content-type" content="text/html; charset=UTF-8?" />
 
                 <meta property="og:type" content="website" />
                 <meta property="og:url" content="https://www.chokunplayz.com/" />

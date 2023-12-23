@@ -4,6 +4,7 @@ import {
     SiDocker,
     SiNextdotjs as SiNextJs,
     SiNodedotjs as SiNodeJs,
+    SiBun,
     SiPostgresql,
     SiReact,
     SiRedis,
@@ -12,6 +13,10 @@ import {
     SiJavascript,
     SiPython,
     SiPrisma,
+    SiMicrosoftexcel,
+    SiAdobepremierepro,
+    SiAdobephotoshop,
+    SiAdobelightroom,
 } from "react-icons/si";
 import { GrVmware } from "react-icons/gr";
 import { FaLinux } from "react-icons/fa";
@@ -42,14 +47,14 @@ const Index = ({ stats, topRepos }: AppProps) => {
             <p className="text-gray-800 dark:text-gray-300 leading-6 font-light tracking-wide mb-12">
                 I'm passionate about everything in technology, since engineering is not only in software, my field
                 expand beyond that, from mechanical, network, software, etc, I love finding out new things, knowledge
-                exists all arround us, I'm all about finding these knowledge, learn from other's mistake and improve on
+                exists all around us, I'm all about finding these knowledge, learn from other's mistake and improve on
                 it, it's what give me the power to get up every morning
             </p>
 
             <h2 className="font-medium text-3xl mb-4">Technologies</h2>
             <p className="text-gray-800 dark:text-gray-300 leading-6 font-light tracking-wide mb-6">
-                I use a variety of tools to help my day-to-day work, Below is a list of technologies I've had
-                experience with in the past, or use currently.
+                I use a variety of tools to help my day-to-day work, Below is a list of technologies I've had experience
+                with in the past, or use currently.
             </p>
             <div className="w-full flex flex-wrap flex-row p-1 bg-white/10 dark:bg-black/10">
                 {/* {Languages} */}
@@ -74,7 +79,7 @@ const Index = ({ stats, topRepos }: AppProps) => {
                 <TechItem icon={SiPostgresql} name="Postgres" />
                 <TechItem icon={SiGit} name="Git" />
 
-                {/* {Enviorment} */}
+                {/* {Environment} */}
                 <TechItem icon={SiDocker} name="Docker" />
                 <TechItem icon={GrVmware} name="VMware vSphere" />
                 <TechItem icon={FaLinux} name="Ubuntu" />

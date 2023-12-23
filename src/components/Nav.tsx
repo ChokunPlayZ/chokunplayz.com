@@ -13,17 +13,13 @@ import { Tooltip } from "react-tippy";
 
 const LandingButton = ({ name, link, selected }: { name: string; link: string; selected: boolean }) => {
     return (
-        <Link href={link}>
-            <a
-                className={classNames(
-                    selected
-                        ? "bg-black/10 dark:bg-[#c8c8dc]/10"
-                        : "bg-transparent hover:bg-gray-700/5 dark:hover:bg-[#c8c8dc]/5 dark:text-white",
-                    "cursor-pointer px-4 py-2 text-sm rounded-md text-black/80 hover:text-black dark:text-white/80 dark:hover:text-white transition-all duration-75"
-                )}
-            >
+        <Link href={link} className={classNames(
+            selected
+                ? "bg-black/10 dark:bg-[#c8c8dc]/10"
+                : "bg-transparent hover:bg-gray-700/5 dark:hover:bg-[#c8c8dc]/5 dark:text-white",
+            "cursor-pointer px-4 py-2 text-sm rounded-md text-black/80 hover:text-black dark:text-white/80 dark:hover:text-white transition-all duration-75"
+        )}>
                 {name}
-            </a>
         </Link>
     );
 };
@@ -40,16 +36,11 @@ const MobileLandingButton = ({
     onClick: () => void;
 }) => {
     return (
-        <Link href={link}>
-            <a
-                className={classNames(
-                    selected ? "bg-black/10 dark:bg-[#c8c8dc]/10" : "bg-transparent dark:text-white",
-                    "flex flex-grow justify-center border border-slate-800/30 cursor-pointer w-auto py-4 text-base text-black/80 dark:text-white/80 transition-all duration-75"
-                )}
-                onClick={onClick}
-            >
+        <Link href={link} className={classNames(
+            selected ? "bg-black/10 dark:bg-[#c8c8dc]/10" : "bg-transparent dark:text-white",
+            "flex flex-grow justify-center border border-slate-800/30 cursor-pointer w-auto py-4 text-base text-black/80 dark:text-white/80 transition-all duration-75"
+        )} onClick={onClick}>
                 {name}
-            </a>
         </Link>
     );
 };
@@ -57,9 +48,9 @@ const MobileLandingButton = ({
 const LinkButton = ({ title, icon, href }: any) => {
     return (
         <Tooltip title={title} position={"top"} duration={250}>
-            <a target="_blank" rel="noreferrer" href={href} aria-label={title}>
+            <Link target="_blank" rel="noreferrer" href={href} aria-label={title}>
                 {icon}
-            </a>
+            </Link>
         </Tooltip>
     );
 };
@@ -78,7 +69,8 @@ const Nav = () => {
                 <div className="flex flex-row items-center justify-between gap-2">
                     <ThemeToggle />
                     <LandingButton name="Home" link="/" selected={router.pathname === "/"} />
-                    <LandingButton name="ChokunLabs" link="/ckl" selected={router.pathname === "/ckl"} />
+                    <LandingButton name="Labs" link="/ckl" selected={router.pathname === "/ckl"} />
+                    <LandingButton name="Photos" link="/photos" selected={router.pathname === "/photos"} />
                 </div>
 
                 <div className="flex flex-row items-center justify-center gap-2 xs:gap-4">
@@ -157,6 +149,24 @@ const Nav = () => {
                                     name="Home"
                                     link="/"
                                     selected={router.pathname === "/"}
+                                    onClick={() => setMenuOpen(false)}
+                                />
+                            </div>
+
+                            <div className="flex flex-row w-full justify-evenly">
+                                <MobileLandingButton
+                                    name="Labs"
+                                    link="/ckl"
+                                    selected={router.pathname === "/ckl"}
+                                    onClick={() => setMenuOpen(false)}
+                                />
+                            </div>
+
+                            <div className="flex flex-row w-full justify-evenly">
+                                <MobileLandingButton
+                                    name="Photos"
+                                    link="/photos"
+                                    selected={router.pathname === "/photos"}
                                     onClick={() => setMenuOpen(false)}
                                 />
                             </div>
