@@ -2,6 +2,16 @@
 module.exports = {
   output: "standalone",
   reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'static.ckl.moe',
+        port: '',
+        pathname: '/guest/**',
+      },
+    ],
+  },
   async redirects() {
     return [
       {
