@@ -18,7 +18,7 @@ const Index = ({ stats, topRepos }: AppProps) => {
             <p className="text-gray-800 dark:text-gray-300 leading-6 tracking-wide mb-12">
                 Project ChokunLabs, born as a result of my passion for homelabbing, it houses some of the hosted apps,
                 free to use, for everyone, no censorship, and this means I'm not responsible for every picture hosted on
-                ckl static host, and message sent in the hosted ntfy server, contact lab@ckl.moe for DMCA and other notice
+                ckl static host, and message sent in the hosted ntfy server, contact lab@ckl.moe for removal request/etc
             </p>
         </motion.div>
     );

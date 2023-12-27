@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import Image from 'next/image'
+import Image from "next/image";
 import { classNames } from "../util/classNames";
 import Link from "next/link";
 
@@ -8,7 +8,7 @@ interface AppProps {
     topRepos: Record<any, any>;
 }
 
-const LinkButton = ({ name, link}: { name: string; link: string }) => {
+const LinkButton = ({ name, link }: { name: string; link: string }) => {
     return (
         <Link
             href={link}
@@ -30,33 +30,47 @@ const Index = ({ stats, topRepos }: AppProps) => {
         >
             <h1 className="mt-36 font-bold text-2xl md:text-5xl mb-4">Photography</h1>
             <p className="text-gray-800 dark:text-gray-300 leading-6 tracking-wide mb-12">
-                This is a page dedicated to my photography hobby, I do event shoots in my school out of my free time, if you're here for your photos, scroll down
+                This is a page dedicated to my photography hobby, I do event shoots in my school out of my free time, if
+                you're here for your photos, scroll down.
             </p>
 
             <div className="h-full w-full bg-gray-400 rounded-md bg-clip-padding pt-5 ps-5 pb-6 mb-2 items-center backdrop-filter backdrop-blur-sm bg-opacity-10">
                 <h2 className="text-2xl md:text-5xl font-bold mb-2">ACS Annual Sport Days 2023</h2>
                 <p className="mb-2">
-                    <span className="font-medium">Location:</span> Assumption College Sriracha<br/>
+                    <span className="font-medium">Location:</span> Assumption College Sriracha
+                    <br />
                     <span className="font-medium">Date:</span> 30/11/2023 - 1/12/2023
                 </p>
                 <div className="pt-2">
-                    <LinkButton link="https://jpg.ckl.moe/share/3aGZyBI02491hxhvRyUwdT2joSipk3O-utJucT6I4tOGjZuz_qNoeMJ-YCSRx9wNA_U" name="Day 1"/>
-                    <LinkButton link="https://jpg.ckl.moe/share/1BmimtLSLKL9vA-mdvuNz_hPPzZ0x7gm82Cw266J26_qJ2QGM1lkDFb-bRCyi98cG5A" name="Day 2"/>
+                    <LinkButton
+                        link="https://jpg.ckl.moe/share/3aGZyBI02491hxhvRyUwdT2joSipk3O-utJucT6I4tOGjZuz_qNoeMJ-YCSRx9wNA_U"
+                        name="Day 1"
+                    />
+                    <LinkButton
+                        link="https://jpg.ckl.moe/share/1BmimtLSLKL9vA-mdvuNz_hPPzZ0x7gm82Cw266J26_qJ2QGM1lkDFb-bRCyi98cG5A"
+                        name="Day 2"
+                    />
                 </div>
             </div>
 
             <div className="h-full w-full bg-gray-400 rounded-md bg-clip-padding pt-5 ps-5 pb-6 mb-2 items-center backdrop-filter backdrop-blur-sm bg-opacity-10">
                 <h2 className="text-2xl md:text-5xl font-bold mb-2">ACS Christmas Fair 2023</h2>
                 <p className="mb-2">
-                    <span className="font-medium">Location:</span> Assumption College Sriracha<br/>
+                    <span className="font-medium">Location:</span> Assumption College Sriracha
+                    <br />
                     <span className="font-medium">Date:</span> 21/12/2023 - 22/12/2023
                 </p>
                 <div className="pt-2">
-                    <LinkButton link="https://jpg.ckl.moe/share/er0ntMkrZ9o8msfNJZ2ja27wzG99epI38Fyy93ReJswn3q4GZsZ7h4iVdEg-izKmLwg" name="Day 1"/>
-                    <LinkButton link="https://jpg.ckl.moe/share/Exta0cLMFZrsGLnvevsx2MirV2WVRYoxzq5PUVpp_D8FHsVHaN3le_oEqeStrIGPous" name="Day 2"/>
+                    <LinkButton
+                        link="https://jpg.ckl.moe/share/er0ntMkrZ9o8msfNJZ2ja27wzG99epI38Fyy93ReJswn3q4GZsZ7h4iVdEg-izKmLwg"
+                        name="Day 1"
+                    />
+                    <LinkButton
+                        link="https://jpg.ckl.moe/share/Exta0cLMFZrsGLnvevsx2MirV2WVRYoxzq5PUVpp_D8FHsVHaN3le_oEqeStrIGPous"
+                        name="Day 2"
+                    />
                 </div>
             </div>
-
         </motion.div>
     );
 };

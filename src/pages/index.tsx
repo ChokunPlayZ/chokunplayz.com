@@ -117,12 +117,6 @@ const Index = ({ stats, topRepos }: AppProps) => {
                     );
                 })}
             </div>
-
-            <h2 className="font-medium text-3xl mb-4">Pictures </h2>
-            <p className="text-gray-800 dark:text-gray-300 leading-6 font-light tracking-wide mb-6">
-                I enjoy taking pictures, the ability to just capture a moment is just so exciting, picture portfolio
-                (comming soon)
-            </p>
         </motion.div>
     );
 };
