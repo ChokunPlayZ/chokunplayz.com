@@ -161,8 +161,6 @@ const Index = ({ stats, topRepos }: AppProps) => {
                 <TechItem icon={SiOpenvpn} name="OpenVPN" />
                 <TechItem icon={SiWireguard} name="Wireguard" />
                 <TechItem icon={SiWireshark} name="Wireshark" />
-                <TechItem icon={SiHp} name="Hot Problems" />
-                <TechItem icon={SiCisco} name="Cisco" />
 
                 {/* Home Automation */}
                 <TechItem icon={SiIfttt} name="IfThisThenThat" />
