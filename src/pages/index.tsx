@@ -1,60 +1,5 @@
 import { motion } from "framer-motion";
-import {
-    SiGit,
-    SiDocker,
-    SiNextdotjs as SiNextJs,
-    SiNodedotjs as SiNodeJs,
-    SiBun,
-    SiPostgresql,
-    SiReact,
-    SiRedis,
-    SiTailwindcss as SiTailwindCSS,
-    SiTypescript,
-    SiJavascript,
-    SiPython,
-    SiPrisma,
-    SiMicrosoftexcel,
-    SiAdobepremierepro,
-    SiAdobephotoshop,
-    SiAdobelightroom,
-    SiMariadb,
-    SiAdonisjs,
-    SiExpress,
-    SiFlask,
-    SiFirebase,
-    SiAmazonaws,
-    SiDigitalocean,
-    SiAkamai,
-    SiCloudflare,
-    SiApachemaven,
-    SiNginx,
-    SiNginxproxymanager,
-    SiNgrok,
-    SiOpenvpn,
-    SiWireguard,
-    SiWireshark,
-    SiDatagrip,
-    SiWebstorm,
-    SiXcode,
-    SiVisualstudiocode,
-    SiPhp,
-    SiLaravel,
-    SiCodeigniter,
-    SiMongodb,
-    SiWordpress,
-    SiBootstrap,
-    SiBulma,
-    SiJquery,
-    SiSqlite,
-    SiMongoose,
-    SiMicrosoftpowerpoint,
-    SiFigma,
-    SiAdobexd,
-    SiPostman,
-    SiInsomnia,
-    SiAndroidstudio,
-    SiPycharm, SiGrafana, SiPrometheus, SiHp, SiCisco, SiIfttt, SiHomebridge, SiHomeassistant, SiCplusplus, SiC
-} from "react-icons/si";
+import { SiGit, SiDocker, SiNextdotjs as SiNextJs, SiNodedotjs as SiNodeJs, SiBun, SiPostgresql, SiReact, SiRedis, SiTailwindcss as SiTailwindCSS, SiTypescript, SiJavascript, SiPython, SiPrisma, SiMicrosoftexcel, SiAdobepremierepro, SiAdobephotoshop, SiAdobelightroom, SiMariadb, SiAdonisjs, SiExpress, SiFlask, SiFirebase, SiAmazonaws, SiDigitalocean, SiAkamai, SiCloudflare, SiApachemaven, SiNginx, SiNginxproxymanager, SiNgrok, SiOpenvpn, SiWireguard, SiWireshark, SiDatagrip, SiWebstorm, SiXcode, SiVisualstudiocode, SiPhp, SiLaravel, SiCodeigniter, SiMongodb, SiWordpress, SiBootstrap, SiBulma, SiJquery, SiSqlite, SiMongoose, SiMicrosoftpowerpoint, SiFigma, SiAdobexd, SiPostman, SiInsomnia, SiAndroidstudio, SiPycharm, SiGrafana, SiPrometheus, SiIfttt, SiHomebridge, SiHomeassistant, SiCplusplus, SiC } from "react-icons/si";
 import { GrVmware } from "react-icons/gr";
 import { FaLinux, FaJava } from "react-icons/fa";
 import { TechItem } from "../components/TechItem";
@@ -102,7 +47,6 @@ const Index = ({ stats, topRepos }: AppProps) => {
                 <TechItem icon={FaJava} name="Java" />
                 <TechItem icon={SiCplusplus} name="C++" />
                 <TechItem icon={SiC} name="C" />
-
 
                 {/* {Runtime} */}
                 <TechItem icon={SiNodeJs} name="Node.js" />
