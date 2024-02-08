@@ -35,6 +35,21 @@ const Index = ({ stats, topRepos }: AppProps) => {
             </p>
 
             <div className="h-full w-full bg-gray-400 rounded-md bg-clip-padding pt-5 ps-5 pb-6 mb-2 items-center backdrop-filter backdrop-blur-sm bg-opacity-10">
+                <h2 className="text-3xl font-bold mb-2">ACS Academic Days (2023)</h2>
+                <p className="mb-2">
+                    <span className="font-medium">Location:</span> Assumption College Sriracha
+                    <br />
+                    <span className="font-medium">Date:</span> 8/02/2024 - 9/02/2024
+                </p>
+                <div className="pt-2">
+                    <LinkButton
+                        link="https://jpg.ckl.moe/share/SiQuWo2vxBPsnJ1-WCXFH_I9j95ke14pbmTP_knfGKYPcxbxGZgnn8nP-oPFndztAks"
+                        name="Day 1-2"
+                    />
+                </div>
+            </div>
+
+            <div className="h-full w-full bg-gray-400 rounded-md bg-clip-padding pt-5 ps-5 pb-6 mb-2 items-center backdrop-filter backdrop-blur-sm bg-opacity-10">
                 <h2 className="text-3xl font-bold mb-2">ACS Teacher Retirement & Children's Day (2023)</h2>
                 <p className="mb-2">
                     <span className="font-medium">Location:</span> Assumption College Sriracha
