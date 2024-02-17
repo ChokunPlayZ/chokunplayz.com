@@ -43,18 +43,20 @@ const Index = ({ stats, topRepos }: AppProps) => {
                     รูปในหน้านี้บางรูป มีสิ่งที่ไม่ควรออกสื่อ เพราะฉะนั้น โพสอย่างระวังนะครับ :)
                 </p>
 
-                <LinkButton
-                    link="https://jpg.ckl.moe/share/GJkqGVXz1lRsaSzQ7DUYWFVdt_0fazDbXs8e9cOJnEL5rD01B2KoGM4uYY-e19xIJLY"
-                    name="Gallery"
-                />
-                <LinkButton
-                    link="https://photos.app.goo.gl/78KBhQ16M1Sig3RAA"
-                    name="Google Photos"
-                />
-                <LinkButton
-                    link="https://drive.google.com/drive/folders/1YJgpXPltxMSEU3aoKvKa5pa3BOHO6AqJ?usp=sharing"
-                    name="Canon Raws (Google Drive)"
-                />
+                <div className="h-full bg-gray-400 rounded-md pt-5 ps-5 pb-5 bg-opacity-10">
+                    <LinkButton
+                        link="https://jpg.ckl.moe/share/GJkqGVXz1lRsaSzQ7DUYWFVdt_0fazDbXs8e9cOJnEL5rD01B2KoGM4uYY-e19xIJLY"
+                        name="Gallery"
+                    />
+                    <LinkButton
+                        link="https://photos.app.goo.gl/78KBhQ16M1Sig3RAA"
+                        name="Google Photos (สำรอง)"
+                    />
+                    <LinkButton
+                        link="https://drive.google.com/drive/folders/1YJgpXPltxMSEU3aoKvKa5pa3BOHO6AqJ?usp=sharing"
+                        name="Canon Raws (ไฟล์สด) (Google Drive)"
+                    />
+                </div>
 
                 <p className="text-white-800 dark:text-white leading-6 tracking-wide mb-6 mt-12">
                     ก่อนอื่นก็ขอบคุณที่เลื่อนมาอ่านนะ ไม่ได้คิดว่าจะมีใครมาอ่านแหละ แต่กว่า ก็ขอขอบคุณ คนที่เรียกให้ถ่ายให้ ก็ยินดีครับ วันนี้สนุกมาก ในรูปแบบของตากล้องเอง อาจจะไม่ได้กระโดด เต้น เหมือนคนอื่น เพราะกลัวกล้องแตกแหละ เดะพ่อด่า, แต่ก็สนุกจริงๆ ใครจะเอารูปไปลงก็แทคได้นะ <a href="https://instagram.com/chokunplayz">@chokunplayz</a> งานนี้ก็เป็นงานสุดท้ายที่จะได้เห็นในนามของ เด็กอัสสัม, เพราะก็จบแล้วเนอะ, คงจะไม่ได้ใส่ชุดนักเรียนแบกกล้องเข้าโรงเรียนนี้แล้วแหละ, ท้ายนี ขอโทษนะ ที่งานอาจจะออกมาไม่ตามความคาดหวัง เกิดข้อผิดพลาดที่ใด ขออภัย มา ณ ขณะนี้ ด้วย งานนี้หินจริงๆ นั้งแก้แสง สี นานมาก บวกกับมีแฟรช ยิ่งทำยากขึ้นอีก ท้ายจริงๆละ ขอให้ทุกคน ประสพความสำเร็จในรั้วหมาลัย เจอแต่เพื่อนดีๆ ไปเรียนใหนก็มีคนรัก เกรดดีๆ แล้วใว้กลับมาเจอกันที่รั้วแดงขาวที่นี่อีกนะ ถึงตอนนั้น ก็อาจจะวางมือจากวงการช่างภาพละ กล้องหนัก 555
