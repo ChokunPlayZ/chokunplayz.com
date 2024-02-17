@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { classNames } from "../util/classNames";
+import { classNames } from "../../util/classNames";
 import Link from "next/link";
 
 interface AppProps {

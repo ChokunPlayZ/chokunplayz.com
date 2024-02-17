@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { classNames } from "../util/classNames";
+import { classNames } from "../../util/classNames";
 import { Metadata, ResolvingMetadata } from "next";
 import Link from "next/link";
 import Head from "next/head";
