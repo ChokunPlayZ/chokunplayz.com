@@ -45,14 +45,10 @@ function MySite({ Component, pageProps, router }: AppProps) {
 
                 <meta property="og:type" content="website" />
                 <meta property="og:url" content="https://www.chokunplayz.com/" />
-                <meta property="og:title" content="ChokunPlayZ" />
-                <meta property="og:description" content="ChokunPlayZ Web" />
                 <meta property="og:keywords" content="chokunplayz, ChokunPlayZ, chokun, chokunplayz tiktok, tiktok, chokunplayz youtube, naelike, naelike tiktok, chokunplayz_100k, tiktok, naelike youtube, tiktok counter, personal website, tiktoker, youtuber" />
 
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:url" content="https://www.chokunplayz.com/" />
-                <meta name="twitter:title" content="ChokunPlayZ Web" />
-                <meta name="twitter:description" content="Hi, This is my site nothing much here just a static site" />
 
                 <meta name="generator" content="Microsoft Visual Studio" />
 

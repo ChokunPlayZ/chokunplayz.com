@@ -30,6 +30,12 @@ const Index = ({ stats, topRepos }: AppProps) => {
             <Head>
                 <title>ACS7760 Gala Dinner Photos</title>
                 <meta name="description" content="รูปจากงาน Gala Dinner ACS7760 Harmonia Night" />
+
+                <meta property="og:title" content="ACS7760 Gala Dinner Photos" />
+                <meta property="og:description" content="รูปจากงาน Gala Dinner ACS7760 Harmonia Night" />
+
+                <meta name="twitter:title" content="ACS7760 Gala Dinner Photos" />
+                <meta name="twitter:description" content="รูปจากงาน Gala Dinner ACS7760 Harmonia Night" />
             </Head>
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -54,7 +60,7 @@ const Index = ({ stats, topRepos }: AppProps) => {
                     />
                     <LinkButton
                         link="https://drive.google.com/drive/folders/1YJgpXPltxMSEU3aoKvKa5pa3BOHO6AqJ?usp=sharing"
-                        name="Canon Raws (ไฟล์สด) (Google Drive)"
+                        name="Raws (ไฟล์สด) (Google Drive)"
                     />
                 </div>
 
