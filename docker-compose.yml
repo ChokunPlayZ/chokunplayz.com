@@ -1,0 +1,8 @@
+version: '3'
+services:
+  nextjs-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 9393:3000
