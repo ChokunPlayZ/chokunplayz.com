@@ -31,7 +31,8 @@ const Index = ({ stats, topRepos }: AppProps) => {
             <h1 className="mt-36 font-bold text-2xl md:text-5xl mb-4">Photography</h1>
             <p className="text-gray-800 dark:text-gray-300 leading-6 tracking-wide mb-12">
                 This is a page dedicated to my photography hobby, I do event shoots in my school out of my free time, if
-                you're here for your photos, scroll down.
+                you're here for your photos, scroll down. <br/><br/>
+                how to download comming soon
             </p>
 
             <div className="h-full w-full bg-gray-400 rounded-md bg-clip-padding pt-5 ps-5 pb-6 mb-2 items-center backdrop-filter backdrop-blur-sm bg-opacity-10">
