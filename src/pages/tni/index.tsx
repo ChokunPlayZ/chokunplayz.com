@@ -42,7 +42,8 @@ const Index = ({ stats, topRepos }: AppProps) => {
                 หรือจะกดค้างแล้วบันทึกก็ได้ แต่จะไม่ได้รูปเต็มความคมชัดนะ <br/>
                 (สำหรับ Andriod วิธีไม่เหมือนกันทุกเครื่องนะ ทักมาถามได้ จะพยายามสอนทำ แต่ถ้ามีผู้รู้ไกล้ตัว ลองถามดูก่อนนะ!) <br/>
                 โหลดรูปเสร็จแล้ว ชอบ ไม่ชอบ ยังไงทักมาบอกได้น้า จะได้เอาไปพัฒนาในงานต่อๆไปนะครับ ขอบคุณทุกคนที่ให้ถ่ายรูปนะครับ! <br/>
-                <a href="https://instragram.com/chokunplayz">IG ตากล้องครับ @chokunplayz หรือคลิกได้เลย</a>
+                <a href="https://instragram.com/chokunplayz">IG ตากล้องครับ @chokunplayz หรือคลิกได้เลย</a> <br/>
+                จะลงรูปแทกได้นะครับ อยากเห็นคนเอารูปไปลง
             </p>
 
             <div className="h-full w-full bg-gray-400 rounded-md bg-clip-padding pt-5 ps-5 pb-6 mb-2 items-center backdrop-filter backdrop-blur-sm bg-opacity-10">
