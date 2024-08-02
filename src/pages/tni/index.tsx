@@ -30,7 +30,7 @@ const Index = ({ stats, topRepos }: AppProps) => {
         >
             <h1 className="mt-36 font-bold text-2xl md:text-5xl mb-4">TNI Photo Project</h1>
             <p className="text-gray-800 dark:text-gray-300 leading-6 tracking-wide mb-12">
-                หน้าเว็บนั้จะรวมรูปที่ถ่ายใน สภาบันเทคโนโลยี ไทย-ญี่ปุ่น<br/><br/>
+                หน้าเว็บนั้จะรวมรูปที่ผมถ่ายใน สภาบันเทคโนโลยี ไทย-ญี่ปุ่น<br/><br/>
                 วิธีโหลดรูป <br/>
                 - สำหรับทุก platform ถ้ายังไม่ได้เปิดใน google chrome หรือ safari ให้กดปุ่มแชร์ และกด "เปิดใน browser เร่มต้น" <br/>
                 - กดลิงค์ download ของงานนั้นๆ <br/>
