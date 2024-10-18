@@ -1,5 +1,52 @@
 import { motion } from "framer-motion";
-import { SiGit, SiDocker, SiNextdotjs as SiNextJs, SiNodedotjs as SiNodeJs, SiBun, SiPostgresql, SiReact, SiRedis, SiTailwindcss as SiTailwindCSS, SiTypescript, SiJavascript, SiPython, SiPrisma, SiMicrosoftexcel, SiAdobepremierepro, SiAdobephotoshop, SiAdobelightroom, SiMariadb, SiAdonisjs, SiExpress, SiFlask, SiFirebase, SiAmazonaws, SiDigitalocean, SiAkamai, SiCloudflare, SiApachemaven, SiNginx, SiNginxproxymanager, SiNgrok, SiOpenvpn, SiWireguard, SiWireshark, SiDatagrip, SiWebstorm, SiXcode, SiVisualstudiocode, SiPhp, SiLaravel, SiCodeigniter, SiMongodb, SiWordpress, SiBootstrap, SiBulma, SiJquery, SiSqlite, SiMongoose, SiMicrosoftpowerpoint, SiFigma, SiAdobexd, SiPostman, SiInsomnia, SiAndroidstudio, SiPycharm, SiGrafana, SiPrometheus, SiIfttt, SiHomebridge, SiHomeassistant, SiCplusplus, SiC } from "react-icons/si";
+import {
+    SiGit,
+    SiDocker,
+    SiNextdotjs as SiNextJs,
+    SiNodedotjs as SiNodeJs,
+    SiBun,
+    SiPostgresql,
+    SiReact,
+    SiRedis,
+    SiTailwindcss as SiTailwindCSS,
+    SiTypescript,
+    SiJavascript,
+    SiPython,
+    SiPrisma,
+    SiMicrosoftexcel,
+    SiAdobepremierepro,
+    SiAdobephotoshop,
+    SiAdobelightroom,
+    SiMariadb,
+    SiExpress,
+    SiFlask,
+    SiCloudflare,
+    SiDatagrip,
+    SiWebstorm,
+    SiXcode,
+    SiVisualstudiocode,
+    SiPhp,
+    SiCodeigniter,
+    SiMongodb,
+    SiWordpress,
+    SiBootstrap,
+    SiJquery,
+    SiMongoose,
+    SiFigma,
+    SiPostman,
+    SiInsomnia,
+    SiGrafana,
+    SiPrometheus,
+    SiCplusplus,
+    SiC,
+    SiProxmox,
+    SiQemu,
+    SiCsharp,
+    SiGooglesheets,
+    SiMikrotik,
+    SiOpnsense,
+    SiDavinciresolve
+} from "react-icons/si";
 import { GrVmware } from "react-icons/gr";
 import { FaLinux, FaJava } from "react-icons/fa";
 import { TechItem } from "../components/TechItem";
@@ -21,8 +68,7 @@ const Index = ({ stats, topRepos }: AppProps) => {
         >
             <h1 className="mt-36 font-bold text-4xl md:text-5xl mb-4">Hi, I'm Chokun</h1>
             <p className="text-gray-800 dark:text-gray-300 leading-6 tracking-wide mb-12">
-                I'm a self-taught fullstack engineer from Thailand🇹🇭. I'm currently pursuing infrastructure planing and
-                network engineering, to create powerful, secure, reliable infrastructure
+                I'm a self-taught fullstack engineer from Thailand🇹🇭. I'm currently pursuing system engineering, to create powerful, secure, reliable infrastructure!
             </p>
 
             <h2 className="font-medium text-3xl mb-4">What I Do</h2>
@@ -47,6 +93,7 @@ const Index = ({ stats, topRepos }: AppProps) => {
                 <TechItem icon={FaJava} name="Java" />
                 <TechItem icon={SiCplusplus} name="C++" />
                 <TechItem icon={SiC} name="C" />
+                <TechItem icon={SiCsharp} name="C#" />
 
                 {/* {Runtime} */}
                 <TechItem icon={SiNodeJs} name="Node.js" />
@@ -56,16 +103,13 @@ const Index = ({ stats, topRepos }: AppProps) => {
                 {/* {Frameworks} */}
                 <TechItem icon={SiNextJs} name="Next.js" />
                 <TechItem icon={SiExpress} name="Express.js" />
-                <TechItem icon={SiAdonisjs} name="Adonis.js" />
                 <TechItem icon={SiFlask} name="Flask" />
-                <TechItem icon={SiLaravel} name="Lavavel" />
                 <TechItem icon={SiCodeigniter} name="Codeigniter" />
                 <TechItem icon={SiWordpress} name="Wordpress" />
 
                 {/* {Libs} */}
                 <TechItem icon={SiTailwindCSS} name="TailwindCSS" />
                 <TechItem icon={SiBootstrap} name="Bootstrap" />
-                <TechItem icon={SiBulma} name="Bulma" />
                 <TechItem icon={SiJquery} name="jQuery" />
                 <TechItem icon={SiReact} name="React.js" />
                 <TechItem icon={SiPrisma} name="Prisma" />
@@ -73,60 +117,36 @@ const Index = ({ stats, topRepos }: AppProps) => {
             </div>
             <div className="w-full flex flex-wrap flex-row p-1 bg-white/10 dark:bg-black/10">
                 {/* {DBs} */}
-                <TechItem icon={SiRedis} name="Redis" />
                 <TechItem icon={SiPostgresql} name="Postgres" />
                 <TechItem icon={SiMariadb} name="Mariadb" />
-                <TechItem icon={SiSqlite} name="SqLite" />
                 <TechItem icon={SiMongodb} name="Mongodb" />
 
                 {/* DevOps */}
                 <TechItem icon={SiGit} name="Git" />
-                <TechItem icon={SiFirebase} name="FireBase" />
-                <TechItem icon={SiAmazonaws} name="Amazon AWS" />
-                <TechItem icon={SiDigitalocean} name="Digital Ocean" />
-                <TechItem icon={SiAkamai} name="Akamai" />
                 <TechItem icon={SiCloudflare} name="Cloudflare" />
                 <TechItem icon={SiGrafana} name="Grafana" />
                 <TechItem icon={SiPrometheus} name="Prometheus" />
             </div>
             <div className="w-full flex flex-wrap flex-row p-1 bg-white/10 dark:bg-black/10">
-                {/* Web Server/Reverse Proxy */}
-                <TechItem icon={SiApachemaven} name="Apache" />
-                <TechItem icon={SiNginx} name="Nginx" />
-                <TechItem icon={SiNginxproxymanager} name="Nginx Proxy Manager" />
-                <TechItem icon={SiNgrok} name="Ngrok" />
-
-                {/* {Environment} */}
+                {/* {Environments} */}
                 <TechItem icon={SiDocker} name="Docker" />
                 <TechItem icon={GrVmware} name="VMware vSphere" />
-                <TechItem icon={FaLinux} name="Ubuntu" />
+                <TechItem icon={SiProxmox} name="Proxmox Virtual Enviornment" />
+                <TechItem icon={SiQemu} name="QEMU/KVM" />
 
-                {/* Network */}
-                <TechItem icon={SiOpenvpn} name="OpenVPN" />
-                <TechItem icon={SiWireguard} name="Wireguard" />
-                <TechItem icon={SiWireshark} name="Wireshark" />
-
-                {/* Home Automation */}
-                <TechItem icon={SiIfttt} name="IfThisThenThat" />
-                <TechItem icon={SiHomebridge} name="Homebridge" />
-                <TechItem icon={SiHomeassistant} name="Home Assistant" />
-
-
-
+                <TechItem icon={SiMikrotik} name="Mikrotik" />
+                <TechItem icon={SiOpnsense} name="OpnSense" />
             </div>
             <div className="w-full flex flex-wrap flex-row p-1 bg-white/10 dark:bg-black/10 mb-12">
                 {/* {Programs} */}
                 <TechItem icon={SiMicrosoftexcel} name="Microsoft Excel" />
-                <TechItem icon={SiMicrosoftpowerpoint} name="Microsoft Powerpoint" />
-                <TechItem icon={SiAdobepremierepro} name="Adobe Premiere Pro" />
+                <TechItem icon={SiGooglesheets} name="Google Sheets" />
+                <TechItem icon={SiDavinciresolve} name="Davinchi Resolve" />
                 <TechItem icon={SiAdobephotoshop} name="Adobe Photoshop" />
                 <TechItem icon={SiAdobelightroom} name="Adobe Lightroom" />
-                <TechItem icon={SiAdobexd} name="Adobe XD" />
                 <TechItem icon={SiDatagrip} name="JetBrains DataGrip" />
                 <TechItem icon={SiWebstorm} name="JetBrains WebStrom" />
-                <TechItem icon={SiPycharm} name="JetBrains PyCharm" />
                 <TechItem icon={SiVisualstudiocode} name="Visual Studio Code" />
-                <TechItem icon={SiAndroidstudio} name="Andriod Studio" />
                 <TechItem icon={SiXcode} name="Xcode" />
                 <TechItem icon={SiFigma} name="Figma" />
                 <TechItem icon={SiPostman} name="Postman" />
