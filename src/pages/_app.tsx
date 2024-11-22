@@ -1,5 +1,6 @@
 import "../globals.css";
 import type { AppProps } from "next/app";
+import { GoogleAnalytics } from '@next/third-parties/google'
 import Head from "next/head";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
@@ -71,6 +72,7 @@ function MySite({ Component, pageProps, router }: AppProps) {
                     <AnimatePresence exitBeforeEnter>
                         <Component {...pageProps} key={router.pathname} />
                     </AnimatePresence>
+                    <GoogleAnalytics gaId="G-16FT90PTQ5" />
                     <Footer />
                 </div>
             </div>
