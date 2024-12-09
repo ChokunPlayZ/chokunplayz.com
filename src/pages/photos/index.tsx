@@ -7,6 +7,28 @@ interface AppProps {
     stats: Record<string, number>;
     topRepos: Record<any, any>;
 }
+import { Metadata } from 'next';
+export const metadata: Metadata = {
+    title: "Photos - Chokun",
+    description: "Chokun's Personal Photo gallery for events.",
+    keywords: [
+        "photographer",
+        "technology",
+        "web development",
+        "Thailand"
+    ],
+    openGraph: {
+        title: "Chokun's Portfolio",
+        description: "Exploring technology, engineering, and innovation",
+        url: "https://www.chokunplayz.com/",
+        type: "website"
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Chokun - Fullstack Engineer",
+        description: "Personal portfolio showcasing technologies and projects"
+    }
+};
 
 const LinkButton = ({ name, link }: { name: string; link: string }) => {
     return (

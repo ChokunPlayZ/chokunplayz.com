@@ -57,6 +57,30 @@ interface AppProps {
     topRepos: Record<any, any>;
 }
 
+import { Metadata } from 'next';
+export const metadata: Metadata = {
+    title: "Chokun - Fullstack Engineer",
+    description: "Personal portfolio of Chokun, a self-taught fullstack engineer from Thailand specializing in system engineering and technology.",
+    keywords: [
+        "fullstack engineer",
+        "system engineering",
+        "technology",
+        "web development",
+        "Thailand"
+    ],
+    openGraph: {
+        title: "Chokun's Portfolio",
+        description: "Exploring technology, engineering, and innovation",
+        url: "https://www.chokunplayz.com/",
+        type: "website"
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Chokun - Fullstack Engineer",
+        description: "Personal portfolio showcasing technologies and projects"
+    }
+};
+
 const Index = ({ stats, topRepos }: AppProps) => {
     return (
         <motion.div
