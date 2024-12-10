@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import React, { useState, useEffect } from 'react';
+import Head from "next/head";
 
 const TimerPage = () => {
     const [timePassed, setTimePassed] = useState({
@@ -30,6 +31,11 @@ const TimerPage = () => {
     }, []);
 
     return (
+        <>
+        <Head>
+            <title>Countup</title>
+            <meta name="title" content="Countup" />
+        </Head>
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -67,6 +73,7 @@ const TimerPage = () => {
                 </div>
             </div>
         </motion.div>
+        </>
     );
 };
 

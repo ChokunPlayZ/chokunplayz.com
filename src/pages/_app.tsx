@@ -32,10 +32,29 @@ function MySite({ Component, pageProps, router }: AppProps) {
                     <meta charSet="utf-8" />
                     <link rel="icon" href="/favicon.ico" />
                     <meta name="viewport" content="width=device-width,initial-scale=1" />
+
                     <meta name="theme-color" content="#DBF2FC"/>
+
+                    <meta name="title" content="Chokun's Site" />
                     <meta name="robots" content="index, follow" />
                     <meta name="googlebot" content="index, follow" />
                     <meta name="google-site-verification" content="mDFmdnk2pfHaCJFL2uDn4QfsLpyIxa1k3XxD1xEqJl4" />
+                    <meta name="author" content="Yanavut Rojanapron" />
+                    <meta name="keywords" content="chokunplayz, ChokunPlayZ, chokun, chokunplayz tiktok, tiktok, chokunplayz youtube, naelike, naelike tiktok, chokunplayz_100k, tiktok, naelike youtube, tiktok counter, personal website, tiktoker, youtuber" />
+                    <meta httpEquiv="content-language" content="th" />
+                    <meta name="distribution" content="Global" />
+                    <meta httpEquiv="content-type" content="text/html; charset=UTF-8?" />
+
+                    <meta property="og:type" content="website" />
+                    <meta property="og:url" content="https://www.chokunplayz.com/" />
+                    <meta property="og:keywords" content="chokunplayz, ChokunPlayZ, chokun, chokunplayz tiktok, tiktok, chokunplayz youtube, naelike, naelike tiktok, chokunplayz_100k, tiktok, naelike youtube, tiktok counter, personal website, tiktoker, youtuber" />
+
+                    <meta name="twitter:card" content="summary_large_image" />
+                    <meta name="twitter:url" content="https://www.chokunplayz.com/" />
+
+                    <meta name="generator" content="Microsoft Visual Studio" />
+
+                    <script type="application/ld+json" className="yoast-schema-graph" />
                 </Head>
             </Head>
 

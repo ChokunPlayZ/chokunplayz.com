@@ -51,6 +51,7 @@ import { GrVmware } from "react-icons/gr";
 import { FaLinux, FaJava } from "react-icons/fa";
 import { TechItem } from "../components/TechItem";
 import RepoItem from "../components/RepoItem";
+import Head  from "next/head";
 
 interface AppProps {
     stats: Record<string, number>;
@@ -59,8 +60,8 @@ interface AppProps {
 
 import { Metadata } from 'next';
 export const metadata: Metadata = {
-    title: "Chokun - Fullstack Engineer",
-    description: "Personal portfolio of Chokun, a self-taught fullstack engineer from Thailand specializing in system engineering and technology.",
+    title: "r",
+    description: "",
     keywords: [
         "fullstack engineer",
         "system engineering",
@@ -83,6 +84,11 @@ export const metadata: Metadata = {
 
 const Index = ({ stats, topRepos }: AppProps) => {
     return (
+        <>
+            <Head>
+                <title>Chokun - Fullstack Engineer</title>
+                <meta name="title" content="Chokun - Fullstack Engineer" />
+            </Head>
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -204,6 +210,7 @@ const Index = ({ stats, topRepos }: AppProps) => {
                 })}
             </div>
         </motion.div>
+        </>
     );
 };
 
