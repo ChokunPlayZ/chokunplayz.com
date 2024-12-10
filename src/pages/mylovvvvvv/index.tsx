@@ -81,6 +81,7 @@ const TimerPage = () => {
                     <div>Seconds</div>
                 </div>
             </div>
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
         </motion.div>
         </>
     );
