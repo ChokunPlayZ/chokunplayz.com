@@ -51,6 +51,7 @@ import { GrVmware } from "react-icons/gr";
 import { FaLinux, FaJava } from "react-icons/fa";
 import { TechItem } from "../components/TechItem";
 import RepoItem from "../components/RepoItem";
+import CreadlyBadge from "../components/CreadlyBadge";
 import Head  from "next/head";
 
 interface AppProps {
@@ -182,6 +183,15 @@ const Index = ({ stats, topRepos }: AppProps) => {
                 <TechItem icon={SiPostman} name="Postman" />
                 <TechItem icon={SiInsomnia} name="Insomnia" />
             </div>
+
+            <h2 className="font-medium text-3xl mb-4">Certified Excel Nerd</h2>
+            <p className="text-gray-800 dark:text-gray-300 leading-6 font-light tracking-wide mb-6">
+                I like Google Sheets a lot more but honestly Excel is still an industry standard, I don't even know why I take this certification,
+                but I already have it so might as well show off.
+            </p>
+            <CreadlyBadge
+            BadgeId="c36f775f-d407-44c4-b729-58c83cc25dca"
+            />
 
             <h2 className="font-medium text-3xl mb-4">Projects</h2>
             <p className="text-gray-800 dark:text-gray-300 leading-6 font-light tracking-wide mb-6">
