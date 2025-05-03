@@ -35,7 +35,7 @@ module.exports = {
         permanent: true
       },
       {
-        source: '/tnixsecdbootcamp25-picdl',
+        source: '/p/tnixsecdbootcamp25',
         destination: 'https://jpg.ckl.moe/share/cdxKufN1cQ1jQYHausvLsUGgD3ShxnKQHUvXrvgjTX1z8qsElQ_7RZGJZFETl1kgGSI',
         permanent: true
       }
