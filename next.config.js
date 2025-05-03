@@ -33,6 +33,11 @@ module.exports = {
         source: '/adobesucks',
         destination: 'https://drive.ckl.moe/d/s/r2que1RE82SDPvIoEGw3PSqcTJqbWCF8/y141ifognf67_bT2o0pdmXfF--j8kkDi-XrxAo8QZ-gk',
         permanent: true
+      },
+      {
+        source: '/tnixsecdbootcamp25-picdl',
+        destination: 'https://jpg.ckl.moe/share/cdxKufN1cQ1jQYHausvLsUGgD3ShxnKQHUvXrvgjTX1z8qsElQ_7RZGJZFETl1kgGSI',
+        permanent: true
       }
     ]
   },
