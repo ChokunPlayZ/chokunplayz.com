@@ -129,7 +129,7 @@ const Index = ({ stats, topRepos }: AppProps) => {
                     <div className="pt-2">
                         <LinkButton
                             link="https://jpg.ckl.moe/share/SiQuWo2vxBPsnJ1-WCXFH_I9j95ke14pbmTP_knfGKYPcxbxGZgnn8nP-oPFndztAks"
-                            name="Day 1-2"
+                            name="Download Here!"
                         />
                     </div>
                 </div>
@@ -182,11 +182,7 @@ const Index = ({ stats, topRepos }: AppProps) => {
                     <div className="pt-2">
                         <LinkButton
                             link="https://jpg.ckl.moe/share/3aGZyBI02491hxhvRyUwdT2joSipk3O-utJucT6I4tOGjZuz_qNoeMJ-YCSRx9wNA_U"
-                            name="Day 1"
-                        />
-                        <LinkButton
-                            link="https://jpg.ckl.moe/share/1BmimtLSLKL9vA-mdvuNz_hPPzZ0x7gm82Cw266J26_qJ2QGM1lkDFb-bRCyi98cG5A"
-                            name="Day 2"
+                            name="Download Here!"
                         />
                     </div>
                 </div>
