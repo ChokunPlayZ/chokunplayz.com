@@ -20,6 +20,11 @@ module.exports = {
         permanent: true,
       },
       {
+        source: '/git',
+        destination: 'https://github.com/chokunplayz',
+        permanent: true,
+      },
+      {
         source: '/twitter',
         destination: 'https://twitter.com/chokuntweets',
         permanent: true,
@@ -33,6 +38,11 @@ module.exports = {
         source: '/adobesucks',
         destination: 'https://drive.ckl.moe/d/s/r2que1RE82SDPvIoEGw3PSqcTJqbWCF8/y141ifognf67_bT2o0pdmXfF--j8kkDi-XrxAo8QZ-gk',
         permanent: true
+      },
+      {
+        source: '/p',
+        destination: 'https://github.com/chokunplayz',
+        permanent: true,
       },
       {
         source: '/p/tnixsecdbootcamp25',
