@@ -44,6 +44,19 @@ const Index = ({ stats, topRepos }: AppProps) => {
                 </p>
 
                 <div className="h-full w-full bg-gray-400 rounded-md bg-clip-padding pt-5 ps-5 pb-6 mb-2 items-center backdrop-filter backdrop-blur-sm bg-opacity-10">
+                    <h2 className="text-3xl font-bold mb-2">TNI IT First Meet 2025</h2>
+                    <p className="mb-2">
+                        <span className="font-medium">Date:</span> 20/05/2025
+                    </p>
+                    <div className="pt-2">
+                        <LinkButton
+                            link="https://jpg.ckl.moe/share/_sgM-5tfUyVe38ePxMjlZvpw_T9fn4wFu9PV6pvg59zZ7WD0IDr8Rzxy30hyJGXY4yA"
+                            name="Download Here!"
+                        />
+                    </div>
+                </div>
+
+                <div className="h-full w-full bg-gray-400 rounded-md bg-clip-padding pt-5 ps-5 pb-6 mb-2 items-center backdrop-filter backdrop-blur-sm bg-opacity-10">
                     <h2 className="text-3xl font-bold mb-2">TNIxSecureD Cybersec Bootcamp 2025</h2>
                     <p className="mb-2">
                         <span className="font-medium">Date:</span> 3/05/2025

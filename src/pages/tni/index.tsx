@@ -47,13 +47,91 @@ const Index = ({ stats, topRepos }: AppProps) => {
             </p>
 
             <div className="h-full w-full bg-gray-400 rounded-md bg-clip-padding pt-5 ps-5 pb-6 mb-2 items-center backdrop-filter backdrop-blur-sm bg-opacity-10">
+                <h2 className="text-3xl font-bold mb-2">TNI IT First Meet 2025</h2>
+                <p className="mb-2">
+                    <span className="font-medium">Date:</span> 20/05/2025
+                </p>
+                <div className="pt-2">
+                    <LinkButton
+                        link="https://jpg.ckl.moe/share/_sgM-5tfUyVe38ePxMjlZvpw_T9fn4wFu9PV6pvg59zZ7WD0IDr8Rzxy30hyJGXY4yA"
+                        name="Download Here!"
+                    />
+                </div>
+            </div>
+
+            <div className="h-full w-full bg-gray-400 rounded-md bg-clip-padding pt-5 ps-5 pb-6 mb-2 items-center backdrop-filter backdrop-blur-sm bg-opacity-10">
+                <h2 className="text-3xl font-bold mb-2">TNIxSecureD Cybersec Bootcamp 2025</h2>
+                <p className="mb-2">
+                    <span className="font-medium">Date:</span> 3/05/2025
+                </p>
+                <div className="pt-2">
+                    <LinkButton
+                        link="https://jpg.ckl.moe/share/cdxKufN1cQ1jQYHausvLsUGgD3ShxnKQHUvXrvgjTX1z8qsElQ_7RZGJZFETl1kgGSI"
+                        name="Download Here!"
+                    />
+                </div>
+            </div>
+
+            <div className="h-full w-full bg-gray-400 rounded-md bg-clip-padding pt-5 ps-5 pb-6 mb-2 items-center backdrop-filter backdrop-blur-sm bg-opacity-10">
+                <h2 className="text-3xl font-bold mb-2">TNI Christmas 2024</h2>
+                <p className="mb-2">
+                    <span className="font-medium">Date:</span> 25/12/2024
+                </p>
+                <div className="pt-2">
+                    <LinkButton
+                        link="https://jpg.ckl.moe/share/JHFfBlFiguMi9NHfA69QwNhXEIRUUZPkbCW5ycwFWARqWYkJWya5WzWVWbDYYPayVSM"
+                        name="Download Here!"
+                    />
+                </div>
+            </div>
+
+            <div className="h-full w-full bg-gray-400 rounded-md bg-clip-padding pt-5 ps-5 pb-6 mb-2 items-center backdrop-filter backdrop-blur-sm bg-opacity-10">
+                <h2 className="text-3xl font-bold mb-2">TNI IT Camp 2024</h2>
+                <p className="mb-2">
+                    <span className="font-medium">Date:</span> 24/11/2024
+                </p>
+                <div className="pt-2">
+                    <LinkButton
+                        link="https://jpg.ckl.moe/share/nvhL8PRr68nzj2fuked87ru9W9KyGLb-fcZGE6FCb30Zhnd0nzI918WSdlVKJ1TH2PA"
+                        name="Download Here!"
+                    />
+                </div>
+            </div>
+
+            <div className="h-full w-full bg-gray-400 rounded-md bg-clip-padding pt-5 ps-5 pb-6 mb-2 items-center backdrop-filter backdrop-blur-sm bg-opacity-10">
+                <h2 className="text-3xl font-bold mb-2">TNI Engineering Camp 2024</h2>
+                <p className="mb-2">
+                    <span className="font-medium">Date:</span> 23/11/2024
+                </p>
+                <div className="pt-2">
+                    <LinkButton
+                        link="https://jpg.ckl.moe/share/vIksB_56CTjbGvVV36gahY_NO525CXdenF19llREkeJl3Wy8GLK43By1vQ9wqtZB1Lw"
+                        name="Download Here!"
+                    />
+                </div>
+            </div>
+
+            <div className="h-full w-full bg-gray-400 rounded-md bg-clip-padding pt-5 ps-5 pb-6 mb-2 items-center backdrop-filter backdrop-blur-sm bg-opacity-10">
                 <h2 className="text-3xl font-bold mb-2">TNI Day (2024)</h2>
                 <p className="mb-2">
-                    <span className="font-medium">Date:</span> 2/08/2024
+                    <span className="font-medium">Date:</span> 02/08/2024
                 </p>
                 <div className="pt-2">
                     <LinkButton
                         link="https://jpg.ckl.moe/share/EgoAnErncQ8M-KsbeiTes4zIGn4Mya6ribiyek28j4F_YPkPaQRrMYTeFkieOjlPCE4"
+                        name="Download Here!"
+                    />
+                </div>
+            </div>
+
+            <div className="h-full w-full bg-gray-400 rounded-md bg-clip-padding pt-5 ps-5 pb-6 mb-2 items-center backdrop-filter backdrop-blur-sm bg-opacity-10">
+                <h2 className="text-3xl font-bold mb-2">TNI Freshy Day (2024)</h2>
+                <p className="mb-2">
+                    <span className="font-medium">Date:</span> 06/07/2024
+                </p>
+                <div className="pt-2">
+                    <LinkButton
+                        link="https://jpg.ckl.moe/share/5WZC-KZTojSbe-EWN36-KxskpT3VcaxvGp71WYkHZ1_qoVOPj0W86hB2s7DHb1rho1s"
                         name="Download Here!"
                     />
                 </div>

@@ -48,6 +48,11 @@ module.exports = {
         source: '/p/tnixsecdbootcamp25',
         destination: 'https://jpg.ckl.moe/share/cdxKufN1cQ1jQYHausvLsUGgD3ShxnKQHUvXrvgjTX1z8qsElQ_7RZGJZFETl1kgGSI',
         permanent: true
+      },
+      {
+        source: '/p/tniitfirstmeetco25',
+        destination: 'https://jpg.ckl.moe/share/_sgM-5tfUyVe38ePxMjlZvpw_T9fn4wFu9PV6pvg59zZ7WD0IDr8Rzxy30hyJGXY4yA',
+        permanent: true
       }
     ]
   },
