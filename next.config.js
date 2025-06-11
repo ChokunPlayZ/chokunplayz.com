@@ -30,6 +30,11 @@ module.exports = {
         permanent: true,
       },
       {
+        source: '/ig',
+        destination: 'https://instagram.com/chokunplayz',
+        permanent: true,
+      },
+      {
         source: '/discord',
         destination: 'https://discord.gg/M8GrEeZAcz',
         permanent: true,
