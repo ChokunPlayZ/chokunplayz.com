@@ -58,6 +58,11 @@ module.exports = {
         source: '/p/tniitfirstmeetco25',
         destination: 'https://jpg.ckl.moe/share/_sgM-5tfUyVe38ePxMjlZvpw_T9fn4wFu9PV6pvg59zZ7WD0IDr8Rzxy30hyJGXY4yA',
         permanent: true
+      },
+      {
+        source: '/p/tniitfreshycamp25',
+        destination: 'https://drive.google.com/drive/folders/1Tt6FxJTE3eABdh9WBnv385R4SDBlOci5?usp=sharing',
+        permanent: true
       }
     ]
   },
