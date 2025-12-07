@@ -2,6 +2,8 @@ Dockerfile
 .dockerignore
 node_modules
 npm-debug.log
+package-lock.json
+bun-debug.log
 README.md
 .next
 .git
