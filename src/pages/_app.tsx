@@ -33,7 +33,7 @@ function MySite({ Component, pageProps, router }: AppProps) {
                     <link rel="icon" href="/favicon.ico" />
                     <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-                    <meta name="theme-color" content="#DBF2FC"/>
+                    <meta name="theme-color" content="#DBF2FC" />
 
                     <meta name="title" content="Chokun's Site" />
                     <meta name="robots" content="index, follow" />
@@ -61,7 +61,7 @@ function MySite({ Component, pageProps, router }: AppProps) {
             <div className="text-black dark:text-white flex flex-row justify-center w-full h-full bg-gradient-to-bl from-[#f7c7d5] to-[#9995ee] dark:from-[#5e4d56] dark:to-[#3e3c5f] min-h-screen">
                 <Nav />
                 <div className="w-[80%] md:w-[45rem]">
-                    <AnimatePresence exitBeforeEnter>
+                    <AnimatePresence mode="wait">
                         <Component {...pageProps} key={router.pathname} />
                     </AnimatePresence>
                     <GoogleAnalytics gaId="G-16FT90PTQ5" />

@@ -19,7 +19,7 @@ const LandingButton = ({ name, link, selected }: { name: string; link: string; s
                 : "bg-transparent hover:bg-gray-700/5 dark:hover:bg-[#c8c8dc]/5 dark:text-white",
             "cursor-pointer px-4 py-2 text-sm rounded-md text-black/80 hover:text-black dark:text-white/80 dark:hover:text-white transition-all duration-75"
         )}>
-                {name}
+            {name}
         </Link>
     );
 };
@@ -40,18 +40,19 @@ const MobileLandingButton = ({
             selected ? "bg-black/10 dark:bg-[#c8c8dc]/10" : "bg-transparent dark:text-white",
             "flex flex-grow justify-center border border-slate-800/30 cursor-pointer w-auto py-4 text-base text-black/80 dark:text-white/80 transition-all duration-75"
         )} onClick={onClick}>
-                {name}
+            {name}
         </Link>
     );
 };
 
 const LinkButton = ({ title, icon, href }: any) => {
+    const TooltipAny = Tooltip as any;
     return (
-        <Tooltip title={title} position={"top"} duration={250}>
+        <TooltipAny title={title} position={"top"} duration={250}>
             <Link target="_blank" rel="noreferrer" href={href} aria-label={title}>
                 {icon}
             </Link>
-        </Tooltip>
+        </TooltipAny>
     );
 };
 
@@ -124,7 +125,7 @@ const Nav = () => {
                 </div>
             </motion.div>
 
-            <AnimatePresence exitBeforeEnter>
+            <AnimatePresence mode="wait">
                 {mobileMenuOpen && (
                     <>
                         <motion.div
