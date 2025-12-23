@@ -13,6 +13,19 @@ interface PhotoSlideshowProps {
 export function PhotoSlideshow({ photos }: PhotoSlideshowProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const [selectedPhoto, setSelectedPhoto] = useState<PichausPhoto | null>(null)
+    const [canLoadImages, setCanLoadImages] = useState(false)
+
+    useEffect(() => {
+        // If the page is already loaded, load images immediately
+        if (document.readyState === 'complete') {
+            setCanLoadImages(true)
+        } else {
+            // Otherwise wait for the load event (scripts, styles, and other assets)
+            const handleLoad = () => setCanLoadImages(true)
+            window.addEventListener('load', handleLoad)
+            return () => window.removeEventListener('load', handleLoad)
+        }
+    }, [])
 
     if (photos.length === 0) {
         return null
@@ -84,6 +97,7 @@ export function PhotoSlideshow({ photos }: PhotoSlideshowProps) {
                                     key={`row-${rowIndex}-photo-${photo.id}-${index}`}
                                     photo={photo}
                                     rowHeight={rowHeight}
+                                    canLoad={canLoadImages}
                                     onClick={() => setSelectedPhoto(photo)}
                                 />
                             ))}
@@ -118,12 +132,16 @@ export function PhotoSlideshow({ photos }: PhotoSlideshowProps) {
 function PhotoCard({
     photo,
     rowHeight,
+    canLoad,
     onClick,
 }: {
     photo: PichausPhoto
     rowHeight: number
+    canLoad: boolean
     onClick: () => void
 }) {
+    const [isLoaded, setIsLoaded] = useState(false)
+
     return (
         <div
             className="relative shrink-0 overflow-hidden rounded-xl group cursor-pointer transition-all duration-300 hover:brightness-110"
@@ -133,16 +151,33 @@ function PhotoCard({
             }}
             onClick={onClick}
         >
-            <img
-                src={photo.thumbnailUrl}
-                alt={photo.album.title || 'Photo'}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 pointer-events-auto"
-                draggable={false}
-                onClick={(e) => {
-                    e.stopPropagation()
-                    onClick()
-                }}
-            />
+            {(!isLoaded || !canLoad) && photo.blurhash && (
+                <div className="absolute inset-0 pointer-events-none">
+                    <Blurhash
+                        hash={photo.blurhash}
+                        width="100%"
+                        height="100%"
+                        resolutionX={32}
+                        resolutionY={32}
+                        punch={1}
+                    />
+                </div>
+            )}
+
+            {canLoad && (
+                <img
+                    src={photo.thumbnailUrl}
+                    alt={photo.album.title || 'Photo'}
+                    className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 pointer-events-auto ${isLoaded ? 'opacity-100' : 'opacity-0'
+                        }`}
+                    draggable={false}
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        onClick()
+                    }}
+                    onLoad={() => setIsLoaded(true)}
+                />
+            )}
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
         </div>
     )
