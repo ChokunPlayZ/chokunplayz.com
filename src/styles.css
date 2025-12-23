@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import 'tailwindcss';
+
+/* Hide theme toggle when modal is open */
+body.modal-open .theme-toggle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ============================================
+   PREMIUM GLASSMORPHISM THEME - LIGHT & DARK MODE
+   ============================================ */
+
+:root {
+  /* Light mode (refined) */
+  --bg-primary: #f0f9ff;
+  /* Sky 50 */
+  --bg-secondary: #e0f2fe;
+  /* Sky 100 */
+  --bg-tertiary: #bae6fd;
+  /* Sky 200 */
+  --text-primary: #0c4a6e;
+  /* Sky 900 */
+  --text-secondary: #0369a1;
+  /* Sky 700 */
+  --text-muted: #38bdf8;
+  /* Sky 400 */
+
+  /* Pastel Blue Accents */
+  --accent: #38bdf8;
+  /* Sky 400 - Nice clear pastel blue */
+  --accent-soft: #7dd3fc;
+  /* Sky 300 */
+  --accent-hover: #0ea5e9;
+  /* Sky 500 */
+  --accent-glow: rgba(56, 189, 248, 0.4);
+
+  --border: #bae6fd;
+  --border-soft: #e0f2fe;
+
+  /* Glassmorphism */
+  --card-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-shadow: 0 8px 32px 0 rgba(56, 189, 248, 0.1);
+}
+
+[data-theme='dark'] {
+  /* Dark mode (Deep Ocean/Night Sky) */
+  --bg-primary: #0f172a;
+  /* Slate 900 */
+  --bg-secondary: #1e293b;
+  /* Slate 800 */
+  --bg-tertiary: #334155;
+  /* Slate 700 */
+  --text-primary: #f0f9ff;
+  --text-secondary: #bae6fd;
+  --text-muted: #7dd3fc;
+
+  /* Pastel Blue Accents (Dark Mode) */
+  --accent: #7dd3fc;
+  /* Sky 300 */
+  --accent-soft: #38bdf8;
+  /* Sky 400 */
+  --accent-hover: #bae6fd;
+  /* Sky 200 */
+  --accent-glow: rgba(125, 211, 252, 0.3);
+
+  --border: #334155;
+  --border-soft: #1e293b;
+
+  /* Glassmorphism Dark */
+  --card-bg: rgba(30, 41, 59, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
+  line-height: 1.6;
+  transition:
+    background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.4s ease;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.025em;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Premium Gradient Background */
+.gradient-bg {
+  position: relative;
+  background:
+    radial-gradient(
+      circle at 15% 50%,
+      rgba(56, 189, 248, 0.1),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 85% 30%,
+      rgba(125, 211, 252, 0.1),
+      transparent 25%
+    );
+  background-color: var(--bg-primary);
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Animations included in style upgrade */
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(10px, -15px);
+  }
+
+  50% {
+    transform: translate(-5px, -25px);
+  }
+
+  75% {
+    transform: translate(-15px, -10px);
+  }
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  33% {
+    transform: translate(-20px, -10px);
+  }
+
+  66% {
+    transform: translate(15px, -20px);
+  }
+}
+
+@keyframes float-delayed {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(20px, -30px);
+  }
+}
+
+.animate-float {
+  animation: float 10s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 15s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 12s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+/* Smooth Fade In */
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Link underline effect */
+.hover-underline-animation {
+  display: inline-block;
+  position: relative;
+}
+
+.hover-underline-animation::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--accent);
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+.hover-underline-animation:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}

@@ -1,8 +1,17 @@
-version: '3'
 services:
-  nextjs-web:
+  web:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "${PORT}:3000"
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PICHAUS_API_KEY=${PICHAUS_API_KEY}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

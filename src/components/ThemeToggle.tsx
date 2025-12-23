@@ -1,41 +1,20 @@
-import { useEffect, useState } from "react";
-import { FiSun, FiMoon } from "react-icons/fi";
+import { Moon, Sun } from 'lucide-react'
+import { useTheme } from './ThemeProvider'
 
-const ThemeToggle = () => {
-    const [theme, setTheme] = useState<string>("dark");
+export function ThemeToggle() {
+  const { theme, toggleTheme } = useTheme()
 
-    useEffect(() => {
-        let storedTheme = localStorage.getItem("theme") as string;
-
-        if (!storedTheme) {
-            localStorage.setItem("theme", theme);
-        } else {
-            setTheme(storedTheme);
-            storedTheme === "light" ? document.querySelector("html")?.classList.remove("dark") : null;
-            storedTheme === "dark" ? document.querySelector("html")?.classList.add("dark") : null;
-        }
-    }, []);
-
-    const changeTheme = (theme: string) => {
-        let newTheme = theme === "light" ? "dark" : "light";
-
-        localStorage.setItem("theme", newTheme);
-        setTheme(newTheme);
-        newTheme === "light"
-            ? document.querySelector("html")?.classList.remove("dark")
-            : document.querySelector("html")?.classList.add("dark");
-    };
-
-    return (
-        <button
-            className="p-2 rounded-md bg-transparent hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer"
-            aria-label="theme toggle"
-            onClick={() => changeTheme(theme)}
-        >
-            {theme === "light" && <FiSun className="text-black w-6 h-6 xs:w-5 xs:h-5" />}
-            {theme === "dark" && <FiMoon className="text-white w-6 h-6 xs:w-5 xs:h-5" />}
-        </button>
-    );
-};
-
-export default ThemeToggle;
+  return (
+    <button
+      onClick={toggleTheme}
+      className="theme-toggle fixed top-6 right-6 z-50 p-3 rounded-full glass-panel hover:scale-110 hover:rotate-12 transition-all duration-300 cursor-pointer"
+      aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+    >
+      {theme === 'light' ? (
+        <Moon className="w-5 h-5 text-(--text-muted) hover:text-(--text-primary)" />
+      ) : (
+        <Sun className="w-5 h-5 text-yellow-400 hover:text-yellow-300" />
+      )}
+    </button>
+  )
+}

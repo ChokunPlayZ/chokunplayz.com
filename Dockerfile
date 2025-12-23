@@ -1,56 +1,43 @@
-FROM oven/bun:alpine AS base
+# Build stage
+FROM oven/bun:1 AS builder
 
-# Install dependencies only when needed
-FROM base AS deps
 WORKDIR /app
 
-# Install dependencies using Bun
+# Copy package files
 COPY package.json bun.lock* ./
+
+# Install dependencies
 RUN bun install --frozen-lockfile
 
-
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+# Copy source code
 COPY . .
 
-ENV NEXT_TELEMETRY_DISABLED=1
-
+# Build the application
 RUN bun run build
 
-# Production image, copy all the files and run next
-# Use Node.js for the runtime since Next.js standalone mode requires it
-FROM oven/bun:alpine AS runner
+# Production stage
+FROM oven/bun:1-slim AS runner
+
 WORKDIR /app
 
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
+# Create non-root user for security
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 app
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Copy built application from builder stage
+COPY --from=builder --chown=app:nodejs /app/.output /app/.output
+COPY --from=builder --chown=app:nodejs /app/package.json /app/
 
-COPY --from=builder /app/public ./public
+# Switch to non-root user
+USER app
 
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-RUN apk add --no-cache curl
-
-USER nextjs
-
+# Expose port
 EXPOSE 3000
 
+# Set environment variables
+ENV NODE_ENV=production
+ENV HOST=0.0.0.0
 ENV PORT=3000
-# set hostname to localhost
-ENV HOSTNAME=0.0.0.0
 
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD ["bun", "server.js"]
+# Start the application
+CMD ["bun", "run", ".output/server/index.mjs"]
