@@ -16,9 +16,11 @@ COPY . .
 RUN bun run build
 
 # Production stage
-FROM oven/bun:1-slim AS runner
+FROM oven/bun:1-alpine AS runner
 
 WORKDIR /app
+
+RUN apk add curl
 
 # Copy built application from builder stage
 COPY --from=builder /app/.output /app/.output
