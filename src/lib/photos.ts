@@ -1,17 +1,15 @@
 import { createServerFn } from '@tanstack/react-start'
 
 // Type for the photo response from the API (matching actual API response)
+// Type for the photo response from the API (matching actual API response)
 export interface PichausPhoto {
   id: string
   url: string
   thumbnailUrl: string
-  filename: string
-  originalName: string
   width: number
   height: number
   blurhash: string
   dateTaken: number
-  createdAt: number
   album: {
     id: string
     title: string
@@ -20,7 +18,23 @@ export interface PichausPhoto {
 
 interface ApiResponse {
   success: boolean
-  data?: Array<PichausPhoto>
+  data?: Array<{
+    id: string
+    url: string
+    thumbnailUrl: string
+    width: number
+    height: number
+    blurhash: string
+    dateTaken: number
+    album: {
+      id: string
+      title: string
+    }
+    // define other potential fields as optional if needed for type safety but we only pick what we need
+    filename?: string
+    originalName?: string
+    createdAt?: number
+  }>
 }
 
 // Server function to fetch random photos from Pichaus API
@@ -63,7 +77,22 @@ export const getRandomPhotos = createServerFn().handler(async () => {
       }
     }
 
-    return { photos: result.data, error: null }
+    // Map and pick only necessary fields to reduce payload
+    const photos: Array<PichausPhoto> = result.data.map((photo) => ({
+      id: photo.id,
+      url: photo.url,
+      thumbnailUrl: photo.thumbnailUrl,
+      width: photo.width,
+      height: photo.height,
+      blurhash: photo.blurhash,
+      dateTaken: photo.dateTaken,
+      album: {
+        id: photo.album.id,
+        title: photo.album.title,
+      },
+    }))
+
+    return { photos, error: null }
   } catch (error) {
     console.error('Failed to fetch photos:', error)
     return {
