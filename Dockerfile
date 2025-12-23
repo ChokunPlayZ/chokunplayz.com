@@ -20,16 +20,9 @@ FROM oven/bun:1-slim AS runner
 
 WORKDIR /app
 
-# Create non-root user for security
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 app
-
 # Copy built application from builder stage
-COPY --from=builder --chown=app:nodejs /app/.output /app/.output
-COPY --from=builder --chown=app:nodejs /app/package.json /app/
-
-# Switch to non-root user
-USER app
+COPY --from=builder /app/.output /app/.output
+COPY --from=builder /app/package.json /app/
 
 # Expose port
 EXPOSE 3000
