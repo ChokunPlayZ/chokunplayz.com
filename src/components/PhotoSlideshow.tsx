@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom'
 import { Calendar, ExternalLink, Maximize2, X } from 'lucide-react'
 import { Blurhash } from 'react-blurhash'
 import type { PichausPhoto } from '../lib/photos'
+import { getPhotoThumbnailUrl, getPhotoUrl } from '../lib/photos'
 
 interface PhotoSlideshowProps {
     photos: Array<PichausPhoto>
@@ -166,7 +167,7 @@ function PhotoCard({
 
             {canLoad && (
                 <img
-                    src={photo.thumbnailUrl}
+                    src={getPhotoThumbnailUrl(photo.id)}
                     alt={photo.album.title || 'Photo'}
                     className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 pointer-events-auto ${isLoaded ? 'opacity-100' : 'opacity-0'
                         }`}
@@ -257,7 +258,7 @@ function PhotoViewer({
                     )}
 
                     <img
-                        src={photo.url}
+                        src={getPhotoUrl(photo.id)}
                         alt={photo.album.title || 'Photo'}
                         className={`max-w-full max-h-full object-contain shadow-2xl rounded-sm transition-opacity duration-500 pointer-events-auto ${isLoaded ? 'opacity-100' : 'opacity-0'
                             }`}
@@ -280,7 +281,7 @@ function PhotoViewer({
                                         href={
                                             photo.album.id
                                                 ? `https://p.ckl.moe/v/${photo.album.id}`
-                                                : photo.url
+                                                : getPhotoUrl(photo.id)
                                         }
                                         target="_blank"
                                         rel="noopener noreferrer"

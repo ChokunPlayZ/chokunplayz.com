@@ -2,10 +2,9 @@ import { createServerFn } from '@tanstack/react-start'
 
 // Type for the photo response from the API (matching actual API response)
 // Type for the photo response from the API (matching actual API response)
+// Type for the photo response from the API (matching actual API response)
 export interface PichausPhoto {
   id: string
-  url: string
-  thumbnailUrl: string
   width: number
   height: number
   blurhash: string
@@ -15,6 +14,12 @@ export interface PichausPhoto {
     title: string
   }
 }
+
+export const getPhotoUrl = (id: string) =>
+  `https://p.ckl.moe/api/assets/${id}/full`
+
+export const getPhotoThumbnailUrl = (id: string) =>
+  `https://p.ckl.moe/api/assets/${id}/thumb`
 
 interface ApiResponse {
   success: boolean
@@ -80,8 +85,6 @@ export const getRandomPhotos = createServerFn().handler(async () => {
     // Map and pick only necessary fields to reduce payload
     const photos: Array<PichausPhoto> = result.data.map((photo) => ({
       id: photo.id,
-      url: photo.url,
-      thumbnailUrl: photo.thumbnailUrl,
       width: photo.width,
       height: photo.height,
       blurhash: photo.blurhash,
