@@ -30,6 +30,8 @@ function RootComponent() {
   )
 }
 
+import { NotFound } from '../components/NotFound'
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -58,4 +60,5 @@ export const Route = createRootRoute({
   }),
   component: RootComponent,
   shellComponent: RootDocument,
+  notFoundComponent: NotFound,
 })
