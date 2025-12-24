@@ -255,10 +255,7 @@ function PhotoViewer({
                             className={`absolute inset-0 w-full h-full object-contain rounded-sm transition-opacity duration-500 pointer-events-auto z-20 ${isLoaded ? 'opacity-100' : 'opacity-0'
                                 }`}
                             onClick={(e) => e.stopPropagation()}
-                            onLoad={() => {
-                                console.log('Image loaded:', photo.id)
-                                setIsLoaded(true)
-                            }}
+                            onLoad={() => setIsLoaded(true)}
                         />
 
                         {/* Loading Spinner */}
