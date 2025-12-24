@@ -105,6 +105,12 @@ export const photoAlbums = [
         url: 'https://p.ckl.moe/v/30FvSLTPb6',
     },
     {
+        title: 'ACS 2023 Art/Sci Sports',
+        date: '2024-01-15',
+        location: 'Assumption College Sriracha',
+        url: 'https://p.ckl.moe/v/E_oybzqtF4',
+    },
+    {
         title: 'ACS Teacher Retirement Send-off 2024',
         date: '2024-01-15',
         location: 'Assumption College Sriracha',
@@ -121,5 +127,11 @@ export const photoAlbums = [
         date: '2023-11-30',
         location: 'Assumption College Sriracha',
         url: 'https://p.ckl.moe/v/kZaNEnUEzX',
+    },
+    {
+        title: 'Arduino Education Day TH 2023',
+        location: 'Assumption College Sriracha',
+        date: '2023-11-24',
+        url: 'https://p.ckl.moe/v/3UFAleakRd',
     },
 ] as const
