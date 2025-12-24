@@ -44,7 +44,7 @@ interface ApiResponse {
 
 // Server function to fetch random photos from Pichaus API
 export const getRandomPhotos = createServerFn().handler(async () => {
-  const count = 40
+  const count = 50
   const apiKey = process.env.PICHAUS_API_KEY
 
   if (!apiKey) {
