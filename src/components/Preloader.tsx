@@ -45,6 +45,7 @@ export function Preloader() {
 
     return (
         <div
+            id="global-preloader"
             className={`fixed inset-0 z-9999 flex items-center justify-center bg-(--bg-primary) transition-opacity duration-700 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
                 }`}
         >
