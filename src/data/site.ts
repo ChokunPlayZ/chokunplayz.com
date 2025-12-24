@@ -9,6 +9,7 @@ export const profile = {
     tagline: 'Self-taught Fullstack Engineer from Thailand 🇹🇭',
     about: `I'm passionate about everything in technology. Since engineering is not only in software, my field expands beyond that. from mechanical, network, software, and more. I love finding out new things. Knowledge exists all around us, and I'm all about discovering it, learning from others' mistakes, and improving on them.`,
     email: 'chokunplayz@ckl.moe',
+    titles: ['Developer', 'Network Engineer', 'Photographer', 'Mechanical Engineer', 'Maker', 'Homelabber'],
 }
 
 // --- Social Links ---

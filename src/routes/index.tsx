@@ -9,6 +9,7 @@ import { PhotoAlbumCard } from '../components/PhotoAlbumCard'
 import { SocialLinks } from '../components/SocialLinks'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { PhotoSlideshow } from '../components/PhotoSlideshow'
+import { Typewriter } from '../components/Typewriter'
 import { experiences, photoAlbums, profile, projects, socials } from '../data/site'
 import { getRandomPhotos } from '../lib/photos'
 
@@ -84,7 +85,7 @@ function HomePage() {
           </div>
 
           <p className="text-xl md:text-2xl text-(--text-secondary) max-w-2xl mx-auto font-light leading-relaxed">
-            {profile.tagline}
+            I'm a <Typewriter words={profile.titles} typingSpeed={80} deletingSpeed={50} />
           </p>
 
           <div className="flex justify-center pt-8">
