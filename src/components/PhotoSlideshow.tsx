@@ -226,17 +226,17 @@ function PhotoViewer({
             <div className="relative w-full h-full max-w-[95vw] max-h-[95vh] flex flex-col items-center justify-center p-4 md:p-8 pointer-events-none">
                 {/* Main Image */}
                 <div className="relative flex-1 flex items-center justify-center w-full min-h-0">
-                    {/* Blurhash Placeholder */}
-                    {!isLoaded && photo.blurhash && (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div
-                                className="relative overflow-hidden rounded-sm shadow-2xl"
-                                style={{
-                                    aspectRatio: `${photo.width} / ${photo.height}`,
-                                    maxHeight: '100%',
-                                    maxWidth: '100%',
-                                }}
-                            >
+                    <div className="relative max-w-full max-h-full">
+                        {/* Spacer SVG to drive dimensions */}
+                        <img
+                            src={`data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='${photo.width}' height='${photo.height}' viewBox='0 0 ${photo.width} ${photo.height}'%3E%3C/svg%3E`}
+                            alt=""
+                            className="max-w-full max-h-[calc(95vh-200px)] md:max-h-[85vh] w-auto h-auto opacity-0 block pointer-events-none"
+                        />
+
+                        {/* Blurhash Background */}
+                        {photo.blurhash && (
+                            <div className="absolute inset-0 overflow-hidden rounded-sm shadow-2xl bg-white/5 z-10">
                                 <Blurhash
                                     hash={photo.blurhash}
                                     width="100%"
@@ -246,24 +246,28 @@ function PhotoViewer({
                                     punch={1}
                                 />
                             </div>
-                        </div>
-                    )}
+                        )}
 
-                    {/* Loading Spinner (fallback if no blurhash) */}
-                    {!isLoaded && !photo.blurhash && (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin" />
-                        </div>
-                    )}
+                        {/* Main Image */}
+                        <img
+                            src={getPhotoUrl(photo.id)}
+                            alt={photo.album.title || 'Photo'}
+                            className={`absolute inset-0 w-full h-full object-contain rounded-sm transition-opacity duration-500 pointer-events-auto z-20 ${isLoaded ? 'opacity-100' : 'opacity-0'
+                                }`}
+                            onClick={(e) => e.stopPropagation()}
+                            onLoad={() => {
+                                console.log('Image loaded:', photo.id)
+                                setIsLoaded(true)
+                            }}
+                        />
 
-                    <img
-                        src={getPhotoUrl(photo.id)}
-                        alt={photo.album.title || 'Photo'}
-                        className={`max-w-full max-h-full object-contain shadow-2xl rounded-sm transition-opacity duration-500 pointer-events-auto ${isLoaded ? 'opacity-100' : 'opacity-0'
-                            }`}
-                        onClick={(e) => e.stopPropagation()}
-                        onLoad={() => setIsLoaded(true)}
-                    />
+                        {/* Loading Spinner */}
+                        {!isLoaded && (
+                            <div className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none">
+                                <div className="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin shrink-0" />
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* Info Bar */}
