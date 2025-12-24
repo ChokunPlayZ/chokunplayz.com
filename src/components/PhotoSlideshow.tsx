@@ -34,7 +34,7 @@ export function PhotoSlideshow({ photos }: PhotoSlideshowProps) {
 
     // Distribute photos to rows based on width to keep them balanced
     const rowCount = 5
-    const rowHeight = 180 // Slightly smaller for 4 rows
+    const rowHeight = 140 // Slightly smaller for 4 rows
     const spacing = 8
 
     // Initialize rows
@@ -75,8 +75,7 @@ export function PhotoSlideshow({ photos }: PhotoSlideshowProps) {
                 className="relative w-full overflow-hidden space-y-2"
             >
                 {/* Gradient overlays for scroll hint */}
-                <div className="absolute left-0 top-0 bottom-0 w-24 bg-linear-to-r from-(--bg-primary) via-(--bg-primary)/80 to-transparent z-10 pointer-events-none" />
-                <div className="absolute right-0 top-0 bottom-0 w-24 bg-linear-to-l from-(--bg-primary) via-(--bg-primary)/80 to-transparent z-10 pointer-events-none" />
+
 
                 {rows.map((row, rowIndex) => {
                     const rowWidth = calculateRowWidth(row)

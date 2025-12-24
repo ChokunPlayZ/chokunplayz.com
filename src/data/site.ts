@@ -34,14 +34,20 @@ export const projects = [
     {
         name: 'ckl.moe',
         description: 'Personal portfolio website built with TanStack Start',
-        url: 'https://github.com/chokunplayz/ckl.moe',
-        tech: ['TypeScript', 'React', 'TailwindCSS', 'TanStack Start'],
+        url: 'https://github.com/chokunplayz/chokunplayz.com',
+        tech: ['React', 'TailwindCSS', 'TanStack Start'],
     },
     {
-        name: 'ChokunLabs',
-        description: 'Self-hosted homelab infrastructure for various services',
-        url: 'https://ckl.moe/labs',
-        tech: ['Docker', 'Proxmox VE', 'MikroTik', 'Cloudflare'],
+        name: 'PicHaus',
+        description: 'Self-hosted Picture hosting Service',
+        url: 'https://github.com/ChokunPlayZ/PicHaus',
+        tech: ['Docker', 'Nuxt.JS', 'Prisma', 'PostgreSQL', 'TailwindCSS'],
+    },
+    {
+        name: 'Tool',
+        description: 'a on device tech tool for everyone',
+        url: 'https://github.com/ChokunPlayZ/tool',
+        tech: ['Docker', 'Tanstack Start', 'React', 'TailwindCSS']
     },
     // Add more projects here...
 ] as const

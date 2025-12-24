@@ -1,5 +1,5 @@
 import { Await, createFileRoute, defer } from '@tanstack/react-router'
-import { Suspense, useEffect, useRef } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { Camera, ImageIcon } from 'lucide-react'
 import { Section } from '../components/Section'
 import { ProjectCard } from '../components/ProjectCard'
@@ -22,6 +22,7 @@ export const Route = createFileRoute('/')({
 function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { randomPhotosPromise } = Route.useLoaderData()
+  const [showAllEvents, setShowAllEvents] = useState(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -139,16 +140,31 @@ function HomePage() {
           </div>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {photoAlbums.map((album) => (
-            <PhotoAlbumCard
+          {photoAlbums.map((album, index) => (
+            <div
               key={album.title}
-              title={album.title}
-              date={album.date}
-              url={album.url}
-              location={'location' in album ? album.location : undefined}
-            />
+              className={index >= 3 && !showAllEvents ? 'hidden md:block' : ''}
+            >
+              <PhotoAlbumCard
+                title={album.title}
+                date={album.date}
+                url={album.url}
+                location={'location' in album ? album.location : undefined}
+              />
+            </div>
           ))}
         </div>
+
+        {!showAllEvents && photoAlbums.length > 3 && (
+          <div className="flex justify-center mt-6 md:hidden">
+            <button
+              onClick={() => setShowAllEvents(true)}
+              className="px-6 py-2 rounded-full border border-(--border) hover:bg-(--accent)/5 text-sm font-medium transition-colors"
+            >
+              Show More Events
+            </button>
+          </div>
+        )}
       </Section>
 
       {/* Random Photos Slideshow */}
