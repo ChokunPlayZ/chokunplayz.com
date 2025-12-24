@@ -17,7 +17,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <style dangerouslySetInnerHTML={{
           __html: `
           :root { --bg-primary: #f0f9ff; }
-          @media (prefers-color-scheme: dark) { :root { --bg-primary: #0f172a; } }
           [data-theme='dark'] { --bg-primary: #0f172a; }
           #global-preloader {
             position: fixed;
@@ -32,6 +31,23 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             justify-content: center;
           }
         `}} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            (function() {
+              try {
+                var localValue = localStorage.getItem('theme');
+                var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (localValue === 'dark' || (!localValue && systemDark)) {
+                  document.documentElement.setAttribute('data-theme', 'dark');
+                } else {
+                  document.documentElement.setAttribute('data-theme', 'light');
+                }
+              } catch (e) {}
+            })();
+          `,
+          }}
+        />
       </head>
       <body>
         {children}
