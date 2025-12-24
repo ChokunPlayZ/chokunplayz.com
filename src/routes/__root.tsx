@@ -58,17 +58,49 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
+  const { activeEvent } = Route.useLoaderData()
   return (
     <ThemeProvider>
       <Preloader />
+      <SeasonalManager initialConfig={activeEvent} />
       <Outlet />
     </ThemeProvider>
   )
 }
 
 import { NotFound } from '../components/NotFound'
+import { SeasonalManager } from '../components/SeasonalManager'
+import { SeasonalConfig, seasonalEvents } from '../data/seasonal'
 
 export const Route = createRootRoute({
+  loader: (): { activeEvent: SeasonalConfig | null } => {
+    const now = new Date()
+    const currentMonth = now.getMonth() + 1 // 1-12
+    const currentDay = now.getDate()
+
+    // Find the first event that matches the current date
+    const activeEvent = seasonalEvents.find(event => {
+      const { startMonth, startDay, endMonth, endDay } = event.schedule
+
+      if (startMonth < endMonth) {
+        // Normal range (e.g. Oct to Dec)
+        return (currentMonth > startMonth || (currentMonth === startMonth && currentDay >= startDay)) &&
+          (currentMonth < endMonth || (currentMonth === endMonth && currentDay <= endDay))
+      } else if (startMonth === endMonth) {
+        // Same month range (e.g. Dec 1 to Dec 25, or Dec 25 to Dec 25)
+        return currentMonth === startMonth && currentDay >= startDay && currentDay <= endDay
+      } else {
+        // Wrap around year (e.g. Dec to Jan)
+        const afterStart = (currentMonth > startMonth || (currentMonth === startMonth && currentDay >= startDay))
+        const beforeEnd = (currentMonth < endMonth || (currentMonth === endMonth && currentDay <= endDay))
+        return afterStart || beforeEnd
+      }
+    })
+
+    return {
+      activeEvent: activeEvent || null
+    }
+  },
   head: () => ({
     meta: [
       {
