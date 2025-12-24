@@ -52,6 +52,31 @@ export const projects = [
     // Add more projects here...
 ] as const
 
+// --- Experiences ---
+export const experiences = [
+    // {
+    //     company: 'Zexus Innovation Hub ,Co.Ltd',
+    //     position: 'Group Cheif Information Officer',
+    //     period: '2025 - Present',
+    //     description: 'Leading the company towards more stustainsable and reliable IT environment.',
+    //     type: 'work',
+    // },
+    {
+        company: 'Thai-Nichi Institute Of Technology',
+        position: 'Information Technology',
+        period: '2024 - Present',
+        description: 'Studying Information Technology.',
+        type: 'education',
+    },
+    {
+        company: 'Assumption College Sriracha',
+        position: 'Computer Science Programme',
+        period: '2021 - 2023',
+        description: 'Studied Computer Science, Participated in many clubs and activities.',
+        type: 'education',
+    },
+] as const
+
 // --- Photo Albums ---
 // Photography portfolio - add new albums at the top
 export const photoAlbums = [

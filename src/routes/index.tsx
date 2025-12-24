@@ -1,13 +1,15 @@
 import { Await, createFileRoute, defer } from '@tanstack/react-router'
 import { Suspense, useEffect, useRef, useState } from 'react'
-import { Camera, ImageIcon } from 'lucide-react'
+import { Camera, ImageIcon, Home, User, FolderGit2, Mail, Briefcase } from 'lucide-react'
+import { JumpNavigation } from '../components/JumpNavigation'
+import { ExperienceCard } from '../components/ExperienceCard'
 import { Section } from '../components/Section'
 import { ProjectCard } from '../components/ProjectCard'
 import { PhotoAlbumCard } from '../components/PhotoAlbumCard'
 import { SocialLinks } from '../components/SocialLinks'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { PhotoSlideshow } from '../components/PhotoSlideshow'
-import { photoAlbums, profile, projects, socials } from '../data/site'
+import { experiences, photoAlbums, profile, projects, socials } from '../data/site'
 import { getRandomPhotos } from '../lib/photos'
 
 export const Route = createFileRoute('/')({
@@ -18,6 +20,16 @@ export const Route = createFileRoute('/')({
   },
   component: HomePage,
 })
+
+const SECTIONS = [
+  { id: 'home', label: 'Home', icon: <Home className="w-4 h-4" /> },
+  { id: 'about', label: 'About', icon: <User className="w-4 h-4" /> },
+  { id: 'experiences', label: 'Experiences', icon: <Briefcase className="w-4 h-4" /> },
+  { id: 'projects', label: 'Projects', icon: <FolderGit2 className="w-4 h-4" /> },
+  { id: 'photos', label: 'Photos', icon: <Camera className="w-4 h-4" />, offset: -40 },
+  { id: 'recent-shots', label: 'Recent Shots', icon: <ImageIcon className="w-4 h-4" />, offset: -40 },
+  { id: 'contact', label: 'Contact', icon: <Mail className="w-4 h-4" /> },
+]
 
 function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -60,7 +72,7 @@ function HomePage() {
       </div>
 
       {/* Hero Section */}
-      <header className="relative min-h-screen flex flex-col justify-center items-center px-6 pt-20">
+      <header id="home" className="relative min-h-screen flex flex-col justify-center items-center px-6 pt-20">
         <div className="max-w-4xl mx-auto text-center z-10 space-y-8 fade-in-section is-visible">
           <div className="space-y-4">
             <h1 className="text-6xl md:text-8xl font-bold text-(--text-primary) tracking-tight leading-none">
@@ -107,6 +119,22 @@ function HomePage() {
         </div>
       </Section>
 
+      {/* Experience Section */}
+      <Section title="Experiences" id="experiences" className="fade-in-section">
+        <div className="space-y-6">
+          {experiences.map((exp, index) => (
+            <ExperienceCard
+              key={index}
+              company={exp.company}
+              position={exp.position}
+              period={exp.period}
+              description={exp.description}
+              type={exp.type}
+            />
+          ))}
+        </div>
+      </Section>
+
       {/* Projects Section */}
       <Section
         title="Featured Projects"
@@ -143,7 +171,15 @@ function HomePage() {
           {photoAlbums.map((album, index) => (
             <div
               key={album.title}
-              className={index >= 3 && !showAllEvents ? 'hidden md:block' : ''}
+              className={
+                !showAllEvents
+                  ? index >= 9
+                    ? 'hidden'
+                    : index >= 3
+                      ? 'hidden md:block'
+                      : ''
+                  : ''
+              }
             >
               <PhotoAlbumCard
                 title={album.title}
@@ -156,7 +192,9 @@ function HomePage() {
         </div>
 
         {!showAllEvents && photoAlbums.length > 3 && (
-          <div className="flex justify-center mt-6 md:hidden">
+          <div
+            className={`flex justify-center mt-6 ${photoAlbums.length > 9 ? '' : 'md:hidden'}`}
+          >
             <button
               onClick={() => setShowAllEvents(true)}
               className="px-6 py-2 rounded-full border border-(--border) hover:bg-(--accent)/5 text-sm font-medium transition-colors"
@@ -168,7 +206,7 @@ function HomePage() {
       </Section>
 
       {/* Random Photos Slideshow */}
-      <section className="py-16 fade-in-section">
+      <section id="recent-shots" className="py-16 fade-in-section">
         <div className="max-w-4xl mx-auto px-6 mb-8">
           <div className="flex items-center gap-4">
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-(--accent)/10 text-(--accent)">
@@ -203,7 +241,7 @@ function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-24 text-center fade-in-section">
+      <footer id="contact" className="py-24 text-center fade-in-section">
         <div className="max-w-2xl mx-auto px-6">
           <h2 className="text-3xl font-bold text-(--text-primary) mb-6">
             Let's Connect
@@ -214,6 +252,7 @@ function HomePage() {
           </p>
         </div>
       </footer>
+      <JumpNavigation sections={SECTIONS} />
     </div>
   )
 }
