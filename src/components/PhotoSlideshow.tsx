@@ -17,15 +17,21 @@ export function PhotoSlideshow({ photos }: PhotoSlideshowProps) {
     const [canLoadImages, setCanLoadImages] = useState(false)
 
     useEffect(() => {
-        // If the page is already loaded, load images immediately
-        if (document.readyState === 'complete') {
-            setCanLoadImages(true)
-        } else {
-            // Otherwise wait for the load event (scripts, styles, and other assets)
-            const handleLoad = () => setCanLoadImages(true)
-            window.addEventListener('load', handleLoad)
-            return () => window.removeEventListener('load', handleLoad)
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting) {
+                    setCanLoadImages(true)
+                    observer.disconnect()
+                }
+            },
+            { rootMargin: '200px' }, // Start loading when 200px away
+        )
+
+        if (containerRef.current) {
+            observer.observe(containerRef.current)
         }
+
+        return () => observer.disconnect()
     }, [])
 
     if (photos.length === 0) {

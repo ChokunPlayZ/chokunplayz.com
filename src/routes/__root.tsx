@@ -5,6 +5,7 @@ import {
   createRootRoute,
 } from '@tanstack/react-router'
 
+import { Preloader } from '../components/Preloader'
 import { ThemeProvider } from '../components/ThemeProvider'
 import appCss from '../styles.css?url'
 
@@ -25,6 +26,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   return (
     <ThemeProvider>
+      <Preloader />
       <Outlet />
     </ThemeProvider>
   )
