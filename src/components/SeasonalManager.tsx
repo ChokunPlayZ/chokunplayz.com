@@ -8,7 +8,10 @@ interface SeasonalManagerProps {
     initialConfig: SeasonalConfig | null
 }
 
+import { useTheme } from './ThemeProvider'
+
 export function SeasonalManager({ initialConfig }: SeasonalManagerProps) {
+    const { theme } = useTheme()
     const [isClient, setIsClient] = useState(false)
     const [isEnabled, setIsEnabled] = useState(!!initialConfig)
     // Default to the first event if none active, just for editing purposes
@@ -71,6 +74,7 @@ export function SeasonalManager({ initialConfig }: SeasonalManagerProps) {
             <div className="fixed inset-0 pointer-events-none z-100" style={{ zIndex: 100 }}>
                 {isEnabled && config.snow.enabled && (
                     <Snowfall
+                        color={theme === 'dark' ? '#ffffff' : '#aeb9cd'}
                         snowflakeCount={config.snow.intensity}
                         style={{ position: 'fixed', width: '100vw', height: '100vh', zIndex: 1 }}
                     />
