@@ -51,7 +51,7 @@ export const seasonalEvents: SeasonalEvent[] = [
         id: 'winter-season',
         schedule: {
             startMonth: 12,
-            startDay: 25,
+            startDay: 24,
             endMonth: 1,
             endDay: 15,
         },
