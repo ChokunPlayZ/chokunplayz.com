@@ -50,7 +50,12 @@ export const projects = [
         url: 'https://github.com/ChokunPlayZ/tool',
         tech: ['Docker', 'Tanstack Start', 'React', 'TailwindCSS']
     },
-    // Add more projects here...
+    {
+        name: 'TangMa',
+        description: 'a dead-simple road trip Expense Tracker',
+        url: 'https://github.com/ChokunPlayZ/TangMa',
+        tech: ['Docker', 'Tanstack Start', 'React', 'TailwindCSS', 'Drizzle', 'PostgreSQL']
+    },
 ] as const
 
 // --- Experiences ---
