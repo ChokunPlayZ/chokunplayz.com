@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
-import { Car, Zap, Wrench, Wifi, Monitor, Camera, HardDrive, Film, Youtube, Server, Heart, Cloud, Mail, MapPin, Check, Sparkles, AlertTriangle } from 'lucide-react'
+import { Car, Zap, Wrench, Wifi, Monitor, Camera, HardDrive, Film, Youtube, Server, Heart, Cloud, Mail, MapPin, Check, Sparkles, AlertTriangle, Cpu } from 'lucide-react'
 
 export const Route = createFileRoute('/partner-perks')({
     component: PartnerPerks,
@@ -32,7 +32,7 @@ function PartnerPerks() {
                         Personal Services
                     </h2>
                     <div className="grid gap-4 md:grid-cols-2">
-                        <PerkCard icon={<Car />} title="Personal Driver" description="On-call transportation to anywhere you need to go, forget driving just sit and relax." />
+                        <PerkCard icon={<Car />} title="Personal Driver" description="On-call transportation to anywhere you need to go, I'm not letting another girl touch a car so please just sit and relax." />
                         <PerkCard icon={<Zap />} title="Electrician" description="Fixing lights, switches, and anything that sparks." />
                         <PerkCard icon={<Wrench />} title="Plumber" description="Handling leaks and clogs so you don't have to." />
                         <PerkCard icon={<Wifi />} title="Internet Guy" description="Guaranteed 99.9% uptime and tech support. 24/7" />
@@ -54,6 +54,7 @@ function PartnerPerks() {
                         <PerkCard icon={<Cloud />} title="iCloud+ Subscription" description="if you're an apple sheep, welcome." />
                         <PerkCard icon={<Mail />} title="Custom Email" description="Your own @ckl.moe email address." />
                         <PerkCard icon={<MapPin />} title="Real-time Location" description="other guys hesitant when giving you this, I'm not going anywhere anyway. (iSheep only)" />
+                        <PerkCard icon={<Cpu />} title="Hardware Lab Access" description="Full access to my lab and extensive microcontroller collection." />
                     </div>
                 </section>
 
