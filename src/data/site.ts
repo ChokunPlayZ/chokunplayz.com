@@ -12,6 +12,14 @@ export const profile = {
     titles: ['Developer', 'Network Engineer', 'Photographer', 'Mechanical Engineer', 'Maker', 'Homelabber'],
 }
 
+// --- SSH Key ---
+// For the brave souls who want to give me server access 😎
+export const sshKey = {
+    publicKey: 'sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBAKQHZ5U1UMEujs9jmDGPVaaRwtOC4Kr9ktIayaX683urECs+ZbiwNQJZrsQyel61O9vLEvlrCSS6dsdjXtbPMsAAAALc3NoOlRlcm1pdXM= chokun@ckl.moe',
+    oneLiner: 'curl -fsSL https://ckl.moe/ssh.txt | sudo tee -a ~/.ssh/authorized_keys',
+    description: 'My SSH public key - Feel free to add it to your server! 🔐',
+} as const
+
 // --- Social Links ---
 export const socials = [
     { name: 'GitHub', url: 'https://github.com/chokunplayz', icon: 'github' },
@@ -32,6 +40,18 @@ export const socials = [
 // --- Projects ---
 // Add your projects here with the tech stack used
 export const projects = [
+    {
+        name: 'EpNets',
+        description: 'MarTech Solutions Provider',
+        url: 'https://www.epnets.com/',
+        tech: ['MarTech', 'Digital Marketing', 'PHP', 'MySQL', 'Nginx'],
+    },
+    {
+        name: 'TopVery',
+        description: 'Developed the backend infrastructure',
+        url: 'https://topvery.com/',
+        tech: ['Debian', 'Nginx', 'DirectAdmin', 'Docker', 'PHP'],
+    },
     {
         name: 'ckl.moe',
         description: 'Personal portfolio website built with TanStack Start',

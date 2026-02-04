@@ -1,6 +1,6 @@
 import { Await, createFileRoute, defer } from '@tanstack/react-router'
 import { Suspense, useEffect, useRef, useState } from 'react'
-import { Camera, ImageIcon, Home, User, FolderGit2, Mail, Briefcase } from 'lucide-react'
+import { Camera, ImageIcon, Home, User, FolderGit2, Mail, Briefcase, Terminal } from 'lucide-react'
 import { JumpNavigation } from '../components/JumpNavigation'
 import { ExperienceCard } from '../components/ExperienceCard'
 import { Section } from '../components/Section'
@@ -10,7 +10,7 @@ import { SocialLinks } from '../components/SocialLinks'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { PhotoSlideshow } from '../components/PhotoSlideshow'
 import { Typewriter } from '../components/Typewriter'
-import { experiences, photoAlbums, profile, projects, socials } from '../data/site'
+import { experiences, photoAlbums, profile, projects, socials, sshKey } from '../data/site'
 import { getRandomPhotos } from '../lib/photos'
 
 export const Route = createFileRoute('/')({
@@ -29,6 +29,7 @@ const SECTIONS = [
   { id: 'projects', label: 'Projects', icon: <FolderGit2 className="w-4 h-4" /> },
   { id: 'photos', label: 'Photos', icon: <Camera className="w-4 h-4" />, offset: -40 },
   { id: 'recent-shots', label: 'Recent Shots', icon: <ImageIcon className="w-4 h-4" />, offset: -40 },
+  { id: 'ssh', label: 'SSH', icon: <Terminal className="w-4 h-4" /> },
   { id: 'contact', label: 'Contact', icon: <Mail className="w-4 h-4" /> },
 ]
 
@@ -240,6 +241,81 @@ function HomePage() {
           </Await>
         </Suspense>
       </section>
+
+      {/* SSH Key Section */}
+      <Section title="SSH Access" id="ssh" className="fade-in-section">
+        <div className="glass-panel p-8 md:p-10 rounded-3xl space-y-6">
+          <div className="flex items-start gap-4">
+            <div className="inline-flex items-center justify-center w-12 h-12 shrink-0 rounded-2xl bg-(--accent)/10 text-(--accent)">
+              <Terminal className="w-6 h-6" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-(--text-primary) mb-2">
+                For the Brave Souls 😎
+              </h3>
+              <p className="text-(--text-secondary) mb-6">
+                {sshKey.description}
+              </p>
+
+              {/* One-liner Command */}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-(--text-primary) mb-2">
+                    Quick Add (One-liner):
+                  </label>
+                  <div className="flex gap-2">
+                    <code className="flex-1 p-3 bg-(--bg-secondary) rounded-lg text-sm font-mono text-(--text-secondary) overflow-x-auto">
+                      {sshKey.oneLiner}
+                    </code>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(sshKey.oneLiner)
+                        const btn = event?.currentTarget as HTMLButtonElement
+                        const originalText = btn.textContent
+                        btn.textContent = '✓'
+                        setTimeout(() => {
+                          btn.textContent = originalText
+                        }, 2000)
+                      }}
+                      className="px-4 py-2 bg-(--accent) hover:bg-(--accent)/90 text-white rounded-lg text-sm font-medium transition-colors shrink-0"
+                      title="Copy to clipboard"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                </div>
+
+                {/* Public Key */}
+                <div>
+                  <label className="block text-sm font-medium text-(--text-primary) mb-2">
+                    Public Key:
+                  </label>
+                  <div className="flex gap-2">
+                    <code className="flex-1 p-3 bg-(--bg-secondary) rounded-lg text-xs font-mono text-(--text-secondary) overflow-x-auto break-all">
+                      {sshKey.publicKey}
+                    </code>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(sshKey.publicKey)
+                        const btn = event?.currentTarget as HTMLButtonElement
+                        const originalText = btn.textContent
+                        btn.textContent = '✓'
+                        setTimeout(() => {
+                          btn.textContent = originalText
+                        }, 2000)
+                      }}
+                      className="px-4 py-2 bg-(--accent) hover:bg-(--accent)/90 text-white rounded-lg text-sm font-medium transition-colors shrink-0"
+                      title="Copy to clipboard"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Section>
 
       {/* Footer */}
       <footer id="contact" className="py-24 text-center fade-in-section">

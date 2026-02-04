@@ -1,0 +1,1 @@
+sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBAKQHZ5U1UMEujs9jmDGPVaaRwtOC4Kr9ktIayaX683urECs+ZbiwNQJZrsQyel61O9vLEvlrCSS6dsdjXtbPMsAAAALc3NoOlRlcm1pdXM= chokun@ckl.moe

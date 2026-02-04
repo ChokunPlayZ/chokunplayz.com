@@ -7,7 +7,7 @@ export const Route = createFileRoute('/partner-perks')({
 })
 
 function PartnerPerks() {
-    const [showJoke, setShowJoke] = useState(false)
+    const [isBthClicked, setIsBthClicked] = useState(false)
 
     return (
         <div className="min-h-screen bg-pink-50 dark:bg-slate-900 flex flex-col items-center py-20 px-6 font-sans">
@@ -114,9 +114,9 @@ function PartnerPerks() {
                 </div>
 
                 <div className="mt-8 text-center pb-8">
-                    {!showJoke ? (
+                    {!isBthClicked ? (
                         <button
-                            onClick={() => setShowJoke(true)}
+                            onClick={() => setIsBthClicked(true)}
                             className="px-8 py-3 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-full shadow-lg hover:shadow-pink-500/30 transition-all transform hover:-translate-y-1 active:translate-y-0 cursor-pointer"
                         >
                             Apply Now
