@@ -1,6 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap');
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'Monocraft';
+  src: url('https://cdn.jsdelivr.net/gh/IdreesInc/Monocraft@main/dist/Monocraft-ttf/Monocraft.ttf') format('truetype');
+}
+
+@theme {
+  --font-sans: "Monocraft", "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "Monocraft", monospace;
+  --font-display: "Monocraft", "Outfit", sans-serif;
+}
+
 /* Hide theme toggle when modal is open */
 body.modal-open .theme-toggle {
   opacity: 0;
@@ -78,10 +89,11 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   font-family:
+    'Monocraft',
     'Inter',
     system-ui,
     -apple-system,
-    sans-serif;
+    monospace;
   line-height: 1.6;
   transition:
     background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
@@ -95,7 +107,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Monocraft', 'Outfit', sans-serif;
   letter-spacing: -0.025em;
 }
 
@@ -108,16 +120,12 @@ h6 {
 .gradient-bg {
   position: relative;
   background:
-    radial-gradient(
-      circle at 15% 50%,
+    radial-gradient(circle at 15% 50%,
       rgba(56, 189, 248, 0.1),
-      transparent 25%
-    ),
-    radial-gradient(
-      circle at 85% 30%,
+      transparent 25%),
+    radial-gradient(circle at 85% 30%,
       rgba(125, 211, 252, 0.1),
-      transparent 25%
-    );
+      transparent 25%);
   background-color: var(--bg-primary);
 }
 
@@ -132,6 +140,7 @@ h6 {
 
 /* Animations included in style upgrade */
 @keyframes float {
+
   0%,
   100% {
     transform: translate(0, 0);
@@ -151,6 +160,7 @@ h6 {
 }
 
 @keyframes float-slow {
+
   0%,
   100% {
     transform: translate(0, 0);
@@ -166,6 +176,7 @@ h6 {
 }
 
 @keyframes float-delayed {
+
   0%,
   100% {
     transform: translate(0, 0);

@@ -16,10 +16,10 @@ export interface PichausPhoto {
 }
 
 export const getPhotoUrl = (id: string) =>
-  `https://p.ckl.moe/api/assets/${id}/full`
+  `https://p.ckl.moe/api/assets/full/${id}`
 
 export const getPhotoThumbnailUrl = (id: string) =>
-  `https://p.ckl.moe/api/assets/${id}/thumb`
+  `https://p.ckl.moe/api/assets/thumb/${id}`
 
 interface ApiResponse {
   success: boolean
