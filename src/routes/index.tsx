@@ -1,4 +1,4 @@
-import { Await, Link, createFileRoute, defer } from '@tanstack/react-router'
+import { Await, Link, createFileRoute, defer, useNavigate } from '@tanstack/react-router'
 import { Suspense, useEffect, useRef, useState } from 'react'
 import { Camera, ImageIcon, Home, User, FolderGit2, Mail, Briefcase, Terminal } from 'lucide-react'
 import { JumpNavigation } from '../components/JumpNavigation'
@@ -10,19 +10,13 @@ import { SocialLinks } from '../components/SocialLinks'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { PhotoSlideshow } from '../components/PhotoSlideshow'
 import { Typewriter } from '../components/Typewriter'
-import { PhotoMode } from '../components/PhotoMode'
 import { experiences, photoAlbums, profile, projects, socials, sshKey } from '../data/site'
 import { getRandomPhotos } from '../lib/photos'
 
 export const Route = createFileRoute('/')({
-  validateSearch: (search: Record<string, unknown>) => ({
-    'photo-mode': search['photo-mode'] === 'true' || search['photo-mode'] === true,
+  loader: () => ({
+    randomPhotosPromise: defer(getRandomPhotos()),
   }),
-  loader: () => {
-    return {
-      randomPhotosPromise: defer(getRandomPhotos()),
-    }
-  },
   component: HomePage,
 })
 
@@ -40,9 +34,8 @@ const SECTIONS = [
 function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { randomPhotosPromise } = Route.useLoaderData()
-  const { 'photo-mode': photoModeParam } = Route.useSearch()
+  const navigate = useNavigate()
   const [showAllEvents, setShowAllEvents] = useState(false)
-  const [photoMode, setPhotoMode] = useState(() => photoModeParam)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -97,7 +90,7 @@ function HomePage() {
               typingSpeed={80}
               deletingSpeed={50}
               interactiveWord="Photographer"
-              onInteractiveWordClick={() => setPhotoMode(true)}
+              onInteractiveWordClick={() => navigate({ to: '/photos' })}
             />
           </p>
 
@@ -341,9 +334,6 @@ function HomePage() {
 
       <JumpNavigation sections={SECTIONS} />
 
-      {photoMode && (
-        <PhotoMode photosPromise={randomPhotosPromise} onExit={() => setPhotoMode(false)} />
-      )}
     </div>
   )
 }

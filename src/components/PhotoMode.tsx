@@ -3,7 +3,6 @@
 import { Await } from '@tanstack/react-router'
 import { Camera, X, MapPin } from 'lucide-react'
 import { Suspense, useEffect, useMemo } from 'react'
-import { createPortal } from 'react-dom'
 import { photoAlbums } from '../data/site'
 import { getPhotoThumbnailUrl } from '../lib/photos'
 import type { PichausPhoto } from '../lib/photos'
@@ -48,7 +47,7 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
         }
     }, [onExit])
 
-    return createPortal(
+    return (
         <div data-theme="dark" className="fixed inset-0 z-200 bg-(--bg-primary) flex flex-col animate-in fade-in duration-500">
 
             {/* ── Header ─────────────────────────────────────────── */}
@@ -146,8 +145,7 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
                                                 <div className="w-5 h-5 rounded-full bg-(--bg-primary) border-2 border-(--accent)/70 flex items-center justify-center shrink-0 shadow-[0_0_12px_var(--accent)]">
                                                     <div className="w-1.5 h-1.5 rounded-full bg-(--accent)/80" />
                                                 </div>
-                                                <span className="text-4xl font-black leading-none select-none"
-                                                    style={{ color: 'color-mix(in srgb, var(--text-primary) 12%, transparent)' }}>
+                                                <span className="text-4xl font-black leading-none select-none text-(--text-muted) opacity-40">
                                                     {year}
                                                 </span>
                                             </div>
@@ -171,8 +169,7 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
                                                         <p className="text-[10px] font-bold text-(--text-muted) uppercase tracking-wider leading-none mb-0.5 opacity-55">
                                                             {month}
                                                         </p>
-                                                        <p className="text-xl font-black leading-none"
-                                                            style={{ color: 'color-mix(in srgb, var(--text-primary) 20%, transparent)' }}>
+                                                        <p className="text-xl font-black leading-none text-(--text-muted) opacity-60">
                                                             {day}
                                                         </p>
                                                     </div>
@@ -214,8 +211,7 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
                     </div>
                 </div>
             </div>
-        </div>,
-        document.body,
+        </div>
     )
 }
 
