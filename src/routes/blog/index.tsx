@@ -50,7 +50,7 @@ function BlogIndexPage() {
 
   return (
     <main className="min-h-screen gradient-bg px-6 py-20 md:py-28">
-      <div className="mx-auto max-w-3xl space-y-10">
+      <div className="mx-auto max-w-5xl space-y-10">
 
         {/* Header */}
         <header className="space-y-4">

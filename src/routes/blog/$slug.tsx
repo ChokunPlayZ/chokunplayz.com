@@ -30,7 +30,7 @@ function BlogPostPage() {
   if (!post) {
     return (
       <main className="min-h-screen gradient-bg px-6 py-20">
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-5xl">
           <div className="glass-panel rounded-3xl p-8 space-y-4">
             <h1 className="text-3xl font-bold text-(--text-primary)">Post not found</h1>
             <p className="text-(--text-secondary)">
@@ -54,7 +54,7 @@ function BlogPostPage() {
 
   return (
     <main className="min-h-screen gradient-bg px-6 py-20 md:py-28">
-      <div className="mx-auto max-w-3xl">
+      <div className="mx-auto max-w-5xl">
 
         {/* Back link */}
         <Link

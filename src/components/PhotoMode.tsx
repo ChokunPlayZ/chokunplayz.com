@@ -228,6 +228,8 @@ const BG_ROWS = 9
 const BG_HEIGHT = 175
 const BG_ROW_GAP = 10
 const BG_IMG_GAP = 8
+// Must satisfy: (copies - 1) * singleW >= this value for any viewport up to 4K + 300px wrapper extension
+const BG_MIN_COVERAGE = 5000
 
 function BgStrips({ photos }: { photos: PichausPhoto[] }) {
     const rows = useMemo(() => {
@@ -236,54 +238,69 @@ function BgStrips({ photos }: { photos: PichausPhoto[] }) {
         return r
     }, [photos])
 
+    const rowMeta = useMemo(() =>
+        rows.map((row, ri) => {
+            // singleW includes trailing gap so copy N+1's first photo lands at exactly singleW
+            const singleW = row.reduce(
+                (s, p) => s + (p.width / p.height) * BG_HEIGHT + BG_IMG_GAP,
+                0,
+            )
+            // Need (copies-1)*singleW >= BG_MIN_COVERAGE so the strip always covers the
+            // full rotated wrapper width at the end of the animation (translateX = -singleW)
+            const copies = Math.max(2, Math.ceil(BG_MIN_COVERAGE / singleW) + 1)
+            const goLeft = ri % 2 === 0
+            const dur = Math.round(row.length * 7 + ri * 4)
+            return { singleW, copies, goLeft, dur }
+        }),
+    [rows])
+
     return (
         <>
             <div style={{ display: 'flex', flexDirection: 'column', gap: BG_ROW_GAP }}>
                 {rows.map((row, ri) => {
                     if (!row.length) return null
-                    const singleW = row.reduce(
-                        (s, p) => s + (p.width / p.height) * BG_HEIGHT + BG_IMG_GAP,
-                        0,
-                    )
-                    const anim = ri % 2 === 0 ? 'bgL' : 'bgR'
-                    const dur = Math.round(row.length * 7 + ri * 4)
+                    const { singleW, copies, goLeft, dur } = rowMeta[ri]
+                    const animName = `bgStrip${ri}`
                     return (
                         <div key={ri} style={{ height: BG_HEIGHT, flexShrink: 0 }}>
                             <div
                                 style={{
                                     display: 'flex',
                                     gap: BG_IMG_GAP,
-                                    width: singleW * 2,
-                                    animation: `${anim} ${dur}s linear infinite`,
+                                    animation: `${animName} ${dur}s linear infinite`,
                                     willChange: 'transform',
                                 }}
                             >
-                                {[...row, ...row].map((photo, idx) => (
-                                    <img
-                                        key={`${photo.id}-${idx}`}
-                                        src={getPhotoThumbnailUrl(photo.id)}
-                                        style={{
-                                            width: (photo.width / photo.height) * BG_HEIGHT,
-                                            height: BG_HEIGHT,
-                                            objectFit: 'cover',
-                                            borderRadius: 8,
-                                            flexShrink: 0,
-                                            display: 'block',
-                                        }}
-                                        loading="eager"
-                                        draggable={false}
-                                        alt=""
-                                    />
-                                ))}
+                                {Array.from({ length: copies }, (_, ci) =>
+                                    row.map((photo) => (
+                                        <img
+                                            key={`${ci}-${photo.id}`}
+                                            src={getPhotoThumbnailUrl(photo.id)}
+                                            style={{
+                                                width: (photo.width / photo.height) * BG_HEIGHT,
+                                                height: BG_HEIGHT,
+                                                objectFit: 'cover',
+                                                borderRadius: 8,
+                                                flexShrink: 0,
+                                                display: 'block',
+                                            }}
+                                            loading="eager"
+                                            draggable={false}
+                                            alt=""
+                                        />
+                                    ))
+                                )}
                             </div>
                         </div>
                     )
                 })}
             </div>
-            <style>{`
-                @keyframes bgL { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-                @keyframes bgR { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
-            `}</style>
+            <style>{rowMeta.map(({ singleW, goLeft }, ri) => {
+                const name = `bgStrip${ri}`
+                const from = goLeft ? '0px' : `-${singleW}px`
+                const to   = goLeft ? `-${singleW}px` : '0px'
+                return `@keyframes ${name} { 0% { transform: translateX(${from}); } 100% { transform: translateX(${to}); } }`
+            }).join('\n')}</style>
         </>
     )
 }

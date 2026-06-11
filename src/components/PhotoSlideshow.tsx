@@ -28,7 +28,7 @@ export function PhotoSlideshow({ photos, rowCount = 5, rowHeight = 140, rowGap =
                     observer.disconnect()
                 }
             },
-            { rootMargin: '200px' }, // Start loading when 200px away
+            { rootMargin: '200px' },
         )
 
         if (containerRef.current) {
@@ -42,14 +42,11 @@ export function PhotoSlideshow({ photos, rowCount = 5, rowHeight = 140, rowGap =
         return null
     }
 
-    // Distribute photos to rows based on width to keep them balanced
     const spacing = 8
+    // (copies-1)*singleW must cover the viewport width; 3500px handles up to ~3200px displays
+    const MIN_COVERAGE = 3500
 
-    // Initialize rows
-    const rows: Array<Array<PichausPhoto>> = Array.from(
-        { length: rowCount },
-        () => [],
-    )
+    const rows: Array<Array<PichausPhoto>> = Array.from({ length: rowCount }, () => [])
     const rowWidths = new Array(rowCount).fill(0)
 
     if (distribute === 'roundRobin') {
@@ -70,7 +67,6 @@ export function PhotoSlideshow({ photos, rowCount = 5, rowHeight = 140, rowGap =
         })
     }
 
-    // Calculate total width for each row
     const calculateRowWidth = (rowPhotos: Array<PichausPhoto>) =>
         rowPhotos.reduce(
             (acc, photo) => acc + (photo.width / photo.height) * rowHeight + spacing,
@@ -84,49 +80,46 @@ export function PhotoSlideshow({ photos, rowCount = 5, rowHeight = 140, rowGap =
                 className="relative w-full overflow-hidden flex flex-col"
                 style={{ gap: rowGap }}
             >
-                {/* Gradient overlays for scroll hint */}
-
-
                 {rows.map((row, rowIndex) => {
                     const rowWidth = calculateRowWidth(row)
-                    const direction = rowIndex % 2 === 0 ? 'left' : 'right'
-                    const duration = row.length * 6 + rowIndex * 2 // Vary speed slightly
+                    const copies = Math.max(2, Math.ceil(MIN_COVERAGE / rowWidth) + 1)
+                    const goLeft = rowIndex % 2 === 0
+                    const duration = row.length * 6 + rowIndex * 2
+                    const animName = `slideshow-row-${rowIndex}`
 
                     return (
                         <div
                             key={`row-${rowIndex}`}
                             className="flex shrink-0"
                             style={{
-                                width: rowWidth * 2,
                                 gap: spacing,
-                                animation: `scroll-${direction} ${duration}s linear infinite`,
+                                animation: `${animName} ${duration}s linear infinite`,
                                 willChange: 'transform',
                             }}
                         >
-                            {[...row, ...row].map((photo, index) => (
-                                <PhotoCard
-                                    key={`row-${rowIndex}-photo-${photo.id}-${index}`}
-                                    photo={photo}
-                                    rowHeight={rowHeight}
-                                    canLoad={canLoadImages}
-                                    onClick={() => setSelectedPhoto(photo)}
-                                />
-                            ))}
+                            {Array.from({ length: copies }, (_, ci) =>
+                                row.map((photo) => (
+                                    <PhotoCard
+                                        key={`${rowIndex}-${ci}-${photo.id}`}
+                                        photo={photo}
+                                        rowHeight={rowHeight}
+                                        canLoad={canLoadImages}
+                                        onClick={() => setSelectedPhoto(photo)}
+                                    />
+                                ))
+                            )}
                         </div>
                     )
                 })}
 
-                {/* CSS Keyframes for scroll animation */}
-                <style>{`
-        @keyframes scroll-left {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        @keyframes scroll-right {
-          0% { transform: translateX(-50%); }
-          100% { transform: translateX(0); }
-        }
-      `}</style>
+                <style>{rows.map((row, rowIndex) => {
+                    const rowWidth = calculateRowWidth(row)
+                    const goLeft = rowIndex % 2 === 0
+                    const name = `slideshow-row-${rowIndex}`
+                    const from = goLeft ? '0px' : `-${rowWidth}px`
+                    const to   = goLeft ? `-${rowWidth}px` : '0px'
+                    return `@keyframes ${name} { 0% { transform: translateX(${from}); } 100% { transform: translateX(${to}); } }`
+                }).join('\n')}</style>
             </div>
 
             {/* Photo Viewer Modal */}

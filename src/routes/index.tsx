@@ -15,6 +15,9 @@ import { experiences, photoAlbums, profile, projects, socials, sshKey } from '..
 import { getRandomPhotos } from '../lib/photos'
 
 export const Route = createFileRoute('/')({
+  validateSearch: (search: Record<string, unknown>) => ({
+    'photo-mode': search['photo-mode'] === 'true' || search['photo-mode'] === true,
+  }),
   loader: () => {
     return {
       randomPhotosPromise: defer(getRandomPhotos()),
@@ -37,8 +40,9 @@ const SECTIONS = [
 function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { randomPhotosPromise } = Route.useLoaderData()
+  const { 'photo-mode': photoModeParam } = Route.useSearch()
   const [showAllEvents, setShowAllEvents] = useState(false)
-  const [photoMode, setPhotoMode] = useState(false)
+  const [photoMode, setPhotoMode] = useState(() => photoModeParam)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -235,7 +239,11 @@ function HomePage() {
           <Await promise={randomPhotosPromise}>
             {(data: any) => {
               const photos = data?.photos ?? []
-              return photos.length > 0 ? <PhotoSlideshow photos={photos} /> : null
+              return photos.length > 0 ? (
+                <div className="-mx-16 overflow-hidden">
+                  <PhotoSlideshow photos={photos} />
+                </div>
+              ) : null
             }}
           </Await>
         </Suspense>
