@@ -9,9 +9,11 @@ import { getPhotoThumbnailUrl, getPhotoUrl } from '../lib/photos'
 
 interface PhotoSlideshowProps {
     photos: Array<PichausPhoto>
+    rowCount?: number
+    rowHeight?: number
 }
 
-export function PhotoSlideshow({ photos }: PhotoSlideshowProps) {
+export function PhotoSlideshow({ photos, rowCount = 5, rowHeight = 140 }: PhotoSlideshowProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const [selectedPhoto, setSelectedPhoto] = useState<PichausPhoto | null>(null)
     const [canLoadImages, setCanLoadImages] = useState(false)
@@ -39,8 +41,6 @@ export function PhotoSlideshow({ photos }: PhotoSlideshowProps) {
     }
 
     // Distribute photos to rows based on width to keep them balanced
-    const rowCount = 5
-    const rowHeight = 140 // Slightly smaller for 4 rows
     const spacing = 8
 
     // Initialize rows

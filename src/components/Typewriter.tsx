@@ -5,6 +5,8 @@ interface TypewriterProps {
     typingSpeed?: number
     deletingSpeed?: number
     pauseTime?: number
+    interactiveWord?: string
+    onInteractiveWordClick?: () => void
 }
 
 export function Typewriter({
@@ -12,6 +14,8 @@ export function Typewriter({
     typingSpeed = 150,
     deletingSpeed = 200,
     pauseTime = 2000,
+    interactiveWord,
+    onInteractiveWordClick,
 }: TypewriterProps) {
     const [currentWordIndex, setCurrentWordIndex] = useState(0)
     const [currentText, setCurrentText] = useState('')
@@ -51,8 +55,18 @@ export function Typewriter({
         pauseTime,
     ])
 
+    const isInteractive =
+        interactiveWord &&
+        onInteractiveWordClick &&
+        !isDeleting &&
+        currentText === interactiveWord
+
     return (
-        <span className="inline-block min-w-[2ch]">
+        <span
+            className={`inline-block min-w-[2ch] transition-all duration-200 ${isInteractive ? 'cursor-pointer underline decoration-dotted underline-offset-4 hover:opacity-75' : ''}`}
+            onClick={isInteractive ? onInteractiveWordClick : undefined}
+            title={isInteractive ? 'Enter photo mode' : undefined}
+        >
             {currentText}
             <span className="animate-pulse ml-1 inline-block w-1.5 h-5 bg-current align-middle" />
         </span>

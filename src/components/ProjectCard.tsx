@@ -8,31 +8,27 @@ interface ProjectCardProps {
   tech: ReadonlyArray<string>
 }
 
-export function ProjectCard({
-  name,
-  description,
-  url,
-  tech,
-}: ProjectCardProps) {
+export function ProjectCard({ name, description, url, tech }: ProjectCardProps) {
   return (
     <a
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative flex flex-col h-full p-6 rounded-2xl glass-panel hover:border-(--accent)/30 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+      className="group relative flex flex-col h-full p-6 rounded-2xl glass-panel card-shine card-glow hover:-translate-y-1.5 transition-all duration-300"
     >
+      {/* Top accent line */}
+      <div className="absolute top-0 left-8 right-8 h-px bg-linear-to-r from-transparent via-(--accent)/35 to-transparent pointer-events-none" />
+
       <div className="flex items-start justify-between mb-4">
-        <h3 className="text-xl font-bold text-(--text-primary) group-hover:text-(--accent) transition-colors">
+        <h3 className="text-xl font-bold text-(--text-primary) group-hover:text-(--accent) transition-colors duration-200 leading-tight">
           {name}
         </h3>
-        <div className="p-2 rounded-full bg-(--bg-secondary) text-(--text-muted) group-hover:bg-(--accent) group-hover:text-white transition-all duration-300 transform group-hover:rotate-45">
+        <div className="shrink-0 ml-3 p-2 rounded-full bg-(--bg-secondary) text-(--text-muted) group-hover:bg-(--accent) group-hover:text-white transition-all duration-300 transform group-hover:rotate-45">
           <ArrowUpRight className="w-4 h-4" />
         </div>
       </div>
 
-      <p className="text-(--text-secondary) mb-6 leading-relaxed grow">
-        {description}
-      </p>
+      <p className="text-(--text-secondary) mb-6 leading-relaxed grow text-sm">{description}</p>
 
       <div className="flex flex-wrap gap-2 mt-auto">
         {tech.map((t) => (

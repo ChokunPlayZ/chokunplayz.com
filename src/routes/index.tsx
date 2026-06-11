@@ -10,6 +10,7 @@ import { SocialLinks } from '../components/SocialLinks'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { PhotoSlideshow } from '../components/PhotoSlideshow'
 import { Typewriter } from '../components/Typewriter'
+import { PhotoMode } from '../components/PhotoMode'
 import { experiences, photoAlbums, profile, projects, socials, sshKey } from '../data/site'
 import { getRandomPhotos } from '../lib/photos'
 
@@ -23,36 +24,33 @@ export const Route = createFileRoute('/')({
 })
 
 const SECTIONS = [
-  { id: 'home', label: 'Home', icon: <Home className="w-4 h-4" /> },
-  { id: 'about', label: 'About', icon: <User className="w-4 h-4" /> },
-  { id: 'experiences', label: 'Experiences', icon: <Briefcase className="w-4 h-4" /> },
-  { id: 'projects', label: 'Projects', icon: <FolderGit2 className="w-4 h-4" /> },
-  { id: 'photos', label: 'Photos', icon: <Camera className="w-4 h-4" />, offset: -40 },
-  { id: 'recent-shots', label: 'Recent Shots', icon: <ImageIcon className="w-4 h-4" />, offset: -40 },
-  { id: 'ssh', label: 'SSH', icon: <Terminal className="w-4 h-4" /> },
-  { id: 'contact', label: 'Contact', icon: <Mail className="w-4 h-4" /> },
+  { id: 'home',         label: 'Home',         icon: <Home className="w-4 h-4" /> },
+  { id: 'about',        label: 'About',         icon: <User className="w-4 h-4" /> },
+  { id: 'experiences',  label: 'Experiences',   icon: <Briefcase className="w-4 h-4" /> },
+  { id: 'projects',     label: 'Projects',      icon: <FolderGit2 className="w-4 h-4" /> },
+  { id: 'photos',       label: 'Photos',        icon: <Camera className="w-4 h-4" />, offset: -40 },
+  { id: 'recent-shots', label: 'Recent Shots',  icon: <ImageIcon className="w-4 h-4" />, offset: -40 },
+  { id: 'ssh',          label: 'SSH',           icon: <Terminal className="w-4 h-4" /> },
+  { id: 'contact',      label: 'Contact',       icon: <Mail className="w-4 h-4" /> },
 ]
 
 function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { randomPhotosPromise } = Route.useLoaderData()
   const [showAllEvents, setShowAllEvents] = useState(false)
+  const [photoMode, setPhotoMode] = useState(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible')
-          }
+          if (entry.isIntersecting) entry.target.classList.add('is-visible')
         })
       },
       { threshold: 0.1, rootMargin: '0px 0px -50px 0px' },
     )
-
     const elements = containerRef.current?.querySelectorAll('.fade-in-section')
     elements?.forEach((el) => observer.observe(el))
-
     return () => observer.disconnect()
   }, [])
 
@@ -73,57 +71,57 @@ function HomePage() {
         <div className="absolute bottom-[-10%] left-[20%] w-140 h-140 bg-cyan-200/30 dark:bg-cyan-500/10 rounded-full blur-[90px] animate-float-delayed" />
       </div>
 
-      {/* Hero Section */}
-      <header id="home" className="relative min-h-screen flex flex-col justify-center items-center px-6 pt-20">
+      {/* ── Hero ─────────────────────────────────────────────── */}
+      <header id="home" className="relative min-h-screen flex flex-col justify-center items-center px-6 pt-20 overflow-hidden">
+        {/* Dot grid */}
+        <div className="absolute inset-0 hero-grid pointer-events-none" />
+
         <div className="max-w-4xl mx-auto text-center z-10 space-y-8 fade-in-section is-visible">
           <div className="space-y-4">
             <h1 className="text-6xl md:text-8xl font-bold text-(--text-primary) tracking-tight leading-none">
               Hello, I'm <br />
-              <span className="bg-linear-to-r from-(--accent) via-sky-400 to-blue-300 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-(--accent) via-sky-300 to-blue-300 bg-clip-text text-transparent animated-gradient-text">
                 {profile.name}
               </span>
             </h1>
           </div>
 
           <p className="text-xl md:text-2xl text-(--text-secondary) max-w-2xl mx-auto font-light leading-relaxed">
-            I'm a <Typewriter words={profile.titles} typingSpeed={80} deletingSpeed={50} />
+            I'm a{' '}
+            <Typewriter
+              words={profile.titles}
+              typingSpeed={80}
+              deletingSpeed={50}
+              interactiveWord="Photographer"
+              onInteractiveWordClick={() => setPhotoMode(true)}
+            />
           </p>
 
-          <div className="flex justify-center pt-8">
+          <div className="flex justify-center pt-4">
             <SocialLinks links={socials} className="justify-center" />
           </div>
 
-          <div className="pt-2">
+          <div className="pt-2 flex flex-wrap gap-3 justify-center">
             <Link
               to="/blog"
               search={{ page: 1 }}
-              className="inline-flex items-center rounded-full border border-(--border) px-6 py-3 text-sm font-medium text-(--text-primary) hover:bg-(--accent)/10 transition-colors"
+              className="inline-flex items-center gap-2 rounded-full border border-(--border) px-6 py-3 text-sm font-medium text-(--text-primary) hover:bg-(--accent)/10 hover:border-(--accent)/40 transition-all duration-200"
             >
               Read the blog
+              <span className="text-(--text-muted)">→</span>
             </Link>
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-(--text-muted)">
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 14l-7 7m0 0l-7-7m7 7V3"
-            />
-          </svg>
+        {/* Scroll indicator */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-(--text-muted) animate-bounce">
+          <span className="text-xs uppercase tracking-widest opacity-50">Scroll</span>
+          <div className="w-px h-8 bg-linear-to-b from-(--accent)/50 to-transparent" />
         </div>
       </header>
 
-      {/* About Section */}
-      <Section title="About Me" id="about" className="fade-in-section">
+      {/* ── About ─────────────────────────────────────────────── */}
+      <Section title="About Me" id="about" index={1} className="fade-in-section">
         <div className="glass-panel p-8 md:p-10 rounded-3xl">
           <p className="text-lg md:text-xl text-(--text-secondary) leading-relaxed">
             {profile.about}
@@ -131,9 +129,11 @@ function HomePage() {
         </div>
       </Section>
 
-      {/* Experience Section */}
-      <Section title="Experiences" id="experiences" className="fade-in-section">
-        <div className="space-y-6">
+      {/* ── Experience ────────────────────────────────────────── */}
+      <Section title="Experiences" id="experiences" index={2} className="fade-in-section">
+        {/* Timeline connector line */}
+        <div className="relative space-y-4">
+          <div className="absolute left-5 top-8 bottom-8 w-px bg-linear-to-b from-(--accent)/25 via-(--accent)/10 to-transparent pointer-events-none" />
           {experiences.map((exp, index) => (
             <ExperienceCard
               key={index}
@@ -147,12 +147,8 @@ function HomePage() {
         </div>
       </Section>
 
-      {/* Projects Section */}
-      <Section
-        title="Featured Projects"
-        id="projects"
-        className="fade-in-section"
-      >
+      {/* ── Projects ──────────────────────────────────────────── */}
+      <Section title="Featured Projects" id="projects" index={3} className="fade-in-section">
         <div className="grid gap-6 md:grid-cols-2">
           {projects.map((project) => (
             <ProjectCard
@@ -166,19 +162,19 @@ function HomePage() {
         </div>
       </Section>
 
-      {/* Photography Section */}
-      <Section id="photos" className="fade-in-section">
+      {/* ── Photography albums ────────────────────────────────── */}
+      <Section id="photos" index={4} className="fade-in-section">
         <div className="flex items-center gap-4 mb-10">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-(--accent)/10 text-(--accent)">
             <Camera className="w-7 h-7" />
           </div>
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-(--text-primary)">
-              Photography
-            </h2>
-            <p className="text-(--text-muted)">Capturing moments & frames</p>
+            <p className="text-xs font-semibold text-(--accent) uppercase tracking-widest mb-1 opacity-60">04</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-(--text-primary)">Photography</h2>
+            <p className="text-(--text-muted) text-sm">Capturing moments & frames</p>
           </div>
         </div>
+
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {photoAlbums.map((album, index) => (
             <div
@@ -204,12 +200,10 @@ function HomePage() {
         </div>
 
         {!showAllEvents && photoAlbums.length > 3 && (
-          <div
-            className={`flex justify-center mt-6 ${photoAlbums.length > 9 ? '' : 'md:hidden'}`}
-          >
+          <div className={`flex justify-center mt-6 ${photoAlbums.length > 9 ? '' : 'md:hidden'}`}>
             <button
               onClick={() => setShowAllEvents(true)}
-              className="px-6 py-2 rounded-full border border-(--border) hover:bg-(--accent)/5 text-sm font-medium transition-colors"
+              className="px-6 py-2 rounded-full border border-(--border) hover:bg-(--accent)/5 hover:border-(--accent)/30 text-sm font-medium transition-all duration-200"
             >
               Show More Events
             </button>
@@ -217,7 +211,7 @@ function HomePage() {
         )}
       </Section>
 
-      {/* Random Photos Slideshow */}
+      {/* ── Recent Shots ──────────────────────────────────────── */}
       <section id="recent-shots" className="py-16 fade-in-section">
         <div className="max-w-4xl mx-auto px-6 mb-8">
           <div className="flex items-center gap-4">
@@ -225,12 +219,9 @@ function HomePage() {
               <ImageIcon className="w-7 h-7" />
             </div>
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-(--text-primary)">
-                Recent Shots
-              </h2>
-              <p className="text-(--text-muted)">
-                Random photos from my gallery
-              </p>
+              <p className="text-xs font-semibold text-(--accent) uppercase tracking-widest mb-1 opacity-60">05</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-(--text-primary)">Recent Shots</h2>
+              <p className="text-(--text-muted) text-sm">Random photos from my gallery</p>
             </div>
           </div>
         </div>
@@ -244,16 +235,14 @@ function HomePage() {
           <Await promise={randomPhotosPromise}>
             {(data: any) => {
               const photos = data?.photos ?? []
-              return photos.length > 0 ? (
-                <PhotoSlideshow photos={photos} />
-              ) : null
+              return photos.length > 0 ? <PhotoSlideshow photos={photos} /> : null
             }}
           </Await>
         </Suspense>
       </section>
 
-      {/* SSH Key Section */}
-      <Section title="SSH Access" id="ssh" className="fade-in-section">
+      {/* ── SSH ───────────────────────────────────────────────── */}
+      <Section title="SSH Access" id="ssh" index={6} className="fade-in-section">
         <div className="glass-panel p-8 md:p-10 rounded-3xl space-y-6">
           <div className="flex items-start gap-4">
             <div className="inline-flex items-center justify-center w-12 h-12 shrink-0 rounded-2xl bg-(--accent)/10 text-(--accent)">
@@ -267,55 +256,47 @@ function HomePage() {
                 {sshKey.description}
               </p>
 
-              {/* One-liner Command */}
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-(--text-primary) mb-2">
                     Quick Add (One-liner):
                   </label>
-                  <div className="flex gap-2">
-                    <code className="flex-1 p-3 bg-(--bg-secondary) rounded-lg text-sm font-mono text-(--text-secondary) overflow-x-auto">
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <code className="flex-1 p-3 bg-(--bg-secondary) rounded-lg text-sm font-mono text-(--text-secondary) overflow-x-auto border border-(--border) min-w-0">
                       {sshKey.oneLiner}
                     </code>
                     <button
-                      onClick={() => {
+                      onClick={(e) => {
                         navigator.clipboard.writeText(sshKey.oneLiner)
-                        const btn = event?.currentTarget as HTMLButtonElement
-                        const originalText = btn.textContent
+                        const btn = e.currentTarget
+                        const orig = btn.textContent
                         btn.textContent = '✓'
-                        setTimeout(() => {
-                          btn.textContent = originalText
-                        }, 2000)
+                        setTimeout(() => { btn.textContent = orig }, 2000)
                       }}
-                      className="px-4 py-2 bg-(--accent) hover:bg-(--accent)/90 text-white rounded-lg text-sm font-medium transition-colors shrink-0"
-                      title="Copy to clipboard"
+                      className="sm:self-start px-4 py-2 bg-(--accent) hover:bg-(--accent-hover) text-white rounded-lg text-sm font-medium transition-colors shrink-0"
                     >
                       Copy
                     </button>
                   </div>
                 </div>
 
-                {/* Public Key */}
                 <div>
                   <label className="block text-sm font-medium text-(--text-primary) mb-2">
                     Public Key:
                   </label>
-                  <div className="flex gap-2">
-                    <code className="flex-1 p-3 bg-(--bg-secondary) rounded-lg text-xs font-mono text-(--text-secondary) overflow-x-auto break-all">
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <code className="flex-1 p-3 bg-(--bg-secondary) rounded-lg text-xs font-mono text-(--text-secondary) overflow-x-auto break-all border border-(--border) min-w-0">
                       {sshKey.publicKey}
                     </code>
                     <button
-                      onClick={() => {
+                      onClick={(e) => {
                         navigator.clipboard.writeText(sshKey.publicKey)
-                        const btn = event?.currentTarget as HTMLButtonElement
-                        const originalText = btn.textContent
+                        const btn = e.currentTarget
+                        const orig = btn.textContent
                         btn.textContent = '✓'
-                        setTimeout(() => {
-                          btn.textContent = originalText
-                        }, 2000)
+                        setTimeout(() => { btn.textContent = orig }, 2000)
                       }}
-                      className="px-4 py-2 bg-(--accent) hover:bg-(--accent)/90 text-white rounded-lg text-sm font-medium transition-colors shrink-0"
-                      title="Copy to clipboard"
+                      className="sm:self-start px-4 py-2 bg-(--accent) hover:bg-(--accent-hover) text-white rounded-lg text-sm font-medium transition-colors shrink-0"
                     >
                       Copy
                     </button>
@@ -327,19 +308,34 @@ function HomePage() {
         </div>
       </Section>
 
-      {/* Footer */}
-      <footer id="contact" className="py-24 text-center fade-in-section">
-        <div className="max-w-2xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-(--text-primary) mb-6">
+      {/* ── Footer / Contact ──────────────────────────────────── */}
+      <footer id="contact" className="py-32 text-center fade-in-section">
+        {/* Separator */}
+        <div className="max-w-xs mx-auto mb-16">
+          <div className="h-px bg-linear-to-r from-transparent via-(--border) to-transparent" />
+        </div>
+        <div className="max-w-2xl mx-auto px-6 space-y-6">
+          <p className="text-xs font-semibold text-(--accent) uppercase tracking-widest opacity-60">07</p>
+          <h2 className="text-4xl md:text-5xl font-bold text-(--text-primary)">
             Let's Connect
           </h2>
-          <SocialLinks links={socials} className="justify-center mb-8" />
-          <p className="text-sm text-(--text-muted)">
-            © {new Date().getFullYear()} {profile.name}
+          <p className="text-(--text-secondary) max-w-sm mx-auto">
+            Whether it's a project, a question, or just a hello — my inbox is open.
+          </p>
+          <div className="pt-2">
+            <SocialLinks links={socials} className="justify-center" />
+          </div>
+          <p className="text-xs text-(--text-muted) pt-6 opacity-60">
+            © {new Date().getFullYear()} {profile.name} · Built with TanStack Start
           </p>
         </div>
       </footer>
+
       <JumpNavigation sections={SECTIONS} />
+
+      {photoMode && (
+        <PhotoMode photosPromise={randomPhotosPromise} onExit={() => setPhotoMode(false)} />
+      )}
     </div>
   )
 }
