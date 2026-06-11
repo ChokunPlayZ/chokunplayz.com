@@ -96,6 +96,7 @@ function HomePage() {
           <div className="pt-2">
             <Link
               to="/blog"
+              search={{ page: 1, preview: false }}
               className="inline-flex items-center rounded-full border border-(--border) px-6 py-3 text-sm font-medium text-(--text-primary) hover:bg-(--accent)/10 transition-colors"
             >
               Read the blog
@@ -235,7 +236,7 @@ function HomePage() {
         </div>
         <Suspense
           fallback={
-            <div className="h-[400px] w-full flex items-center justify-center text-(--text-muted)">
+            <div className="h-100 w-full flex items-center justify-center text-(--text-muted)">
               <div className="w-8 h-8 border-4 border-(--accent)/20 border-t-(--accent) rounded-full animate-spin" />
             </div>
           }
