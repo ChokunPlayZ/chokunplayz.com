@@ -6,7 +6,6 @@ const POSTS_PER_PAGE = 5
 
 interface BlogSearch {
   page: number
-  preview: boolean
 }
 
 function parsePositivePage(value: unknown): number {
@@ -24,40 +23,21 @@ function parsePositivePage(value: unknown): number {
   return 1
 }
 
-function parseBoolean(value: unknown): boolean {
-  if (typeof value === 'boolean') {
-    return value
-  }
-
-  if (typeof value === 'string') {
-    return value === '1' || value.toLowerCase() === 'true'
-  }
-
-  return false
-}
-
 export const Route = createFileRoute('/blog/')({
   validateSearch: (search): BlogSearch => ({
     page: parsePositivePage(search.page),
-    preview: parseBoolean(search.preview),
   }),
   loaderDeps: ({ search }) => ({
     page: search.page,
-    preview: search.preview,
   }),
   loader: ({ deps }) => {
-    const allPosts = getBlogPosts({ includeDrafts: deps.preview })
+    const allPosts = getBlogPosts()
     const totalPages = Math.max(1, Math.ceil(allPosts.length / POSTS_PER_PAGE))
     const page = Math.min(Math.max(deps.page, 1), totalPages)
     const start = (page - 1) * POSTS_PER_PAGE
     const posts = allPosts.slice(start, start + POSTS_PER_PAGE)
 
-    return {
-      posts,
-      page,
-      totalPages,
-      preview: deps.preview,
-    }
+    return { posts, page, totalPages }
   },
   component: BlogIndexPage,
 })
@@ -76,7 +56,7 @@ function formatDate(value: string): string {
 }
 
 function BlogIndexPage() {
-  const { posts, page, totalPages, preview } = Route.useLoaderData()
+  const { posts, page, totalPages } = Route.useLoaderData()
 
   const hasPrevious = page > 1
   const hasNext = page < totalPages
@@ -91,18 +71,6 @@ function BlogIndexPage() {
           <p className="max-w-2xl text-(--text-secondary)">
             Notes about engineering, infra, and whatever I am currently learning.
           </p>
-          <Link
-            to="/blog"
-            search={{ page: 1, preview: !preview }}
-            className="inline-flex rounded-full border border-(--border) px-3 py-1 text-xs font-semibold text-(--text-primary) hover:bg-(--accent)/10 transition-colors"
-          >
-            {preview ? 'Hide Drafts' : 'Preview Drafts'}
-          </Link>
-          {preview && (
-            <p className="inline-flex rounded-full border border-(--border) bg-(--accent)/10 px-3 py-1 text-xs font-semibold text-(--accent)">
-              Draft preview enabled
-            </p>
-          )}
         </header>
 
         {posts.length === 0 ? (
@@ -130,7 +98,6 @@ function BlogIndexPage() {
                   <Link
                     to="/blog/$slug"
                     params={{ slug: post.slug }}
-                    search={{ preview }}
                     className="hover:text-(--accent) transition-colors"
                   >
                     {post.title}
@@ -138,11 +105,6 @@ function BlogIndexPage() {
                 </h2>
 
                 <p className="mt-3 text-(--text-secondary)">{post.summary}</p>
-                {!post.published && (
-                  <p className="mt-4 inline-flex rounded-full border border-amber-300 bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700">
-                    Draft
-                  </p>
-                )}
               </article>
             ))}
 
@@ -150,7 +112,7 @@ function BlogIndexPage() {
               {hasPrevious ? (
                 <Link
                   to="/blog"
-                  search={{ page: page - 1, preview }}
+                  search={{ page: page - 1 }}
                   className="inline-flex items-center rounded-full border border-(--border) px-4 py-2 text-sm text-(--text-primary) hover:bg-(--accent)/10 transition-colors"
                 >
                   Newer Posts
@@ -164,7 +126,7 @@ function BlogIndexPage() {
               {hasNext ? (
                 <Link
                   to="/blog"
-                  search={{ page: page + 1, preview }}
+                  search={{ page: page + 1 }}
                   className="inline-flex items-center rounded-full border border-(--border) px-4 py-2 text-sm text-(--text-primary) hover:bg-(--accent)/10 transition-colors"
                 >
                   Older Posts

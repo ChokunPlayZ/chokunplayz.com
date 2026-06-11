@@ -96,7 +96,7 @@ function HomePage() {
           <div className="pt-2">
             <Link
               to="/blog"
-              search={{ page: 1, preview: false }}
+              search={{ page: 1 }}
               className="inline-flex items-center rounded-full border border-(--border) px-6 py-3 text-sm font-medium text-(--text-primary) hover:bg-(--accent)/10 transition-colors"
             >
               Read the blog

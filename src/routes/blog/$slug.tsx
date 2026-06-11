@@ -2,32 +2,9 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { ArrowLeft, Calendar, Tags } from 'lucide-react'
 import { getBlogPostBySlug } from '@/lib/blog'
 
-interface BlogPostSearch {
-  preview: boolean
-}
-
-function parseBoolean(value: unknown): boolean {
-  if (typeof value === 'boolean') {
-    return value
-  }
-
-  if (typeof value === 'string') {
-    return value === '1' || value.toLowerCase() === 'true'
-  }
-
-  return false
-}
-
 export const Route = createFileRoute('/blog/$slug')({
-  validateSearch: (search): BlogPostSearch => ({
-    preview: parseBoolean(search.preview),
-  }),
-  loaderDeps: ({ search }) => ({
-    preview: search.preview,
-  }),
-  loader: ({ params, deps }) => ({
-    post: getBlogPostBySlug(params.slug, { includeDrafts: deps.preview }),
-    preview: deps.preview,
+  loader: ({ params }) => ({
+    post: getBlogPostBySlug(params.slug),
   }),
   component: BlogPostPage,
 })
@@ -46,7 +23,7 @@ function formatDate(value: string): string {
 }
 
 function BlogPostPage() {
-  const { post, preview } = Route.useLoaderData()
+  const { post } = Route.useLoaderData()
 
   if (!post) {
     return (
@@ -59,7 +36,7 @@ function BlogPostPage() {
             </p>
             <Link
               to="/blog"
-              search={{ page: 1, preview }}
+              search={{ page: 1 }}
               className="inline-flex items-center gap-2 text-(--accent) hover:brightness-110"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -76,7 +53,7 @@ function BlogPostPage() {
       <article className="mx-auto max-w-5xl glass-panel rounded-3xl p-8 md:p-10">
         <Link
           to="/blog"
-          search={{ page: 1, preview }}
+          search={{ page: 1 }}
           className="mb-8 inline-flex items-center gap-2 text-sm text-(--text-muted) hover:text-(--accent) transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -84,11 +61,6 @@ function BlogPostPage() {
         </Link>
 
         <header className="mb-8 space-y-3">
-          {!post.published && (
-            <p className="inline-flex rounded-full border border-amber-300 bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700">
-              Draft preview
-            </p>
-          )}
           <h1 className="text-2xl md:text-3xl font-bold text-(--text-primary)">
             {post.title}
           </h1>
