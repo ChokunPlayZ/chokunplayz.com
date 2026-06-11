@@ -84,17 +84,29 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
                             {(data: { photos: PichausPhoto[] }) => {
                                 const photos = data?.photos ?? []
                                 return photos.length > 0 ? (
-                                    /* Extend 20% past each edge so rotation never exposes the bg */
+                                    /*
+                                     * Fixed pixel inset so coverage is independent of container
+                                     * percentage math. -300px on every side ensures the rotated
+                                     * grid fills all four corners on any screen up to ~2.5K.
+                                     * Round-robin distribution gives every row the same photo
+                                     * count, keeping rows long enough that the loop seam is
+                                     * never inside the visible viewport.
+                                     */
                                     <div
-                                        className="absolute opacity-50"
+                                        className="absolute opacity-45"
                                         style={{
-                                            top: '-20%', left: '-20%',
-                                            width: '140%', height: '140%',
+                                            top: -300, left: -300, right: -300, bottom: -300,
                                             transform: 'rotate(-10deg)',
                                             transformOrigin: 'center center',
                                         }}
                                     >
-                                        <PhotoSlideshow photos={photos} rowCount={10} rowHeight={145} rowGap={0} />
+                                        <PhotoSlideshow
+                                            photos={photos}
+                                            rowCount={9}
+                                            rowHeight={180}
+                                            rowGap={0}
+                                            distribute="roundRobin"
+                                        />
                                     </div>
                                 ) : null
                             }}

@@ -12,9 +12,10 @@ interface PhotoSlideshowProps {
     rowCount?: number
     rowHeight?: number
     rowGap?: number
+    distribute?: 'shortest' | 'roundRobin'
 }
 
-export function PhotoSlideshow({ photos, rowCount = 5, rowHeight = 140, rowGap = 8 }: PhotoSlideshowProps) {
+export function PhotoSlideshow({ photos, rowCount = 5, rowHeight = 140, rowGap = 8, distribute = 'shortest' }: PhotoSlideshowProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const [selectedPhoto, setSelectedPhoto] = useState<PichausPhoto | null>(null)
     const [canLoadImages, setCanLoadImages] = useState(false)
@@ -51,22 +52,23 @@ export function PhotoSlideshow({ photos, rowCount = 5, rowHeight = 140, rowGap =
     )
     const rowWidths = new Array(rowCount).fill(0)
 
-    photos.forEach((photo) => {
-        // Calculate photo width at our target height
-        const photoWidth = (photo.width / photo.height) * rowHeight + spacing
-
-        // Find the shortest row
-        let minRowIndex = 0
-        for (let i = 1; i < rowCount; i++) {
-            if (rowWidths[i] < rowWidths[minRowIndex]) {
-                minRowIndex = i
+    if (distribute === 'roundRobin') {
+        photos.forEach((photo, i) => {
+            const idx = i % rowCount
+            rows[idx].push(photo)
+            rowWidths[idx] += (photo.width / photo.height) * rowHeight + spacing
+        })
+    } else {
+        photos.forEach((photo) => {
+            const photoWidth = (photo.width / photo.height) * rowHeight + spacing
+            let minRowIndex = 0
+            for (let i = 1; i < rowCount; i++) {
+                if (rowWidths[i] < rowWidths[minRowIndex]) minRowIndex = i
             }
-        }
-
-        // Add photo to shortest row
-        rows[minRowIndex].push(photo)
-        rowWidths[minRowIndex] += photoWidth
-    })
+            rows[minRowIndex].push(photo)
+            rowWidths[minRowIndex] += photoWidth
+        })
+    }
 
     // Calculate total width for each row
     const calculateRowWidth = (rowPhotos: Array<PichausPhoto>) =>
@@ -93,11 +95,12 @@ export function PhotoSlideshow({ photos, rowCount = 5, rowHeight = 140, rowGap =
                     return (
                         <div
                             key={`row-${rowIndex}`}
-                            className="flex"
+                            className="flex shrink-0"
                             style={{
                                 width: rowWidth * 2,
                                 gap: spacing,
                                 animation: `scroll-${direction} ${duration}s linear infinite`,
+                                willChange: 'transform',
                             }}
                         >
                             {[...row, ...row].map((photo, index) => (
