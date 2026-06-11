@@ -2,7 +2,7 @@
 
 import { Await } from '@tanstack/react-router'
 import { MapPin, X } from 'lucide-react'
-import { Suspense, useEffect, useMemo } from 'react'
+import { Suspense, useEffect, useMemo, useState } from 'react'
 import { photoAlbums } from '../data/site'
 import { getPhotoThumbnailUrl } from '../lib/photos'
 import type { PichausPhoto } from '../lib/photos'
@@ -34,8 +34,14 @@ function groupByYear(albums: readonly Album[]) {
     return [...map.entries()].sort((a, b) => Number(b[0]) - Number(a[0]))
 }
 
+function LoadTrigger({ onLoad }: { onLoad: () => void }) {
+    useEffect(() => { onLoad() }, [onLoad])
+    return null
+}
+
 export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
     const grouped = useMemo(() => groupByYear(photoAlbums), [])
+    const [loaded, setLoaded] = useState(false)
 
     useEffect(() => {
         document.body.style.overflow = 'hidden'
@@ -82,19 +88,24 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
                     <Await promise={photosPromise}>
                         {(data: { photos: PichausPhoto[] }) => {
                             const photos = data?.photos ?? []
-                            return photos.length > 0 ? (
-                                <div
-                                    className="absolute opacity-55"
-                                    style={{
-                                        top: -300, left: -300, right: -300, bottom: -300,
-                                        transform: 'rotate(-10deg)',
-                                        transformOrigin: 'center center',
-                                        overflow: 'hidden',
-                                    }}
-                                >
-                                    <BgStrips photos={photos} />
-                                </div>
-                            ) : null
+                            return (
+                                <>
+                                    {photos.length > 0 && (
+                                        <div
+                                            className="absolute opacity-55"
+                                            style={{
+                                                top: -300, left: -300, right: -300, bottom: -300,
+                                                transform: 'rotate(-10deg)',
+                                                transformOrigin: 'center center',
+                                                overflow: 'hidden',
+                                            }}
+                                        >
+                                            <BgStrips photos={photos} />
+                                        </div>
+                                    )}
+                                    <LoadTrigger onLoad={() => setLoaded(true)} />
+                                </>
+                            )
                         }}
                     </Await>
                 </Suspense>
@@ -138,7 +149,7 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
                     <div className="max-w-xl mx-auto">
 
                         {/* Timeline header */}
-                        <div className="mb-10 animate-in fade-in slide-in-from-top-3 duration-700">
+                        <div className={`mb-10 transition-[opacity,transform] duration-700 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3'}`}>
                             <p className="text-xs font-semibold text-(--accent) uppercase tracking-widest opacity-60 mb-1">
                                 Timeline
                             </p>
@@ -169,13 +180,13 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
                                     {/* Year marker */}
                                     <div
                                         className={`flex items-center gap-4 ${gIdx > 0 ? 'mt-12' : ''} mb-5`}
-                                        style={{ animation: 'pmSlideIn 0.6s ease both', animationDelay: `${gIdx * 0.08}s` }}
+                                        style={loaded ? { animation: 'pmSlideIn 0.6s ease both', animationDelay: `${gIdx * 0.08}s` } : { opacity: 0 }}
                                     >
                                         <div className="w-12 shrink-0" />
                                         <div className="relative z-10 flex items-center gap-3">
                                             <div
                                                 className="w-5 h-5 rounded-full bg-(--bg-primary) border-2 border-(--accent)/70 flex items-center justify-center shrink-0"
-                                                style={{ animation: 'pmGlowPulse 3s ease-in-out infinite', animationDelay: `${gIdx * 0.4}s` }}
+                                                style={loaded ? { animation: 'pmGlowPulse 3s ease-in-out infinite', animationDelay: `${gIdx * 0.4}s` } : {}}
                                             >
                                                 <div className="w-1.5 h-1.5 rounded-full bg-(--accent)/80" />
                                             </div>
@@ -198,7 +209,7 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="flex items-start gap-4 mb-6 group cursor-pointer"
-                                                style={{ animation: 'pmSlideIn 0.5s ease both', animationDelay: `${delay}s` }}
+                                                style={loaded ? { animation: 'pmSlideIn 0.5s ease both', animationDelay: `${delay}s` } : { opacity: 0 }}
                                             >
                                                 {/* Date column */}
                                                 <div className="w-12 shrink-0 text-right pt-0.5 select-none">
@@ -242,7 +253,7 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
                     </div>
                 </div>
 
-                <div className="text-center pb-10">
+                <div className={`text-center pb-10 transition-opacity duration-1000 ${loaded ? 'opacity-100' : 'opacity-0'}`}>
                     <p className="text-xs text-(--text-muted) opacity-20 tracking-widest">ESC TO EXIT</p>
                 </div>
             </div>
