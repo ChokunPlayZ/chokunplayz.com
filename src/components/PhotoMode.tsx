@@ -90,6 +90,7 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
                                             top: -300, left: -300, right: -300, bottom: -300,
                                             transform: 'rotate(-10deg)',
                                             transformOrigin: 'center center',
+                                            overflow: 'hidden',
                                         }}
                                     >
                                         <BgStrips photos={photos} />
@@ -247,7 +248,7 @@ function BgStrips({ photos }: { photos: PichausPhoto[] }) {
                     const anim = ri % 2 === 0 ? 'bgL' : 'bgR'
                     const dur = Math.round(row.length * 7 + ri * 4)
                     return (
-                        <div key={ri} style={{ height: BG_HEIGHT, overflow: 'hidden', flexShrink: 0 }}>
+                        <div key={ri} style={{ height: BG_HEIGHT, flexShrink: 0 }}>
                             <div
                                 style={{
                                     display: 'flex',
