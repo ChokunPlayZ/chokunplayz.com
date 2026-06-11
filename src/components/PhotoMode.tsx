@@ -20,7 +20,6 @@ function parseEventDate(dateStr: string) {
     return {
         month: d.toLocaleString('en-US', { month: 'short' }).toUpperCase(),
         day:   d.getDate().toString(),
-        full:  d.toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
     }
 }
 
@@ -146,7 +145,7 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
             {/* ── Foreground: scrollable timeline ── */}
             <div className="absolute inset-0 overflow-y-auto z-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <div className="px-6 py-16">
-                    <div className="max-w-xl mx-auto">
+                    <div className="max-w-xl mx-auto bg-(--bg-primary)/60 backdrop-blur-xl rounded-3xl px-8 py-10 border border-white/5 shadow-2xl">
 
                         {/* Timeline header */}
                         <div className={`mb-10 transition-[opacity,transform] duration-700 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3'}`}>
@@ -190,7 +189,7 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
                                             >
                                                 <div className="w-1.5 h-1.5 rounded-full bg-(--accent)/80" />
                                             </div>
-                                            <span className="text-4xl font-black leading-none select-none text-(--text-muted) opacity-40">
+                                            <span className="text-4xl font-black leading-none select-none text-(--text-muted) opacity-70">
                                                 {year}
                                             </span>
                                         </div>
@@ -198,7 +197,7 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
 
                                     {/* Events */}
                                     {events.map((album, idx) => {
-                                        const { month, day, full } = parseEventDate(album.date)
+                                        const { month, day } = parseEventDate(album.date)
                                         const location = 'location' in album ? album.location as string : undefined
                                         const delay = (gIdx * 8 + idx) * 0.045
 
@@ -213,10 +212,10 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
                                             >
                                                 {/* Date column */}
                                                 <div className="w-12 shrink-0 text-right pt-0.5 select-none">
-                                                    <p className="text-[10px] font-bold text-(--text-muted) uppercase tracking-wider leading-none mb-0.5 opacity-55">
+                                                    <p className="text-[10px] font-bold text-(--text-muted) uppercase tracking-wider leading-none mb-0.5 opacity-75">
                                                         {month}
                                                     </p>
-                                                    <p className="text-xl font-black leading-none text-(--text-muted) opacity-60">
+                                                    <p className="text-xl font-black leading-none text-(--text-primary) opacity-80">
                                                         {day}
                                                     </p>
                                                 </div>
@@ -226,21 +225,16 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
 
                                                 {/* Content */}
                                                 <div className="flex-1 min-w-0 group-hover:translate-x-0.5 transition-transform duration-200">
-                                                    <h3 className="text-sm font-bold text-(--text-primary) group-hover:text-(--accent) transition-colors duration-200 leading-snug pr-2">
+                                                    <h3 className="text-sm font-semibold text-(--text-primary) group-hover:text-(--accent) transition-colors duration-200 leading-snug pr-2">
                                                         {album.title}
                                                     </h3>
-                                                    <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1">
-                                                        {location && (
-                                                            <span className="inline-flex items-center gap-1 text-xs text-(--text-muted) opacity-55">
-                                                                <MapPin className="w-2.5 h-2.5 shrink-0" />
-                                                                {location}
-                                                            </span>
-                                                        )}
-                                                        <span className="text-xs text-(--text-muted) opacity-35">
-                                                            {full}
-                                                        </span>
-                                                    </div>
-                                                    <span className="inline-flex items-center gap-1 text-xs font-medium text-(--accent)/40 group-hover:text-(--accent) group-hover:gap-2 mt-2 transition-all duration-200">
+                                                    {location && (
+                                                        <div className="flex items-center gap-1 mt-1 text-xs text-(--text-muted) opacity-60">
+                                                            <MapPin className="w-2.5 h-2.5 shrink-0" />
+                                                            {location}
+                                                        </div>
+                                                    )}
+                                                    <span className="inline-flex items-center gap-1 text-xs font-medium text-(--accent)/60 group-hover:text-(--accent) group-hover:gap-2 mt-2 transition-all duration-200">
                                                         View album →
                                                     </span>
                                                 </div>
