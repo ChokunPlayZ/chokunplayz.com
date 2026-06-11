@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PhotosRouteImport } from './routes/photos'
 import { Route as PartnerPerksRouteImport } from './routes/partner-perks'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 
+const PhotosRoute = PhotosRouteImport.update({
+  id: '/photos',
+  path: '/photos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PartnerPerksRoute = PartnerPerksRouteImport.update({
   id: '/partner-perks',
   path: '/partner-perks',
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/partner-perks': typeof PartnerPerksRoute
+  '/photos': typeof PhotosRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/partner-perks': typeof PartnerPerksRoute
+  '/photos': typeof PhotosRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog': typeof BlogIndexRoute
 }
@@ -60,27 +68,49 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/partner-perks': typeof PartnerPerksRoute
+  '/photos': typeof PhotosRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$' | '/partner-perks' | '/blog/$slug' | '/blog/'
+  fullPaths:
+    | '/'
+    | '/$'
+    | '/partner-perks'
+    | '/photos'
+    | '/blog/$slug'
+    | '/blog/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$' | '/partner-perks' | '/blog/$slug' | '/blog'
-  id: '__root__' | '/' | '/$' | '/partner-perks' | '/blog/$slug' | '/blog/'
+  to: '/' | '/$' | '/partner-perks' | '/photos' | '/blog/$slug' | '/blog'
+  id:
+    | '__root__'
+    | '/'
+    | '/$'
+    | '/partner-perks'
+    | '/photos'
+    | '/blog/$slug'
+    | '/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
   PartnerPerksRoute: typeof PartnerPerksRoute
+  PhotosRoute: typeof PhotosRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/photos': {
+      id: '/photos'
+      path: '/photos'
+      fullPath: '/photos'
+      preLoaderRoute: typeof PhotosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/partner-perks': {
       id: '/partner-perks'
       path: '/partner-perks'
@@ -123,6 +153,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
   PartnerPerksRoute: PartnerPerksRoute,
+  PhotosRoute: PhotosRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
 }

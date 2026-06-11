@@ -58,8 +58,7 @@ export function Typewriter({
     const isInteractive =
         interactiveWord &&
         onInteractiveWordClick &&
-        !isDeleting &&
-        currentText === interactiveWord
+        words[currentWordIndex] === interactiveWord
 
     return (
         <span
