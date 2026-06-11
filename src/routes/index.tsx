@@ -1,4 +1,4 @@
-import { Await, createFileRoute, defer } from '@tanstack/react-router'
+import { Await, Link, createFileRoute, defer } from '@tanstack/react-router'
 import { Suspense, useEffect, useRef, useState } from 'react'
 import { Camera, ImageIcon, Home, User, FolderGit2, Mail, Briefcase, Terminal } from 'lucide-react'
 import { JumpNavigation } from '../components/JumpNavigation'
@@ -91,6 +91,15 @@ function HomePage() {
 
           <div className="flex justify-center pt-8">
             <SocialLinks links={socials} className="justify-center" />
+          </div>
+
+          <div className="pt-2">
+            <Link
+              to="/blog"
+              className="inline-flex items-center rounded-full border border-(--border) px-6 py-3 text-sm font-medium text-(--text-primary) hover:bg-(--accent)/10 transition-colors"
+            >
+              Read the blog
+            </Link>
           </div>
         </div>
 
