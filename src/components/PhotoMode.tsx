@@ -5,7 +5,7 @@ import { Camera, X, MapPin } from 'lucide-react'
 import { Suspense, useEffect, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { photoAlbums } from '../data/site'
-import { PhotoSlideshow } from './PhotoSlideshow'
+import { getPhotoThumbnailUrl } from '../lib/photos'
 import type { PichausPhoto } from '../lib/photos'
 
 interface PhotoModeProps {
@@ -84,14 +84,6 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
                             {(data: { photos: PichausPhoto[] }) => {
                                 const photos = data?.photos ?? []
                                 return photos.length > 0 ? (
-                                    /*
-                                     * Fixed pixel inset so coverage is independent of container
-                                     * percentage math. -300px on every side ensures the rotated
-                                     * grid fills all four corners on any screen up to ~2.5K.
-                                     * Round-robin distribution gives every row the same photo
-                                     * count, keeping rows long enough that the loop seam is
-                                     * never inside the visible viewport.
-                                     */
                                     <div
                                         className="absolute opacity-45"
                                         style={{
@@ -100,13 +92,7 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
                                             transformOrigin: 'center center',
                                         }}
                                     >
-                                        <PhotoSlideshow
-                                            photos={photos}
-                                            rowCount={9}
-                                            rowHeight={180}
-                                            rowGap={0}
-                                            distribute="roundRobin"
-                                        />
+                                        <BgStrips photos={photos} />
                                     </div>
                                 ) : null
                             }}
@@ -229,5 +215,74 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
             </div>
         </div>,
         document.body,
+    )
+}
+
+// ── Dedicated background strip renderer ──────────────────────────────────────
+// Avoids PhotoSlideshow's IntersectionObserver (unreliable inside rotated/clipped
+// containers). Loads images eagerly, uses round-robin row distribution so every
+// row gets the same photo count and the animation loop seam stays off-screen.
+
+const BG_ROWS = 9
+const BG_HEIGHT = 175
+const BG_ROW_GAP = 10
+const BG_IMG_GAP = 8
+
+function BgStrips({ photos }: { photos: PichausPhoto[] }) {
+    const rows = useMemo(() => {
+        const r: PichausPhoto[][] = Array.from({ length: BG_ROWS }, () => [])
+        photos.forEach((p, i) => r[i % BG_ROWS].push(p))
+        return r
+    }, [photos])
+
+    return (
+        <>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: BG_ROW_GAP }}>
+                {rows.map((row, ri) => {
+                    if (!row.length) return null
+                    const singleW = row.reduce(
+                        (s, p) => s + (p.width / p.height) * BG_HEIGHT + BG_IMG_GAP,
+                        0,
+                    )
+                    const anim = ri % 2 === 0 ? 'bgL' : 'bgR'
+                    const dur = Math.round(row.length * 7 + ri * 4)
+                    return (
+                        <div key={ri} style={{ height: BG_HEIGHT, overflow: 'hidden', flexShrink: 0 }}>
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    gap: BG_IMG_GAP,
+                                    width: singleW * 2,
+                                    animation: `${anim} ${dur}s linear infinite`,
+                                    willChange: 'transform',
+                                }}
+                            >
+                                {[...row, ...row].map((photo, idx) => (
+                                    <img
+                                        key={`${photo.id}-${idx}`}
+                                        src={getPhotoThumbnailUrl(photo.id)}
+                                        style={{
+                                            width: (photo.width / photo.height) * BG_HEIGHT,
+                                            height: BG_HEIGHT,
+                                            objectFit: 'cover',
+                                            borderRadius: 8,
+                                            flexShrink: 0,
+                                            display: 'block',
+                                        }}
+                                        loading="eager"
+                                        draggable={false}
+                                        alt=""
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
+            <style>{`
+                @keyframes bgL { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+                @keyframes bgR { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+            `}</style>
+        </>
     )
 }
