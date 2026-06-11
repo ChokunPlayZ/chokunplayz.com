@@ -83,7 +83,6 @@ export function PhotoSlideshow({ photos, rowCount = 5, rowHeight = 140, rowGap =
                 {rows.map((row, rowIndex) => {
                     const rowWidth = calculateRowWidth(row)
                     const copies = Math.max(2, Math.ceil(MIN_COVERAGE / rowWidth) + 1)
-                    const goLeft = rowIndex % 2 === 0
                     const duration = row.length * 6 + rowIndex * 2
                     const animName = `slideshow-row-${rowIndex}`
 

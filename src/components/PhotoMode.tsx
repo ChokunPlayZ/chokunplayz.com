@@ -259,7 +259,7 @@ function BgStrips({ photos }: { photos: PichausPhoto[] }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: BG_ROW_GAP }}>
                 {rows.map((row, ri) => {
                     if (!row.length) return null
-                    const { singleW, copies, goLeft, dur } = rowMeta[ri]
+                    const { copies, dur } = rowMeta[ri]
                     const animName = `bgStrip${ri}`
                     return (
                         <div key={ri} style={{ height: BG_HEIGHT, flexShrink: 0 }}>

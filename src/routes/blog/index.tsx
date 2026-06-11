@@ -56,6 +56,7 @@ function BlogIndexPage() {
         <header className="space-y-4">
           <Link
             to="/"
+            search={{ 'photo-mode': false }}
             className="inline-flex items-center gap-2 text-sm text-(--text-muted) hover:text-(--accent) transition-colors mb-2"
           >
             <ArrowLeft className="w-4 h-4" />

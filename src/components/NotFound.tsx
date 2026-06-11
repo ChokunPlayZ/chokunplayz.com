@@ -28,6 +28,7 @@ export function NotFound() {
 
                 <Link
                     to="/"
+                    search={{ 'photo-mode': false }}
                     className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-(--accent) text-white font-medium hover:brightness-110 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
                 >
                     <Home className="w-5 h-5" />
