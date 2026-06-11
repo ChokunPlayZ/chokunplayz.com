@@ -84,8 +84,17 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
                             {(data: { photos: PichausPhoto[] }) => {
                                 const photos = data?.photos ?? []
                                 return photos.length > 0 ? (
-                                    <div className="opacity-45 scale-105 origin-center">
-                                        <PhotoSlideshow photos={photos} rowCount={7} rowHeight={148} />
+                                    /* Extend 20% past each edge so rotation never exposes the bg */
+                                    <div
+                                        className="absolute opacity-50"
+                                        style={{
+                                            top: '-20%', left: '-20%',
+                                            width: '140%', height: '140%',
+                                            transform: 'rotate(-10deg)',
+                                            transformOrigin: 'center center',
+                                        }}
+                                    >
+                                        <PhotoSlideshow photos={photos} rowCount={10} rowHeight={145} rowGap={0} />
                                     </div>
                                 ) : null
                             }}

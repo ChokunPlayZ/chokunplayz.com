@@ -11,9 +11,10 @@ interface PhotoSlideshowProps {
     photos: Array<PichausPhoto>
     rowCount?: number
     rowHeight?: number
+    rowGap?: number
 }
 
-export function PhotoSlideshow({ photos, rowCount = 5, rowHeight = 140 }: PhotoSlideshowProps) {
+export function PhotoSlideshow({ photos, rowCount = 5, rowHeight = 140, rowGap = 8 }: PhotoSlideshowProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const [selectedPhoto, setSelectedPhoto] = useState<PichausPhoto | null>(null)
     const [canLoadImages, setCanLoadImages] = useState(false)
@@ -78,7 +79,8 @@ export function PhotoSlideshow({ photos, rowCount = 5, rowHeight = 140 }: PhotoS
         <>
             <div
                 ref={containerRef}
-                className="relative w-full overflow-hidden space-y-2"
+                className="relative w-full overflow-hidden flex flex-col"
+                style={{ gap: rowGap }}
             >
                 {/* Gradient overlays for scroll hint */}
 
