@@ -10,18 +10,21 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    // Check for saved preference or system preference during initialization
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('theme') as Theme | null
-      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      return saved || (systemDark ? 'dark' : 'light')
-    }
-    return 'light'
-  })
+  // Always start with 'light' so SSR and client initial render match.
+  // The inline script in __root.tsx already sets data-theme on <html> before
+  // paint, so the CSS is correct. The useEffect below syncs React state to the
+  // real preference after hydration.
+  const [theme, setTheme] = useState<Theme>('light')
 
   useEffect(() => {
-    // Apply theme to document (in case it wasn't set by script or changed)
+    const saved = localStorage.getItem('theme') as Theme | null
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const resolved: Theme = saved || (systemDark ? 'dark' : 'light')
+    setTheme(resolved)
+    document.documentElement.setAttribute('data-theme', resolved)
+  }, [])
+
+  useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
     localStorage.setItem('theme', theme)
   }, [theme])
