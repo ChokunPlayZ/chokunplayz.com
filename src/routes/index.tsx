@@ -1,6 +1,21 @@
-import { Await, Link, createFileRoute, defer, useNavigate } from '@tanstack/react-router'
+import {
+  Await,
+  Link,
+  createFileRoute,
+  defer,
+  useNavigate,
+} from '@tanstack/react-router'
 import { Suspense, useEffect, useRef, useState } from 'react'
-import { Camera, ImageIcon, Home, User, FolderGit2, Mail, Briefcase, Terminal } from 'lucide-react'
+import {
+  Camera,
+  ImageIcon,
+  Home,
+  User,
+  FolderGit2,
+  Mail,
+  Briefcase,
+  Terminal,
+} from 'lucide-react'
 import { JumpNavigation } from '../components/JumpNavigation'
 import { ExperienceCard } from '../components/ExperienceCard'
 import { Section } from '../components/Section'
@@ -10,32 +25,61 @@ import { SocialLinks } from '../components/SocialLinks'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { PhotoSlideshow } from '../components/PhotoSlideshow'
 import { Typewriter } from '../components/Typewriter'
-import { experiences, photoAlbums, profile, projects, socials, sshKey } from '../data/site'
-import { getRandomPhotos } from '../lib/photos'
+import { experiences, profile, projects, socials, sshKey } from '../data/site'
+import { getRandomPhotos, getWebAlbums } from '../lib/photos'
+import type { PichausPhoto } from '../lib/photos'
 
 export const Route = createFileRoute('/')({
   loader: () => ({
-    randomPhotosPromise: defer(getRandomPhotos()),
+    albumsPromise: defer(getWebAlbums()),
   }),
   component: HomePage,
 })
 
 const SECTIONS = [
-  { id: 'home',         label: 'Home',         icon: <Home className="w-4 h-4" /> },
-  { id: 'about',        label: 'About',         icon: <User className="w-4 h-4" /> },
-  { id: 'experiences',  label: 'Experiences',   icon: <Briefcase className="w-4 h-4" /> },
-  { id: 'projects',     label: 'Projects',      icon: <FolderGit2 className="w-4 h-4" /> },
-  { id: 'photos',       label: 'Photos',        icon: <Camera className="w-4 h-4" />, offset: -40 },
-  { id: 'recent-shots', label: 'Recent Shots',  icon: <ImageIcon className="w-4 h-4" />, offset: -40 },
-  { id: 'ssh',          label: 'SSH',           icon: <Terminal className="w-4 h-4" /> },
-  { id: 'contact',      label: 'Contact',       icon: <Mail className="w-4 h-4" /> },
+  { id: 'home', label: 'Home', icon: <Home className="w-4 h-4" /> },
+  { id: 'about', label: 'About', icon: <User className="w-4 h-4" /> },
+  {
+    id: 'experiences',
+    label: 'Experiences',
+    icon: <Briefcase className="w-4 h-4" />,
+  },
+  {
+    id: 'projects',
+    label: 'Projects',
+    icon: <FolderGit2 className="w-4 h-4" />,
+  },
+  {
+    id: 'photos',
+    label: 'Photos',
+    icon: <Camera className="w-4 h-4" />,
+    offset: -40,
+  },
+  {
+    id: 'recent-shots',
+    label: 'Recent Shots',
+    icon: <ImageIcon className="w-4 h-4" />,
+    offset: -40,
+  },
+  { id: 'ssh', label: 'SSH', icon: <Terminal className="w-4 h-4" /> },
+  { id: 'contact', label: 'Contact', icon: <Mail className="w-4 h-4" /> },
 ]
 
 function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const { randomPhotosPromise } = Route.useLoaderData()
+  const { albumsPromise } = Route.useLoaderData()
   const navigate = useNavigate()
   const [showAllEvents, setShowAllEvents] = useState(false)
+  const [randomPhotos, setRandomPhotos] = useState<PichausPhoto[]>([])
+  const [randomPhotosLoading, setRandomPhotosLoading] = useState(true)
+
+  useEffect(() => {
+    setRandomPhotosLoading(true)
+    getRandomPhotos()
+      .then(({ photos }) => setRandomPhotos(photos ?? []))
+      .catch(() => {})
+      .finally(() => setRandomPhotosLoading(false))
+  }, [])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -69,7 +113,10 @@ function HomePage() {
       </div>
 
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <header id="home" className="relative min-h-screen flex flex-col justify-center items-center px-6 pt-20 overflow-hidden">
+      <header
+        id="home"
+        className="relative min-h-screen flex flex-col justify-center items-center px-6 pt-20 overflow-hidden"
+      >
         {/* Dot grid */}
         <div className="absolute inset-0 hero-grid pointer-events-none" />
 
@@ -90,7 +137,9 @@ function HomePage() {
               typingSpeed={80}
               deletingSpeed={50}
               interactiveWord="Photographer"
-              onInteractiveWordClick={() => navigate({ to: '/photos' })}
+              onInteractiveWordClick={() =>
+                navigate({ to: '/photos', search: { album: undefined } })
+              }
             />
           </p>
 
@@ -112,13 +161,20 @@ function HomePage() {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-(--text-muted) animate-bounce">
-          <span className="text-xs uppercase tracking-widest opacity-50">Scroll</span>
+          <span className="text-xs uppercase tracking-widest opacity-50">
+            Scroll
+          </span>
           <div className="w-px h-8 bg-linear-to-b from-(--accent)/50 to-transparent" />
         </div>
       </header>
 
       {/* ── About ─────────────────────────────────────────────── */}
-      <Section title="About Me" id="about" index={1} className="fade-in-section">
+      <Section
+        title="About Me"
+        id="about"
+        index={1}
+        className="fade-in-section"
+      >
         <div className="glass-panel p-8 md:p-10 rounded-3xl">
           <p className="text-lg md:text-xl text-(--text-secondary) leading-relaxed">
             {profile.about}
@@ -127,7 +183,12 @@ function HomePage() {
       </Section>
 
       {/* ── Experience ────────────────────────────────────────── */}
-      <Section title="Experiences" id="experiences" index={2} className="fade-in-section">
+      <Section
+        title="Experiences"
+        id="experiences"
+        index={2}
+        className="fade-in-section"
+      >
         {/* Timeline connector line */}
         <div className="relative space-y-4">
           <div className="absolute left-5 top-8 bottom-8 w-px bg-linear-to-b from-(--accent)/25 via-(--accent)/10 to-transparent pointer-events-none" />
@@ -145,7 +206,12 @@ function HomePage() {
       </Section>
 
       {/* ── Projects ──────────────────────────────────────────── */}
-      <Section title="Featured Projects" id="projects" index={3} className="fade-in-section">
+      <Section
+        title="Featured Projects"
+        id="projects"
+        index={3}
+        className="fade-in-section"
+      >
         <div className="grid gap-6 md:grid-cols-2">
           {projects.map((project) => (
             <ProjectCard
@@ -166,46 +232,77 @@ function HomePage() {
             <Camera className="w-7 h-7" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-(--accent) uppercase tracking-widest mb-1 opacity-60">04</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-(--text-primary)">Photography</h2>
-            <p className="text-(--text-muted) text-sm">Capturing moments & frames</p>
+            <p className="text-xs font-semibold text-(--accent) uppercase tracking-widest mb-1 opacity-60">
+              04
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-(--text-primary)">
+              Photography
+            </h2>
+            <p className="text-(--text-muted) text-sm">
+              Capturing moments & frames
+            </p>
           </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {photoAlbums.map((album, index) => (
-            <div
-              key={album.title}
-              className={
-                !showAllEvents
-                  ? index >= 9
-                    ? 'hidden'
-                    : index >= 3
-                      ? 'hidden md:block'
-                      : ''
-                  : ''
-              }
-            >
-              <PhotoAlbumCard
-                title={album.title}
-                date={album.date}
-                url={album.url}
-                location={'location' in album ? album.location : undefined}
-              />
+        <Suspense
+          fallback={
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="rounded-2xl glass-panel overflow-hidden animate-pulse"
+                >
+                  <div className="w-full aspect-video bg-(--bg-secondary)" />
+                  <div className="p-5 space-y-3">
+                    <div className="h-4 bg-(--bg-secondary) rounded w-3/4" />
+                    <div className="h-3 bg-(--bg-secondary) rounded w-1/2" />
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          }
+        >
+          <Await promise={albumsPromise}>
+            {(data: any) => {
+              const albums = data?.albums ?? []
+              return (
+                <>
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {albums.map((album: any, index: number) => (
+                      <div
+                        key={album.id}
+                        className={
+                          !showAllEvents
+                            ? index >= 9
+                              ? 'hidden'
+                              : index >= 3
+                                ? 'hidden md:block'
+                                : ''
+                            : ''
+                        }
+                      >
+                        <PhotoAlbumCard {...album} />
+                      </div>
+                    ))}
+                  </div>
 
-        {!showAllEvents && photoAlbums.length > 3 && (
-          <div className={`flex justify-center mt-6 ${photoAlbums.length > 9 ? '' : 'md:hidden'}`}>
-            <button
-              onClick={() => setShowAllEvents(true)}
-              className="px-6 py-2 rounded-full border border-(--border) hover:bg-(--accent)/5 hover:border-(--accent)/30 text-sm font-medium transition-all duration-200"
-            >
-              Show More Events
-            </button>
-          </div>
-        )}
+                  {!showAllEvents && albums.length > 3 && (
+                    <div
+                      className={`flex justify-center mt-6 ${albums.length > 9 ? '' : 'md:hidden'}`}
+                    >
+                      <button
+                        onClick={() => setShowAllEvents(true)}
+                        className="px-6 py-2 rounded-full border border-(--border) hover:bg-(--accent)/5 hover:border-(--accent)/30 text-sm font-medium transition-all duration-200"
+                      >
+                        Show More Events
+                      </button>
+                    </div>
+                  )}
+                </>
+              )
+            }}
+          </Await>
+        </Suspense>
       </Section>
 
       {/* ── Recent Shots ──────────────────────────────────────── */}
@@ -216,34 +313,36 @@ function HomePage() {
               <ImageIcon className="w-7 h-7" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-(--accent) uppercase tracking-widest mb-1 opacity-60">05</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-(--text-primary)">Recent Shots</h2>
-              <p className="text-(--text-muted) text-sm">Random photos from my gallery</p>
+              <p className="text-xs font-semibold text-(--accent) uppercase tracking-widest mb-1 opacity-60">
+                05
+              </p>
+              <h2 className="text-3xl md:text-4xl font-bold text-(--text-primary)">
+                Recent Shots
+              </h2>
+              <p className="text-(--text-muted) text-sm">
+                Random photos from my gallery
+              </p>
             </div>
           </div>
         </div>
-        <Suspense
-          fallback={
-            <div className="h-100 w-full flex items-center justify-center text-(--text-muted)">
-              <div className="w-8 h-8 border-4 border-(--accent)/20 border-t-(--accent) rounded-full animate-spin" />
-            </div>
-          }
-        >
-          <Await promise={randomPhotosPromise}>
-            {(data: any) => {
-              const photos = data?.photos ?? []
-              return photos.length > 0 ? (
-                <div className="-mx-16 overflow-hidden">
-                  <PhotoSlideshow photos={photos} />
-                </div>
-              ) : null
-            }}
-          </Await>
-        </Suspense>
+        {randomPhotosLoading ? (
+          <div className="h-100 w-full flex items-center justify-center text-(--text-muted)">
+            <div className="w-8 h-8 border-4 border-(--accent)/20 border-t-(--accent) rounded-full animate-spin" />
+          </div>
+        ) : randomPhotos.length > 0 ? (
+          <div className="-mx-16 overflow-hidden">
+            <PhotoSlideshow photos={randomPhotos} />
+          </div>
+        ) : null}
       </section>
 
       {/* ── SSH ───────────────────────────────────────────────── */}
-      <Section title="SSH Access" id="ssh" index={6} className="fade-in-section">
+      <Section
+        title="SSH Access"
+        id="ssh"
+        index={6}
+        className="fade-in-section"
+      >
         <div className="glass-panel p-8 md:p-10 rounded-3xl space-y-6">
           <div className="flex items-start gap-4">
             <div className="inline-flex items-center justify-center w-12 h-12 shrink-0 rounded-2xl bg-(--accent)/10 text-(--accent)">
@@ -272,7 +371,9 @@ function HomePage() {
                         const btn = e.currentTarget
                         const orig = btn.textContent
                         btn.textContent = '✓'
-                        setTimeout(() => { btn.textContent = orig }, 2000)
+                        setTimeout(() => {
+                          btn.textContent = orig
+                        }, 2000)
                       }}
                       className="sm:self-start px-4 py-2 bg-(--accent) hover:bg-(--accent-hover) text-white rounded-lg text-sm font-medium transition-colors shrink-0"
                     >
@@ -295,7 +396,9 @@ function HomePage() {
                         const btn = e.currentTarget
                         const orig = btn.textContent
                         btn.textContent = '✓'
-                        setTimeout(() => { btn.textContent = orig }, 2000)
+                        setTimeout(() => {
+                          btn.textContent = orig
+                        }, 2000)
                       }}
                       className="sm:self-start px-4 py-2 bg-(--accent) hover:bg-(--accent-hover) text-white rounded-lg text-sm font-medium transition-colors shrink-0"
                     >
@@ -316,24 +419,27 @@ function HomePage() {
           <div className="h-px bg-linear-to-r from-transparent via-(--border) to-transparent" />
         </div>
         <div className="max-w-2xl mx-auto px-6 space-y-6">
-          <p className="text-xs font-semibold text-(--accent) uppercase tracking-widest opacity-60">07</p>
+          <p className="text-xs font-semibold text-(--accent) uppercase tracking-widest opacity-60">
+            07
+          </p>
           <h2 className="text-4xl md:text-5xl font-bold text-(--text-primary)">
             Let's Connect
           </h2>
           <p className="text-(--text-secondary) max-w-sm mx-auto">
-            Whether it's a project, a question, or just a hello — my inbox is open.
+            Whether it's a project, a question, or just a hello — my inbox is
+            open.
           </p>
           <div className="pt-2">
             <SocialLinks links={socials} className="justify-center" />
           </div>
           <p className="text-xs text-(--text-muted) pt-6 opacity-60">
-            © {new Date().getFullYear()} {profile.name} · Built with TanStack Start
+            © {new Date().getFullYear()} {profile.name} · Built with TanStack
+            Start
           </p>
         </div>
       </footer>
 
       <JumpNavigation sections={SECTIONS} />
-
     </div>
   )
 }
