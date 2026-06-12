@@ -1,9 +1,12 @@
 'use client'
 
-import { ExternalLink, MapPin, X, ArrowLeft } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { JustifiedLayout } from '@immich/justified-layout-wasm'
+import { ExternalLink, MapPin, Moon, Sun, X, ArrowLeft } from 'lucide-react'
+import { Blurhash } from 'react-blurhash'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { getAlbumPhotos, getPhotoThumbnailUrl, getPhotoUrl } from '../lib/photos'
 import type { PichausAlbum, PichausPhoto } from '../lib/photos'
+import { useTheme } from './ThemeProvider'
 
 interface PhotoModeProps {
     photos: PichausPhoto[]
@@ -32,7 +35,99 @@ function groupByYear(albums: PichausAlbum[]) {
         if (!map.has(year)) map.set(year, [])
         map.get(year)!.push(album)
     }
-    return [...map.entries()].sort((a, b) => Number(b[0]) - Number(a[0]))
+    return [...map.entries()].sort((a, b) => {
+        if (a[0] === 'Unknown') return 1
+        if (b[0] === 'Unknown') return -1
+        return Number(b[0]) - Number(a[0])
+    })
+}
+
+// ── Photo tile (blurhash → image fade) ───────────────────────────────────────
+
+function PhotoTile({ photo, style }: { photo: PichausPhoto; style: React.CSSProperties }) {
+    const [loaded, setLoaded] = useState(false)
+    return (
+        <a
+            href={getPhotoUrl(photo.id)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute overflow-hidden group"
+            style={style}
+        >
+            {photo.blurhash && (
+                <Blurhash
+                    hash={photo.blurhash}
+                    width="100%"
+                    height="100%"
+                    resolutionX={32}
+                    resolutionY={32}
+                    style={{
+                        position: 'absolute',
+                        inset: 0,
+                        opacity: loaded ? 0 : 1,
+                        transition: 'opacity 0.6s ease',
+                    }}
+                />
+            )}
+            <img
+                src={getPhotoThumbnailUrl(photo.id)}
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-[opacity,transform] duration-500"
+                style={{ opacity: loaded ? 1 : 0 }}
+                onLoad={() => setLoaded(true)}
+                loading="lazy"
+                alt=""
+            />
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-linear-to-t from-black/40 to-transparent" />
+        </a>
+    )
+}
+
+// ── Justified photo grid ──────────────────────────────────────────────────────
+
+function JustifiedGrid({ photos }: { photos: PichausPhoto[] }) {
+    const containerRef = useRef<HTMLDivElement>(null)
+    const [containerWidth, setContainerWidth] = useState(0)
+
+    useEffect(() => {
+        const el = containerRef.current
+        if (!el) return
+        setContainerWidth(el.offsetWidth)
+        const ro = new ResizeObserver(() => setContainerWidth(el.offsetWidth))
+        ro.observe(el)
+        return () => ro.disconnect()
+    }, [])
+
+    const layout = useMemo(() => {
+        if (!containerWidth || !photos.length) return null
+        const aspectRatios = new Float32Array(
+            photos.map(p => (p.width && p.height ? p.width / p.height : 1))
+        )
+        return new JustifiedLayout(aspectRatios, {
+            rowHeight: 220,
+            rowWidth: containerWidth,
+            spacing: 3,
+            heightTolerance: 0.15,
+        })
+    }, [photos, containerWidth])
+
+    return (
+        <div ref={containerRef} className="relative w-full" style={{ height: layout?.containerHeight ?? 0 }}>
+            {layout && photos.map((photo, i) => {
+                const { top, left, width, height } = layout.getPosition(i)
+                return (
+                    <PhotoTile
+                        key={photo.id}
+                        photo={photo}
+                        style={{
+                            top, left, width, height,
+                            animation: 'pmAlbumIn 0.4s ease both',
+                            animationDelay: `${Math.min(i * 0.015, 0.8)}s`,
+                        }}
+                    />
+                )
+            })}
+        </div>
+    )
 }
 
 // ── Album view ────────────────────────────────────────────────────────────────
@@ -42,120 +137,96 @@ interface AlbumViewProps {
     photos: PichausPhoto[]
     loading: boolean
     ready: boolean
+    loadingMore: boolean
+    total: number | null
     onBack: () => void
 }
 
-function AlbumView({ album, photos, loading, ready, onBack }: AlbumViewProps) {
+function AlbumView({ album, photos, loading, ready, loadingMore, total, onBack }: AlbumViewProps) {
     const { month, day } = parseEventDate(album.eventDate)
     const year = getYear(album.eventDate)
     const picHausUrl = `https://p.ckl.moe/v/${album.id}`
 
     return (
-        <div className="px-6 py-16 min-h-full">
-            <div className="max-w-2xl mx-auto">
+        <div className="relative min-h-full">
 
-                {/* Back button */}
-                <button
-                    onClick={onBack}
-                    className="flex items-center gap-2 text-sm text-(--text-muted) hover:text-(--accent) transition-colors duration-200 mb-8 group"
-                >
-                    <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform duration-200" />
-                    All events
-                </button>
+            {/* Sticky header overlay */}
+            <div className="sticky top-0 z-20 px-6 pt-6 pb-4 bg-linear-to-b from-(--bg-primary)/90 via-(--bg-primary)/60 to-transparent backdrop-blur-md">
+                <div className="flex items-start justify-between gap-4">
+                    <div className="flex flex-col gap-3">
+                        {/* Back button */}
+                        <button
+                            onClick={onBack}
+                            className="flex items-center gap-2 text-xs text-(--text-muted) hover:text-(--accent) transition-colors duration-200 group bg-(--bg-primary)/60 backdrop-blur-sm px-3 py-1.5 rounded-full border border-(--border) w-fit"
+                        >
+                            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform duration-200" />
+                            All events
+                        </button>
 
-                {/* Album header */}
-                <div className="mb-8 bg-(--bg-primary)/60 backdrop-blur-xl rounded-3xl px-8 py-6 border border-white/5 shadow-2xl">
-                    <div className="flex items-start justify-between gap-4">
+                        {/* Album metadata */}
                         <div className="flex items-start gap-4">
                             <div className="shrink-0 text-right select-none pt-0.5">
-                                <p className="text-[10px] font-bold text-(--accent) uppercase tracking-wider leading-none mb-0.5 opacity-75">
-                                    {month}
-                                </p>
-                                <p className="text-2xl font-black leading-none text-(--text-primary) opacity-80">
-                                    {day}
-                                </p>
-                                <p className="text-xs font-bold text-(--text-muted) opacity-50 mt-0.5">
-                                    {year}
-                                </p>
+                                <p className="text-[10px] font-bold text-(--accent) uppercase tracking-wider leading-none mb-0.5 opacity-75">{month}</p>
+                                <p className="text-2xl font-black leading-none text-(--text-primary) opacity-80">{day}</p>
+                                <p className="text-xs font-bold text-(--text-muted) opacity-50 mt-0.5">{year}</p>
                             </div>
                             <div>
-                                <h2 className="text-xl font-bold text-(--text-primary) leading-snug mb-1">
-                                    {album.title}
-                                </h2>
+                                <h2 className="text-xl font-bold text-(--text-primary) leading-snug mb-1">{album.title}</h2>
                                 {album.location && (
-                                    <div className="flex items-center gap-1 text-xs text-(--text-muted) opacity-60 mb-2">
+                                    <div className="flex items-center gap-1 text-xs text-(--text-muted) opacity-60 mb-1">
                                         <MapPin className="w-3 h-3 shrink-0" />
                                         {album.location}
                                     </div>
                                 )}
-                                {!loading && ready && (
+                                {(loading || ready) && total !== null && (
                                     <p className="text-xs text-(--text-muted) opacity-40">
-                                        {album.photoCount ?? photos.length} photo{(album.photoCount ?? photos.length) !== 1 ? 's' : ''}
+                                        {total} photo{total !== 1 ? 's' : ''}
                                     </p>
                                 )}
                             </div>
                         </div>
-                        <a
-                            href={picHausUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 hover:border-(--accent)/40 text-xs text-(--text-muted) hover:text-(--accent) transition-all duration-200"
-                        >
-                            <ExternalLink className="w-3 h-3" />
-                            <span className="hidden sm:inline">Open in Pichaus</span>
-                        </a>
                     </div>
+                    <a
+                        href={picHausUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-(--border) hover:border-(--accent)/60 text-xs text-(--text-muted) hover:text-(--accent) transition-all duration-200 bg-(--bg-primary)/60 backdrop-blur-sm"
+                    >
+                        <ExternalLink className="w-3 h-3" />
+                        <span className="hidden sm:inline">Open in Pichaus</span>
+                    </a>
                 </div>
-
-                {/* Loading skeleton */}
-                {loading && (
-                    <div style={{ columns: '2 160px', gap: '8px' }}>
-                        {Array.from({ length: 8 }, (_, i) => (
-                            <div
-                                key={i}
-                                className="mb-2 rounded-xl bg-white/5 animate-pulse"
-                                style={{
-                                    breakInside: 'avoid',
-                                    height: [160, 220, 180, 240, 200, 170, 210, 190][i % 8],
-                                }}
-                            />
-                        ))}
-                    </div>
-                )}
-
-                {/* Photo grid */}
-                {!loading && ready && photos.length === 0 && (
-                    <p className="text-center text-(--text-muted) opacity-40 py-16 text-sm">No photos found.</p>
-                )}
-                {!loading && ready && photos.length > 0 && (
-                    <div style={{ columns: '2 160px', gap: '8px' }}>
-                        {photos.map((photo, i) => (
-                            <a
-                                key={photo.id}
-                                href={getPhotoUrl(photo.id)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="block mb-2 rounded-xl overflow-hidden group relative"
-                                style={{
-                                    breakInside: 'avoid',
-                                    animation: 'pmAlbumIn 0.4s ease both',
-                                    animationDelay: `${Math.min(i * 0.025, 0.6)}s`,
-                                }}
-                            >
-                                <img
-                                    src={getPhotoThumbnailUrl(photo.id)}
-                                    width={photo.width}
-                                    height={photo.height}
-                                    className="w-full block group-hover:scale-105 transition-transform duration-500"
-                                    loading="lazy"
-                                    alt=""
-                                />
-                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-linear-to-t from-black/40 to-transparent rounded-xl" />
-                            </a>
-                        ))}
-                    </div>
-                )}
             </div>
+
+            {/* Loading skeleton */}
+            {loading && (
+                <div className="flex flex-wrap gap-0.75 px-0.75">
+                    {Array.from({ length: 12 }, (_, i) => (
+                        <div
+                            key={i}
+                            className="bg-(--border) opacity-40 animate-pulse shrink-0"
+                            style={{
+                                width: [220, 160, 180, 240, 200, 170, 210, 190, 250, 160, 200, 180][i % 12],
+                                height: 220,
+                            }}
+                        />
+                    ))}
+                </div>
+            )}
+
+            {/* Photo grid */}
+            {!loading && ready && photos.length === 0 && (
+                <p className="text-center text-(--text-muted) opacity-40 py-16 text-sm">No photos found.</p>
+            )}
+            {!loading && ready && photos.length > 0 && (
+                <JustifiedGrid photos={photos} />
+            )}
+
+            {loadingMore && (
+                <div className="flex justify-center py-8">
+                    <div className="w-5 h-5 rounded-full border-2 border-(--accent)/30 border-t-(--accent) animate-spin" />
+                </div>
+            )}
         </div>
     )
 }
@@ -163,12 +234,30 @@ function AlbumView({ album, photos, loading, ready, onBack }: AlbumViewProps) {
 // ── Main component ────────────────────────────────────────────────────────────
 
 export function PhotoMode({ photos, albums, onExit }: PhotoModeProps) {
+    const { theme, toggleTheme } = useTheme()
     const grouped = useMemo(() => groupByYear(albums), [albums])
     const [loaded, setLoaded] = useState(false)
     const [selectedAlbum, setSelectedAlbum] = useState<PichausAlbum | null>(null)
     const [albumPhotos, setAlbumPhotos] = useState<PichausPhoto[]>([])
     const [albumLoading, setAlbumLoading] = useState(false)
     const [albumReady, setAlbumReady] = useState(false)
+    const [albumPage, setAlbumPage] = useState(1)
+    const [albumHasMore, setAlbumHasMore] = useState(false)
+    const [albumLoadingMore, setAlbumLoadingMore] = useState(false)
+    const [albumTotal, setAlbumTotal] = useState<number | null>(null)
+    const albumPanelRef = useRef<HTMLDivElement>(null)
+    const loadMoreRef = useRef<() => void>(() => {})
+    const [windowWidth, setWindowWidth] = useState(1200)
+
+    useEffect(() => {
+        setWindowWidth(window.innerWidth)
+        const onResize = () => setWindowWidth(window.innerWidth)
+        window.addEventListener('resize', onResize)
+        return () => window.removeEventListener('resize', onResize)
+    }, [])
+
+    const isMobile = windowWidth < 768
+    const sidebarWidth = windowWidth < 1024 ? '320px' : '400px'
 
     useEffect(() => {
         document.body.style.overflow = 'hidden'
@@ -187,16 +276,51 @@ export function PhotoMode({ photos, albums, onExit }: PhotoModeProps) {
         }
     }, [onExit, selectedAlbum])
 
+    // Keep load-more callback up to date without re-attaching the scroll listener
+    loadMoreRef.current = async () => {
+        if (!selectedAlbum || albumLoadingMore || !albumHasMore) return
+        setAlbumLoadingMore(true)
+        try {
+            const nextPage = albumPage + 1
+            const result = await getAlbumPhotos({ data: { albumId: selectedAlbum.id, page: nextPage, limit: 50 } })
+            if (result.photos.length > 0) {
+                setAlbumPhotos(prev => [...prev, ...result.photos])
+                setAlbumPage(nextPage)
+            }
+            setAlbumHasMore(result.hasMore)
+        } finally {
+            setAlbumLoadingMore(false)
+        }
+    }
+
+    // Attach scroll listener once per album selection
+    useEffect(() => {
+        const el = albumPanelRef.current
+        if (!el || !selectedAlbum) return
+        const onScroll = () => {
+            if (el.scrollHeight - el.scrollTop - el.clientHeight < 400) {
+                loadMoreRef.current()
+            }
+        }
+        el.addEventListener('scroll', onScroll, { passive: true })
+        return () => el.removeEventListener('scroll', onScroll)
+    }, [selectedAlbum?.id])
+
     const handleAlbumSelect = async (album: PichausAlbum) => {
         setSelectedAlbum(album)
         setAlbumPhotos([])
         setAlbumReady(false)
         setAlbumLoading(true)
-        const albumId = album.id
-        if (albumId) {
+        setAlbumPage(1)
+        setAlbumHasMore(false)
+        setAlbumLoadingMore(false)
+        setAlbumTotal(album.photoCount && album.photoCount > 0 ? album.photoCount : null)
+        if (album.id) {
             try {
-                const result = await getAlbumPhotos({ data: albumId })
+                const result = await getAlbumPhotos({ data: { albumId: album.id, page: 1, limit: 50 } })
                 setAlbumPhotos(result.photos)
+                setAlbumHasMore(result.hasMore)
+                if (result.total !== null) setAlbumTotal(result.total)
             } finally {
                 setAlbumLoading(false)
                 setAlbumReady(true)
@@ -208,10 +332,13 @@ export function PhotoMode({ photos, albums, onExit }: PhotoModeProps) {
         setSelectedAlbum(null)
         setAlbumPhotos([])
         setAlbumReady(false)
+        setAlbumPage(1)
+        setAlbumHasMore(false)
+        setAlbumTotal(null)
     }
 
     return (
-        <div data-theme="dark" className="fixed inset-0 z-200 bg-(--bg-primary) animate-in fade-in duration-700">
+        <div className="fixed inset-0 z-200 bg-(--bg-primary) animate-in fade-in duration-700">
 
             {/* ── Film-grain overlay ── */}
             <svg className="fixed inset-0 w-full h-full pointer-events-none opacity-[0.07] z-210" aria-hidden>
@@ -225,17 +352,28 @@ export function PhotoMode({ photos, albums, onExit }: PhotoModeProps) {
             {/* ── Floating REC indicator ── */}
             <div className="fixed top-5 left-5 z-300 flex items-center gap-2 pointer-events-none">
                 <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-white/25">REC</span>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-(--text-muted) opacity-40">REC</span>
             </div>
 
-            {/* ── Floating exit button ── */}
-            <button
-                onClick={onExit}
-                className="fixed top-4 right-4 z-300 w-9 h-9 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/12 border border-white/10 hover:border-(--accent)/50 text-white/35 hover:text-(--accent) transition-all duration-300 backdrop-blur-md"
-                aria-label="Exit"
-            >
-                <X className="w-3.5 h-3.5" />
-            </button>
+            {/* ── Floating controls (top-right) ── */}
+            <div className="fixed top-4 right-4 z-300 flex items-center gap-2">
+                <button
+                    onClick={toggleTheme}
+                    className="w-9 h-9 flex items-center justify-center rounded-full bg-(--bg-secondary)/70 hover:bg-(--bg-secondary) border border-(--border) text-(--text-muted) hover:text-(--text-primary) transition-all duration-300 backdrop-blur-md"
+                    aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+                >
+                    {theme === 'light'
+                        ? <Moon className="w-3.5 h-3.5" />
+                        : <Sun className="w-3.5 h-3.5" />}
+                </button>
+                <button
+                    onClick={onExit}
+                    className="w-9 h-9 flex items-center justify-center rounded-full bg-(--bg-secondary)/70 hover:bg-(--bg-secondary) border border-(--border) hover:border-(--accent)/50 text-(--text-muted) hover:text-(--accent) transition-all duration-300 backdrop-blur-md"
+                    aria-label="Exit"
+                >
+                    <X className="w-3.5 h-3.5" />
+                </button>
+            </div>
 
             {/* ── Background layer ── */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
@@ -262,7 +400,7 @@ export function PhotoMode({ photos, albums, onExit }: PhotoModeProps) {
                             fontSize: 'clamp(56px, 11vw, 160px)',
                             letterSpacing: '0.3em',
                             color: 'transparent',
-                            WebkitTextStroke: '1px rgba(125,211,252,0.045)',
+                            WebkitTextStroke: '1px color-mix(in srgb, var(--text-primary) 7%, transparent)',
                             animation: 'pmDrift 16s ease-in-out infinite',
                         }}
                     >
@@ -290,16 +428,18 @@ export function PhotoMode({ photos, albums, onExit }: PhotoModeProps) {
             {/* ── Two-panel foreground ── */}
             <div className="absolute inset-0 z-10 flex overflow-hidden">
 
-                {/* ── Panel 1: Timeline (shrinks to sidebar when album open) ── */}
+                {/* ── Timeline ── */}
                 <div
-                    className="h-full shrink-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                    className="shrink-0 h-full overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                     style={{
-                        width: selectedAlbum ? '360px' : '100%',
+                        width: selectedAlbum ? (isMobile ? '0px' : sidebarWidth) : '100%',
+                        borderRight: selectedAlbum && !isMobile ? '1px solid var(--border)' : 'none',
                         transition: 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                        overflow: isMobile && selectedAlbum ? 'hidden' : undefined,
                     }}
                 >
-                        <div className="px-5 py-16">
-                            <div className="max-w-xl mx-auto bg-(--bg-primary)/60 backdrop-blur-xl rounded-3xl px-8 py-10 border border-white/5 shadow-2xl">
+                        <div className="px-6 py-16">
+                            <div className="max-w-xl mx-auto bg-(--bg-primary)/60 backdrop-blur-xl rounded-3xl px-8 py-10 border border-(--border) shadow-2xl">
 
                                 {/* Timeline header */}
                                 <div className={`mb-10 transition-[opacity,transform] duration-700 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3'}`}>
@@ -404,26 +544,29 @@ export function PhotoMode({ photos, albums, onExit }: PhotoModeProps) {
                         </div>
                     </div>
 
-                    {/* ── Panel 2: Album view (slides in from right) ── */}
-                    <div
-                        className="flex-1 h-full overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-                        style={{
-                            transform: selectedAlbum ? 'translateX(0)' : 'translateX(100%)',
-                            opacity: selectedAlbum ? 1 : 0,
-                            transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease',
-                            pointerEvents: selectedAlbum ? 'auto' : 'none',
-                        }}
-                    >
-                        {selectedAlbum && (
-                            <AlbumView
-                                album={selectedAlbum}
-                                photos={albumPhotos}
-                                loading={albumLoading}
-                                ready={albumReady}
-                                onBack={handleBack}
-                            />
-                        )}
-                    </div>
+                    {/* ── Panel 2: Album view ── */}
+                {/* ── Album panel (fills remaining space) ── */}
+                <div
+                    ref={albumPanelRef}
+                    className="flex-1 h-full overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                    style={{
+                        opacity: selectedAlbum ? 1 : 0,
+                        pointerEvents: selectedAlbum ? 'auto' : 'none',
+                        transition: 'opacity 0.4s ease',
+                    }}
+                >
+                    {selectedAlbum && (
+                        <AlbumView
+                            album={selectedAlbum}
+                            photos={albumPhotos}
+                            loading={albumLoading}
+                            ready={albumReady}
+                            loadingMore={albumLoadingMore}
+                            total={albumTotal}
+                            onBack={handleBack}
+                        />
+                    )}
+                </div>
             </div>
 
             <style>{`

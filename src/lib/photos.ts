@@ -82,6 +82,7 @@ export const getWebAlbums = createServerFn().handler(async () => {
 
 interface ApiResponse {
   success: boolean
+  pagination?: { page: number; limit: number; total: number; hasMore: boolean }
   data?: Array<{
     id: string
     url: string
@@ -101,26 +102,32 @@ interface ApiResponse {
 }
 
 export const getAlbumPhotos = createServerFn()
-  .validator((albumId: string) => albumId)
-  .handler(async ({ data: albumId }) => {
+  .validator((data: { albumId: string; page?: number; limit?: number }) => data)
+  .handler(async ({ data }) => {
+    const { albumId, page = 1, limit = 50 } = data
     const apiKey = process.env.PICHAUS_API_KEY
-    if (!apiKey) return { photos: [] as PichausPhoto[], error: 'API key not configured' }
+    if (!apiKey) return { photos: [] as PichausPhoto[], total: null, hasMore: false, error: 'API key not configured' }
     try {
       const response = await fetch(
-        `https://p.ckl.moe/api/external/albums/${albumId}/photos?sortBy=dateTaken`,
+        `https://p.ckl.moe/api/external/albums/${albumId}/photos?sortBy=dateTaken&page=${page}&limit=${limit}`,
         { headers: { Authorization: `Bearer ${apiKey}` } },
       )
-      if (!response.ok) return { photos: [] as PichausPhoto[], error: `API error: ${response.status}` }
+      if (!response.ok) return { photos: [] as PichausPhoto[], total: null, hasMore: false, error: `API error: ${response.status}` }
       const result = (await response.json()) as ApiResponse
-      if (!result.success || !result.data) return { photos: [] as PichausPhoto[], error: 'Invalid response' }
+      if (!result.success || !result.data) return { photos: [] as PichausPhoto[], total: null, hasMore: false, error: 'Invalid response' }
       const photos: PichausPhoto[] = result.data.map((p) => ({
         id: p.id, width: p.width, height: p.height,
         blurhash: p.blurhash, dateTaken: p.dateTaken,
         album: { id: p.album?.id ?? albumId, title: p.album?.title ?? '' },
       }))
-      return { photos, error: null }
+      return {
+        photos,
+        total: result.pagination?.total ?? null,
+        hasMore: result.pagination?.hasMore ?? (photos.length >= limit),
+        error: null,
+      }
     } catch {
-      return { photos: [] as PichausPhoto[], error: 'Failed to fetch' }
+      return { photos: [] as PichausPhoto[], total: null, hasMore: false, error: 'Failed to fetch' }
     }
   })
 
