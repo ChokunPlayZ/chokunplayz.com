@@ -22,7 +22,7 @@ export const getPhotoThumbnailUrl = (id: string) =>
 export interface PichausAlbum {
   id: string
   title: string
-  eventDate: string
+  eventDate: string | null
   location?: string
   photoCount?: number
   coverPhoto?: { id: string; width: number; height: number }

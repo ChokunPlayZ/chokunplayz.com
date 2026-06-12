@@ -11,7 +11,8 @@ interface PhotoModeProps {
     onExit: () => void
 }
 
-function parseEventDate(dateStr: string) {
+function parseEventDate(dateStr: string | null | undefined) {
+    if (!dateStr) return { month: '---', day: '-' }
     const d = new Date(dateStr.includes('T') ? dateStr : `${dateStr}T12:00:00`)
     return {
         month: d.toLocaleString('en-US', { month: 'short' }).toUpperCase(),
@@ -22,7 +23,7 @@ function parseEventDate(dateStr: string) {
 function groupByYear(albums: PichausAlbum[]) {
     const map = new Map<string, PichausAlbum[]>()
     for (const album of albums) {
-        const year = album.eventDate.slice(0, 4)
+        const year = album.eventDate?.slice(0, 4) ?? 'Unknown'
         if (!map.has(year)) map.set(year, [])
         map.get(year)!.push(album)
     }
@@ -41,7 +42,7 @@ interface AlbumViewProps {
 
 function AlbumView({ album, photos, loading, ready, onBack }: AlbumViewProps) {
     const { month, day } = parseEventDate(album.eventDate)
-    const year = album.eventDate.slice(0, 4)
+    const year = album.eventDate?.slice(0, 4) ?? ''
     const picHausUrl = `https://p.ckl.moe/v/${album.id}`
 
     return (
