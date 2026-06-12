@@ -22,7 +22,7 @@ export const getPhotoThumbnailUrl = (id: string) =>
 export interface PichausAlbum {
   id: string
   title: string
-  eventDate: string | null
+  eventDate: number | null  // Unix timestamp (seconds), null when unset
   location?: string
   photoCount?: number
   coverPhoto?: { id: string; width: number; height: number }
@@ -33,7 +33,7 @@ interface AlbumsApiResponse {
   data?: Array<{
     id: string
     title: string
-    eventDate: string
+    eventDate: number | null
     location?: string
     photoCount?: number
     coverPhoto?: { id: string; width: number; height: number }
@@ -46,7 +46,7 @@ function hardcodedAlbums(): PichausAlbum[] {
     .map((a) => ({
       id: a.url.split('/v/')[1] ?? '',
       title: a.title,
-      eventDate: a.date,
+      eventDate: Math.floor(new Date(`${a.date}T12:00:00`).getTime() / 1000),
       location: a.location,
     }))
     .filter((a) => a.id !== '')
