@@ -90,11 +90,10 @@ interface ApiResponse {
     height: number
     blurhash: string
     dateTaken: number
-    album: {
+    album?: {
       id: string
       title: string
     }
-    // define other potential fields as optional if needed for type safety but we only pick what we need
     filename?: string
     originalName?: string
     createdAt?: number
@@ -117,7 +116,7 @@ export const getAlbumPhotos = createServerFn()
       const photos: PichausPhoto[] = result.data.map((p) => ({
         id: p.id, width: p.width, height: p.height,
         blurhash: p.blurhash, dateTaken: p.dateTaken,
-        album: { id: p.album.id, title: p.album.title },
+        album: { id: p.album?.id ?? albumId, title: p.album?.title ?? '' },
       }))
       return { photos, error: null }
     } catch {
@@ -173,8 +172,8 @@ export const getRandomPhotos = createServerFn().handler(async () => {
       blurhash: photo.blurhash,
       dateTaken: photo.dateTaken,
       album: {
-        id: photo.album.id,
-        title: photo.album.title,
+        id: photo.album?.id ?? '',
+        title: photo.album?.title ?? '',
       },
     }))
 
