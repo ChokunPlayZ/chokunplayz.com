@@ -2,43 +2,37 @@
 
 import { ExternalLink, MapPin, X, ArrowLeft } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
-import { photoAlbums } from '../data/site'
 import { getAlbumPhotos, getPhotoThumbnailUrl, getPhotoUrl } from '../lib/photos'
-import type { PichausPhoto } from '../lib/photos'
+import type { PichausAlbum, PichausPhoto } from '../lib/photos'
 
 interface PhotoModeProps {
     photos: PichausPhoto[]
+    albums: PichausAlbum[]
     onExit: () => void
 }
 
-type Album = (typeof photoAlbums)[number]
-
 function parseEventDate(dateStr: string) {
-    const d = new Date(`${dateStr}T12:00:00`)
+    const d = new Date(dateStr.includes('T') ? dateStr : `${dateStr}T12:00:00`)
     return {
         month: d.toLocaleString('en-US', { month: 'short' }).toUpperCase(),
         day:   d.getDate().toString(),
     }
 }
 
-function groupByYear(albums: readonly Album[]) {
-    const map = new Map<string, Album[]>()
+function groupByYear(albums: PichausAlbum[]) {
+    const map = new Map<string, PichausAlbum[]>()
     for (const album of albums) {
-        const year = album.date.slice(0, 4)
+        const year = album.eventDate.slice(0, 4)
         if (!map.has(year)) map.set(year, [])
         map.get(year)!.push(album)
     }
     return [...map.entries()].sort((a, b) => Number(b[0]) - Number(a[0]))
 }
 
-function getAlbumId(url: string) {
-    return url.split('/v/')[1] ?? null
-}
-
 // ── Album view ────────────────────────────────────────────────────────────────
 
 interface AlbumViewProps {
-    album: Album
+    album: PichausAlbum
     photos: PichausPhoto[]
     loading: boolean
     ready: boolean
@@ -46,10 +40,9 @@ interface AlbumViewProps {
 }
 
 function AlbumView({ album, photos, loading, ready, onBack }: AlbumViewProps) {
-    const albumId = getAlbumId(album.url)
-    const { month, day } = parseEventDate(album.date)
-    const year = album.date.slice(0, 4)
-    const location = 'location' in album ? album.location as string : undefined
+    const { month, day } = parseEventDate(album.eventDate)
+    const year = album.eventDate.slice(0, 4)
+    const picHausUrl = `https://p.ckl.moe/v/${album.id}`
 
     return (
         <div className="px-6 py-16 min-h-full">
@@ -83,30 +76,28 @@ function AlbumView({ album, photos, loading, ready, onBack }: AlbumViewProps) {
                                 <h2 className="text-xl font-bold text-(--text-primary) leading-snug mb-1">
                                     {album.title}
                                 </h2>
-                                {location && (
+                                {album.location && (
                                     <div className="flex items-center gap-1 text-xs text-(--text-muted) opacity-60 mb-2">
                                         <MapPin className="w-3 h-3 shrink-0" />
-                                        {location}
+                                        {album.location}
                                     </div>
                                 )}
                                 {!loading && ready && (
                                     <p className="text-xs text-(--text-muted) opacity-40">
-                                        {photos.length} photo{photos.length !== 1 ? 's' : ''}
+                                        {album.photoCount ?? photos.length} photo{(album.photoCount ?? photos.length) !== 1 ? 's' : ''}
                                     </p>
                                 )}
                             </div>
                         </div>
-                        {albumId && (
-                            <a
-                                href={album.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 hover:border-(--accent)/40 text-xs text-(--text-muted) hover:text-(--accent) transition-all duration-200"
-                            >
-                                <ExternalLink className="w-3 h-3" />
-                                <span className="hidden sm:inline">Open in Pichaus</span>
-                            </a>
-                        )}
+                        <a
+                            href={picHausUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 hover:border-(--accent)/40 text-xs text-(--text-muted) hover:text-(--accent) transition-all duration-200"
+                        >
+                            <ExternalLink className="w-3 h-3" />
+                            <span className="hidden sm:inline">Open in Pichaus</span>
+                        </a>
                     </div>
                 </div>
 
@@ -165,10 +156,10 @@ function AlbumView({ album, photos, loading, ready, onBack }: AlbumViewProps) {
 
 // ── Main component ────────────────────────────────────────────────────────────
 
-export function PhotoMode({ photos, onExit }: PhotoModeProps) {
-    const grouped = useMemo(() => groupByYear(photoAlbums), [])
+export function PhotoMode({ photos, albums, onExit }: PhotoModeProps) {
+    const grouped = useMemo(() => groupByYear(albums), [albums])
     const [loaded, setLoaded] = useState(false)
-    const [selectedAlbum, setSelectedAlbum] = useState<Album | null>(null)
+    const [selectedAlbum, setSelectedAlbum] = useState<PichausAlbum | null>(null)
     const [albumPhotos, setAlbumPhotos] = useState<PichausPhoto[]>([])
     const [albumLoading, setAlbumLoading] = useState(false)
     const [albumReady, setAlbumReady] = useState(false)
@@ -190,12 +181,12 @@ export function PhotoMode({ photos, onExit }: PhotoModeProps) {
         }
     }, [onExit, selectedAlbum])
 
-    const handleAlbumSelect = async (album: Album) => {
+    const handleAlbumSelect = async (album: PichausAlbum) => {
         setSelectedAlbum(album)
         setAlbumPhotos([])
         setAlbumReady(false)
         setAlbumLoading(true)
-        const albumId = getAlbumId(album.url)
+        const albumId = album.id
         if (albumId) {
             try {
                 const result = await getAlbumPhotos({ data: albumId })
@@ -323,7 +314,7 @@ export function PhotoMode({ photos, onExit }: PhotoModeProps) {
                                         Moments in Film
                                     </h2>
                                     <p className="text-(--text-muted) text-sm">
-                                        {photoAlbums.length} events across {grouped.length} year{grouped.length !== 1 ? 's' : ''}
+                                        {albums.length} events across {grouped.length} year{grouped.length !== 1 ? 's' : ''}
                                     </p>
                                 </div>
 
@@ -354,8 +345,8 @@ export function PhotoMode({ photos, onExit }: PhotoModeProps) {
 
                                             {/* Events */}
                                             {events.map((album, idx) => {
-                                                const { month, day } = parseEventDate(album.date)
-                                                const location = 'location' in album ? album.location as string : undefined
+                                                const { month, day } = parseEventDate(album.eventDate)
+                                                const location = album.location
                                                 const delay = (gIdx * 8 + idx) * 0.045
 
                                                 return (

@@ -1,21 +1,25 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { PhotoMode } from '../components/PhotoMode'
-import { getRandomPhotos } from '../lib/photos'
+import { getRandomPhotos, getWebAlbums } from '../lib/photos'
 
 export const Route = createFileRoute('/photos')({
     loader: async () => {
-        const { photos } = await getRandomPhotos()
-        return { photos }
+        const [{ photos }, { albums }] = await Promise.all([
+            getRandomPhotos(),
+            getWebAlbums(),
+        ])
+        return { photos, albums }
     },
     component: PhotosPage,
 })
 
 function PhotosPage() {
-    const { photos } = Route.useLoaderData()
+    const { photos, albums } = Route.useLoaderData()
     const navigate = useNavigate()
     return (
         <PhotoMode
             photos={photos}
+            albums={albums}
             onExit={() => navigate({ to: '/' })}
         />
     )

@@ -1,8 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
+import { photoAlbums } from '../data/site'
 
-// Type for the photo response from the API (matching actual API response)
-// Type for the photo response from the API (matching actual API response)
-// Type for the photo response from the API (matching actual API response)
 export interface PichausPhoto {
   id: string
   width: number
@@ -20,6 +18,67 @@ export const getPhotoUrl = (id: string) =>
 
 export const getPhotoThumbnailUrl = (id: string) =>
   `https://p.ckl.moe/api/assets/thumb/${id}`
+
+export interface PichausAlbum {
+  id: string
+  title: string
+  eventDate: string
+  location?: string
+  photoCount?: number
+  coverPhoto?: { id: string; width: number; height: number }
+}
+
+interface AlbumsApiResponse {
+  success: boolean
+  data?: Array<{
+    id: string
+    title: string
+    eventDate: string
+    location?: string
+    photoCount?: number
+    coverPhoto?: { id: string; width: number; height: number }
+    [key: string]: unknown
+  }>
+}
+
+function hardcodedAlbums(): PichausAlbum[] {
+  return (photoAlbums as readonly { title: string; date: string; url: string; location?: string }[])
+    .map((a) => ({
+      id: a.url.split('/v/')[1] ?? '',
+      title: a.title,
+      eventDate: a.date,
+      location: a.location,
+    }))
+    .filter((a) => a.id !== '')
+}
+
+export const getWebAlbums = createServerFn().handler(async () => {
+  const apiKey = process.env.PICHAUS_API_KEY
+  if (!apiKey) return { albums: hardcodedAlbums(), error: 'API key not configured' }
+  try {
+    const response = await fetch(
+      'https://p.ckl.moe/api/external/albums?tag=WEB&sortBy=eventDate&order=desc',
+      { headers: { Authorization: `Bearer ${apiKey}` } },
+    )
+    if (!response.ok) {
+      console.warn('getWebAlbums API error', response.status, '– falling back to hardcoded list')
+      return { albums: hardcodedAlbums(), error: `API error: ${response.status}` }
+    }
+    const result = (await response.json()) as AlbumsApiResponse
+    if (!result.success || !result.data) return { albums: hardcodedAlbums(), error: 'Invalid response' }
+    const albums: PichausAlbum[] = result.data.map((a) => ({
+      id: a.id,
+      title: a.title,
+      eventDate: a.eventDate,
+      location: a.location,
+      photoCount: a.photoCount,
+      coverPhoto: a.coverPhoto,
+    }))
+    return { albums, error: null }
+  } catch {
+    return { albums: hardcodedAlbums(), error: 'Failed to fetch' }
+  }
+})
 
 interface ApiResponse {
   success: boolean
