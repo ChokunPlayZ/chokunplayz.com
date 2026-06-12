@@ -1,15 +1,13 @@
 'use client'
 
-import { Await } from '@tanstack/react-router'
 import { MapPin, X } from 'lucide-react'
-import { Suspense, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { photoAlbums } from '../data/site'
 import { getPhotoThumbnailUrl } from '../lib/photos'
 import type { PichausPhoto } from '../lib/photos'
 
 interface PhotoModeProps {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    photosPromise: any
+    photos: PichausPhoto[]
     onExit: () => void
 }
 
@@ -33,12 +31,7 @@ function groupByYear(albums: readonly Album[]) {
     return [...map.entries()].sort((a, b) => Number(b[0]) - Number(a[0]))
 }
 
-function LoadTrigger({ onLoad }: { onLoad: () => void }) {
-    useEffect(() => { onLoad() }, [onLoad])
-    return null
-}
-
-export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
+export function PhotoMode({ photos, onExit }: PhotoModeProps) {
     const grouped = useMemo(() => groupByYear(photoAlbums), [])
     const [loaded, setLoaded] = useState(false)
 
@@ -46,9 +39,12 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
         document.body.style.overflow = 'hidden'
         const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onExit() }
         window.addEventListener('keydown', handleKey)
+        // Trigger animations on next frame so the component is painted first
+        const raf = requestAnimationFrame(() => setLoaded(true))
         return () => {
             document.body.style.overflow = ''
             window.removeEventListener('keydown', handleKey)
+            cancelAnimationFrame(raf)
         }
     }, [onExit])
 
@@ -83,31 +79,19 @@ export function PhotoMode({ photosPromise, onExit }: PhotoModeProps) {
             <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
 
                 {/* Scrolling photo strips */}
-                <Suspense fallback={null}>
-                    <Await promise={photosPromise}>
-                        {(data: { photos: PichausPhoto[] }) => {
-                            const photos = data?.photos ?? []
-                            return (
-                                <>
-                                    {photos.length > 0 && (
-                                        <div
-                                            className="absolute opacity-55"
-                                            style={{
-                                                top: -300, left: -300, right: -300, bottom: -300,
-                                                transform: 'rotate(-10deg)',
-                                                transformOrigin: 'center center',
-                                                overflow: 'hidden',
-                                            }}
-                                        >
-                                            <BgStrips photos={photos} />
-                                        </div>
-                                    )}
-                                    <LoadTrigger onLoad={() => setLoaded(true)} />
-                                </>
-                            )
+                {photos.length > 0 && (
+                    <div
+                        className="absolute opacity-55"
+                        style={{
+                            top: -300, left: -300, right: -300, bottom: -300,
+                            transform: 'rotate(-10deg)',
+                            transformOrigin: 'center center',
+                            overflow: 'hidden',
                         }}
-                    </Await>
-                </Suspense>
+                    >
+                        <BgStrips photos={photos} />
+                    </div>
+                )}
 
                 {/* Watermark */}
                 <div className="absolute inset-0 flex items-center justify-center overflow-hidden">

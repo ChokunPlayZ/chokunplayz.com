@@ -20,18 +20,12 @@ export function Preloader() {
         const handleLoad = () => {
             clearInterval(interval)
             setProgress(100)
-
-            // Wait for progress bar to fill visually
-            setTimeout(() => {
-                setIsVisible(false)
-                // Remove from DOM after transition completes
-                setTimeout(() => setIsRendered(false), 700)
-            }, 500)
+            setIsVisible(false)
+            setTimeout(() => setIsRendered(false), 700)
         }
 
         if (document.readyState === 'complete') {
-            // If already loaded, give it a moment to show the 100% state
-            setTimeout(handleLoad, 500)
+            handleLoad()
         } else {
             window.addEventListener('load', handleLoad)
             return () => {
