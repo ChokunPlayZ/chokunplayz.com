@@ -42,6 +42,30 @@ interface ApiResponse {
   }>
 }
 
+export const getAlbumPhotos = createServerFn()
+  .validator((albumId: string) => albumId)
+  .handler(async ({ data: albumId }) => {
+    const apiKey = process.env.PICHAUS_API_KEY
+    if (!apiKey) return { photos: [] as PichausPhoto[], error: 'API key not configured' }
+    try {
+      const response = await fetch(
+        `https://p.ckl.moe/api/external/albums/${albumId}/photos?sortBy=dateTaken`,
+        { headers: { Authorization: `Bearer ${apiKey}` } },
+      )
+      if (!response.ok) return { photos: [] as PichausPhoto[], error: `API error: ${response.status}` }
+      const result = (await response.json()) as ApiResponse
+      if (!result.success || !result.data) return { photos: [] as PichausPhoto[], error: 'Invalid response' }
+      const photos: PichausPhoto[] = result.data.map((p) => ({
+        id: p.id, width: p.width, height: p.height,
+        blurhash: p.blurhash, dateTaken: p.dateTaken,
+        album: { id: p.album.id, title: p.album.title },
+      }))
+      return { photos, error: null }
+    } catch {
+      return { photos: [] as PichausPhoto[], error: 'Failed to fetch' }
+    }
+  })
+
 // Server function to fetch random photos from Pichaus API
 export const getRandomPhotos = createServerFn().handler(async () => {
   const count = 120
