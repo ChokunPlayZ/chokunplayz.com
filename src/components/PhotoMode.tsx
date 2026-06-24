@@ -565,7 +565,7 @@ export function PhotoMode({
                       }
                     >
                       <div className="w-12 shrink-0" />
-                      <div className="relative z-10 flex items-center gap-3">
+                      <div className="relative z-10 flex items-center gap-3 -ml-1">
                         <div
                           className="w-5 h-5 rounded-full bg-(--bg-primary) border-2 border-(--accent)/70 flex items-center justify-center shrink-0"
                           style={
