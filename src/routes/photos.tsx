@@ -3,6 +3,14 @@ import { PhotoMode } from '../components/PhotoMode'
 import { getRandomPhotos, getWebAlbums } from '../lib/photos'
 
 export const Route = createFileRoute('/photos')({
+  head: () => ({
+    meta: [
+      { title: 'Photos — Chokun' },
+      { name: 'robots', content: 'noimageindex' },
+      { property: 'og:image', content: '' },
+      { name: 'twitter:card', content: 'summary' },
+    ],
+  }),
   validateSearch: (search: Record<string, unknown>) => ({
     album: typeof search.album === 'string' ? search.album : undefined,
   }),

@@ -14,8 +14,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
-        <style dangerouslySetInnerHTML={{
-          __html: `
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
           :root { --bg-primary: #f0f9ff; }
           [data-theme='dark'] { --bg-primary: #0f172a; }
           #global-preloader {
@@ -30,7 +31,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             align-items: center;
             justify-content: center;
           }
-        `}} />
+        `,
+          }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -79,26 +82,38 @@ export const Route = createRootRoute({
     const currentDay = now.getDate()
 
     // Find the first event that matches the current date
-    const activeEvent = seasonalEvents.find(event => {
+    const activeEvent = seasonalEvents.find((event) => {
       const { startMonth, startDay, endMonth, endDay } = event.schedule
 
       if (startMonth < endMonth) {
         // Normal range (e.g. Oct to Dec)
-        return (currentMonth > startMonth || (currentMonth === startMonth && currentDay >= startDay)) &&
-          (currentMonth < endMonth || (currentMonth === endMonth && currentDay <= endDay))
+        return (
+          (currentMonth > startMonth ||
+            (currentMonth === startMonth && currentDay >= startDay)) &&
+          (currentMonth < endMonth ||
+            (currentMonth === endMonth && currentDay <= endDay))
+        )
       } else if (startMonth === endMonth) {
         // Same month range (e.g. Dec 1 to Dec 25, or Dec 25 to Dec 25)
-        return currentMonth === startMonth && currentDay >= startDay && currentDay <= endDay
+        return (
+          currentMonth === startMonth &&
+          currentDay >= startDay &&
+          currentDay <= endDay
+        )
       } else {
         // Wrap around year (e.g. Dec to Jan)
-        const afterStart = (currentMonth > startMonth || (currentMonth === startMonth && currentDay >= startDay))
-        const beforeEnd = (currentMonth < endMonth || (currentMonth === endMonth && currentDay <= endDay))
+        const afterStart =
+          currentMonth > startMonth ||
+          (currentMonth === startMonth && currentDay >= startDay)
+        const beforeEnd =
+          currentMonth < endMonth ||
+          (currentMonth === endMonth && currentDay <= endDay)
         return afterStart || beforeEnd
       }
     })
 
     return {
-      activeEvent: activeEvent || null
+      activeEvent: activeEvent || null,
     }
   },
   head: () => ({
@@ -117,6 +132,18 @@ export const Route = createRootRoute({
         name: 'description',
         content:
           'Self-taught fullstack engineer from Thailand. Passionate about technology, infrastructure, and engineering.',
+      },
+      {
+        name: 'robots',
+        content: 'noimageindex',
+      },
+      {
+        property: 'og:image',
+        content: '',
+      },
+      {
+        name: 'twitter:card',
+        content: 'summary',
       },
     ],
     links: [
