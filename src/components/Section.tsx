@@ -6,7 +6,13 @@ interface SectionProps {
   index?: number
 }
 
-export function Section({ title, children, className = '', id, index }: SectionProps) {
+export function Section({
+  title,
+  children,
+  className = '',
+  id,
+  index,
+}: SectionProps) {
   return (
     <section id={id} className={`py-20 md:py-32 ${className}`}>
       <div className="max-w-4xl mx-auto px-6">

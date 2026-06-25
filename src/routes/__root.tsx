@@ -9,6 +9,11 @@ import { Preloader } from '../components/Preloader'
 import { ThemeProvider } from '../components/ThemeProvider'
 import appCss from '../styles.css?url'
 
+import { NotFound } from '../components/NotFound'
+import { SeasonalManager } from '../components/SeasonalManager'
+import { seasonalEvents } from '../data/seasonal'
+import type { SeasonalConfig} from '../data/seasonal';
+
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -51,6 +56,21 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           `,
           }}
         />
+        {/* Google Analytics */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-16FT90PTQ5"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){window.dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-16FT90PTQ5');
+            `,
+          }}
+        />
       </head>
       <body>
         {children}
@@ -70,10 +90,6 @@ function RootComponent() {
     </ThemeProvider>
   )
 }
-
-import { NotFound } from '../components/NotFound'
-import { SeasonalManager } from '../components/SeasonalManager'
-import { SeasonalConfig, seasonalEvents } from '../data/seasonal'
 
 export const Route = createRootRoute({
   loader: (): { activeEvent: SeasonalConfig | null } => {

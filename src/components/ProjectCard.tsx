@@ -8,7 +8,12 @@ interface ProjectCardProps {
   tech: ReadonlyArray<string>
 }
 
-export function ProjectCard({ name, description, url, tech }: ProjectCardProps) {
+export function ProjectCard({
+  name,
+  description,
+  url,
+  tech,
+}: ProjectCardProps) {
   return (
     <a
       href={url}
@@ -28,7 +33,9 @@ export function ProjectCard({ name, description, url, tech }: ProjectCardProps) 
         </div>
       </div>
 
-      <p className="text-(--text-secondary) mb-6 leading-relaxed grow text-sm">{description}</p>
+      <p className="text-(--text-secondary) mb-6 leading-relaxed grow text-sm">
+        {description}
+      </p>
 
       <div className="flex flex-wrap gap-2 mt-auto">
         {tech.map((t) => (

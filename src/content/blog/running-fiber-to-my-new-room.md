@@ -79,19 +79,19 @@ So yeah, this project was messy, dusty, and way more annoying than expected. But
 
 Here is the total damage:
 
-| Item | Qty | Unit Price (THB) | Line Total (THB) |
-| --- | ---: | ---: | ---: |
-| Link UFH9322 outdoor 2-core single-mode fiber (20 m) | 1 | 116 | 116 |
-| SC/UPC fast connectors (10 pack) | 1 | 240 | 240 |
-| SC-LC UPC duplex patch cable (3 m) | 1 | 128 | 128 |
-| SC-LC UPC duplex patch cable (1 m) | 1 | 98 | 98 |
-| LC-LC UPC duplex patch cable (1 m) | 1 | 93 | 93 |
-| 2-core fiber separator | 2 | 30 | 60 |
-| SC duplex coupler | 2 | 25 | 50 |
-| LC coupler | 1 | 23 | 23 |
-| SM-LR-10G SFP+ optics | 2 | 440 | 880 |
-| XikeStor L2 Managed Switch (4x2.5G, 2x10G SFP+) | 1 | 1,316 | 1,316 |
-| Generic Switch (4x2.5G, 2x10G SFP+) | 1 | 732 | 732 |
-| **Total** |  |  | **3,736** |
+| Item                                                 | Qty | Unit Price (THB) | Line Total (THB) |
+| ---------------------------------------------------- | --: | ---------------: | ---------------: |
+| Link UFH9322 outdoor 2-core single-mode fiber (20 m) |   1 |              116 |              116 |
+| SC/UPC fast connectors (10 pack)                     |   1 |              240 |              240 |
+| SC-LC UPC duplex patch cable (3 m)                   |   1 |              128 |              128 |
+| SC-LC UPC duplex patch cable (1 m)                   |   1 |               98 |               98 |
+| LC-LC UPC duplex patch cable (1 m)                   |   1 |               93 |               93 |
+| 2-core fiber separator                               |   2 |               30 |               60 |
+| SC duplex coupler                                    |   2 |               25 |               50 |
+| LC coupler                                           |   1 |               23 |               23 |
+| SM-LR-10G SFP+ optics                                |   2 |              440 |              880 |
+| XikeStor L2 Managed Switch (4x2.5G, 2x10G SFP+)      |   1 |            1,316 |            1,316 |
+| Generic Switch (4x2.5G, 2x10G SFP+)                  |   1 |              732 |              732 |
+| **Total**                                            |     |                  |        **3,736** |
 
 Would I do it again? Absolutely. It was fun, and I learned a lot.

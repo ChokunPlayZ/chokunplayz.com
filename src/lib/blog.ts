@@ -5,7 +5,7 @@ export interface BlogPostMeta {
   title: string
   date: string
   summary: string
-  tags: string[]
+  tags: Array<string>
   published: boolean
 }
 
@@ -14,7 +14,7 @@ export interface BlogPost extends BlogPostMeta {
   html: string
 }
 
-type FrontmatterValue = string | boolean | number | string[]
+type FrontmatterValue = string | boolean | number | Array<string>
 
 type Frontmatter = Record<string, FrontmatterValue>
 
@@ -25,8 +25,10 @@ marked.setOptions({
 function parseValue(raw: string): FrontmatterValue {
   const trimmed = raw.trim()
 
-  if ((trimmed.startsWith('"') && trimmed.endsWith('"')) ||
-    (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
     return trimmed.slice(1, -1)
   }
 
@@ -51,7 +53,10 @@ function parseValue(raw: string): FrontmatterValue {
   return trimmed
 }
 
-function parseFrontmatter(markdown: string): { frontmatter: Frontmatter; body: string } {
+function parseFrontmatter(markdown: string): {
+  frontmatter: Frontmatter
+  body: string
+} {
   const normalized = markdown.replace(/\r\n/g, '\n')
 
   if (!normalized.startsWith('---\n')) {
@@ -128,12 +133,12 @@ function parseDate(date: string): number {
   return Number.isNaN(timestamp) ? 0 : timestamp
 }
 
-function collectBlogPosts(): BlogPost[] {
+function collectBlogPosts(): Array<BlogPost> {
   const modules = import.meta.glob('../content/blog/*.md', {
     eager: true,
     query: '?raw',
     import: 'default',
-  }) as Record<string, string>
+  })
 
   const posts = Object.entries(modules).map(([filePath, markdown]) => {
     const { frontmatter, body } = parseFrontmatter(markdown)
@@ -170,7 +175,9 @@ interface GetBlogPostBySlugOptions {
   includeDrafts?: boolean
 }
 
-export function getBlogPosts(options: GetBlogPostsOptions = {}): BlogPostMeta[] {
+export function getBlogPosts(
+  options: GetBlogPostsOptions = {},
+): Array<BlogPostMeta> {
   const { includeDrafts = false } = options
 
   return collectBlogPosts()

@@ -20,7 +20,10 @@ function formatDate(value: string): string {
 }
 
 function readingTime(html: string): number {
-  const words = html.replace(/<[^>]*>/g, ' ').trim().split(/\s+/).length
+  const words = html
+    .replace(/<[^>]*>/g, ' ')
+    .trim()
+    .split(/\s+/).length
   return Math.max(1, Math.round(words / 200))
 }
 
@@ -32,7 +35,9 @@ function BlogPostPage() {
       <main className="min-h-screen gradient-bg px-6 py-20">
         <div className="mx-auto max-w-5xl">
           <div className="glass-panel rounded-3xl p-8 space-y-4">
-            <h1 className="text-3xl font-bold text-(--text-primary)">Post not found</h1>
+            <h1 className="text-3xl font-bold text-(--text-primary)">
+              Post not found
+            </h1>
             <p className="text-(--text-secondary)">
               This post does not exist or is not published.
             </p>
@@ -55,7 +60,6 @@ function BlogPostPage() {
   return (
     <main className="min-h-screen gradient-bg px-6 py-20 md:py-28">
       <div className="mx-auto max-w-5xl">
-
         {/* Back link */}
         <Link
           to="/blog"
@@ -105,7 +109,10 @@ function BlogPostPage() {
             )}
           </header>
 
-          <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.html }} />
+          <div
+            className="blog-content"
+            dangerouslySetInnerHTML={{ __html: post.html }}
+          />
 
           <footer className="mt-12 pt-8 border-t border-(--border)">
             <Link

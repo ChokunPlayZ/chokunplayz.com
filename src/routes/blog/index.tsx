@@ -9,7 +9,8 @@ interface BlogSearch {
 }
 
 function parsePositivePage(value: unknown): number {
-  if (typeof value === 'number' && Number.isInteger(value) && value > 0) return value
+  if (typeof value === 'number' && Number.isInteger(value) && value > 0)
+    return value
   if (typeof value === 'string') {
     const parsed = Number.parseInt(value, 10)
     if (!Number.isNaN(parsed) && parsed > 0) return parsed
@@ -51,7 +52,6 @@ function BlogIndexPage() {
   return (
     <main className="min-h-screen gradient-bg px-6 py-20 md:py-28">
       <div className="mx-auto max-w-5xl space-y-10">
-
         {/* Header */}
         <header className="space-y-4">
           <Link
@@ -61,19 +61,24 @@ function BlogIndexPage() {
             <ArrowLeft className="w-4 h-4" />
             Home
           </Link>
-          <p className="text-xs font-semibold text-(--accent) uppercase tracking-widest opacity-60">Writing</p>
+          <p className="text-xs font-semibold text-(--accent) uppercase tracking-widest opacity-60">
+            Writing
+          </p>
           <h1 className="text-4xl md:text-5xl font-bold text-(--text-primary) tracking-tight">
             Blog
           </h1>
           <p className="text-(--text-secondary) max-w-lg leading-relaxed">
-            Notes about engineering, infrastructure, and whatever I'm currently learning.
+            Notes about engineering, infrastructure, and whatever I'm currently
+            learning.
           </p>
         </header>
 
         {/* Post list */}
         {posts.length === 0 ? (
           <div className="glass-panel rounded-3xl p-8 text-(--text-secondary)">
-            No posts yet. Add a markdown file in <code className="text-(--accent)">src/content/blog</code> to publish one.
+            No posts yet. Add a markdown file in{' '}
+            <code className="text-(--accent)">src/content/blog</code> to publish
+            one.
           </div>
         ) : (
           <div className="space-y-4">
@@ -111,7 +116,9 @@ function BlogIndexPage() {
                   </Link>
                 </h2>
 
-                <p className="text-(--text-secondary) text-sm leading-relaxed mb-4">{post.summary}</p>
+                <p className="text-(--text-secondary) text-sm leading-relaxed mb-4">
+                  {post.summary}
+                </p>
 
                 <Link
                   to="/blog/$slug"
@@ -134,7 +141,9 @@ function BlogIndexPage() {
                 >
                   ← Newer
                 </Link>
-              ) : <span />}
+              ) : (
+                <span />
+              )}
 
               <p className="text-xs text-(--text-muted)">
                 Page {page} / {totalPages}
@@ -148,7 +157,9 @@ function BlogIndexPage() {
                 >
                   Older →
                 </Link>
-              ) : <span />}
+              ) : (
+                <span />
+              )}
             </nav>
           </div>
         )}

@@ -7,14 +7,14 @@ import {
 } from '@tanstack/react-router'
 import { Suspense, useEffect, useRef, useState } from 'react'
 import {
-  Camera,
-  ImageIcon,
-  Home,
-  User,
-  FolderGit2,
-  Mail,
   Briefcase,
+  Camera,
+  FolderGit2,
+  Home,
+  ImageIcon,
+  Mail,
   Terminal,
+  User,
 } from 'lucide-react'
 import { JumpNavigation } from '../components/JumpNavigation'
 import { ExperienceCard } from '../components/ExperienceCard'
@@ -70,7 +70,7 @@ function HomePage() {
   const { albumsPromise } = Route.useLoaderData()
   const navigate = useNavigate()
   const [showAllEvents, setShowAllEvents] = useState(false)
-  const [randomPhotos, setRandomPhotos] = useState<PichausPhoto[]>([])
+  const [randomPhotos, setRandomPhotos] = useState<Array<PichausPhoto>>([])
   const [randomPhotosLoading, setRandomPhotosLoading] = useState(true)
 
   useEffect(() => {

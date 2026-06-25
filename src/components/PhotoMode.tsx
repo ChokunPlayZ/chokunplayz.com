@@ -1,7 +1,7 @@
 'use client'
 
 import { JustifiedLayout } from '@immich/justified-layout-wasm'
-import { ExternalLink, MapPin, Moon, Sun, X, ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ExternalLink, MapPin, Moon, Sun, X } from 'lucide-react'
 import { Blurhash } from 'react-blurhash'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
@@ -9,12 +9,12 @@ import {
   getPhotoThumbnailUrl,
   getPhotoUrl,
 } from '../lib/photos'
-import type { PichausAlbum, PichausPhoto } from '../lib/photos'
 import { useTheme } from './ThemeProvider'
+import type { PichausAlbum, PichausPhoto } from '../lib/photos'
 
 interface PhotoModeProps {
-  photos: PichausPhoto[]
-  albums: PichausAlbum[]
+  photos: Array<PichausPhoto>
+  albums: Array<PichausAlbum>
   initialAlbumId?: string
   onAlbumChange?: (albumId: string | null) => void
   onExit: () => void
@@ -34,8 +34,8 @@ function getYear(ts: number | null | undefined) {
   return new Date(ts * 1000).getFullYear().toString()
 }
 
-function groupByYear(albums: PichausAlbum[]) {
-  const map = new Map<string, PichausAlbum[]>()
+function groupByYear(albums: Array<PichausAlbum>) {
+  const map = new Map<string, Array<PichausAlbum>>()
   for (const album of albums) {
     const year = getYear(album.eventDate)
     if (!map.has(year)) map.set(year, [])
@@ -96,7 +96,7 @@ function PhotoTile({
 
 // ── Justified photo grid ──────────────────────────────────────────────────────
 
-function JustifiedGrid({ photos }: { photos: PichausPhoto[] }) {
+function JustifiedGrid({ photos }: { photos: Array<PichausPhoto> }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [containerWidth, setContainerWidth] = useState(0)
 
@@ -154,7 +154,7 @@ function JustifiedGrid({ photos }: { photos: PichausPhoto[] }) {
 
 interface AlbumViewProps {
   album: PichausAlbum
-  photos: PichausPhoto[]
+  photos: Array<PichausPhoto>
   loading: boolean
   ready: boolean
   loadingMore: boolean
@@ -283,7 +283,7 @@ export function PhotoMode({
   const grouped = useMemo(() => groupByYear(albums), [albums])
   const [loaded, setLoaded] = useState(false)
   const [selectedAlbum, setSelectedAlbum] = useState<PichausAlbum | null>(null)
-  const [albumPhotos, setAlbumPhotos] = useState<PichausPhoto[]>([])
+  const [albumPhotos, setAlbumPhotos] = useState<Array<PichausPhoto>>([])
   const [albumLoading, setAlbumLoading] = useState(false)
   const [albumReady, setAlbumReady] = useState(false)
   const [albumPage, setAlbumPage] = useState(1)
@@ -715,9 +715,9 @@ const BG_ROW_GAP = 10
 const BG_IMG_GAP = 8
 const BG_MIN_COVERAGE = 5000
 
-function BgStrips({ photos }: { photos: PichausPhoto[] }) {
+function BgStrips({ photos }: { photos: Array<PichausPhoto> }) {
   const rows = useMemo(() => {
-    const r: PichausPhoto[][] = Array.from({ length: BG_ROWS }, () => [])
+    const r: Array<Array<PichausPhoto>> = Array.from({ length: BG_ROWS }, () => [])
     photos.forEach((p, i) => r[i % BG_ROWS].push(p))
     return r
   }, [photos])

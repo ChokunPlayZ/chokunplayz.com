@@ -1,5 +1,4 @@
 import { createServerFn } from '@tanstack/react-start'
-import { photoAlbums } from '../data/site'
 
 export interface PichausPhoto {
   id: string
@@ -22,7 +21,7 @@ export const getPhotoThumbnailUrl = (id: string) =>
 export interface PichausAlbum {
   id: string
   title: string
-  eventDate: number | null  // Unix timestamp (seconds), null when unset
+  eventDate: number | null // Unix timestamp (seconds), null when unset
   location?: string
   photoCount?: number
   coverPhoto?: { id: string; width: number; height: number }
@@ -41,32 +40,34 @@ interface AlbumsApiResponse {
   }>
 }
 
-function hardcodedAlbums(): PichausAlbum[] {
-  return (photoAlbums as readonly { title: string; date: string; url: string; location?: string }[])
-    .map((a) => ({
-      id: a.url.split('/v/')[1] ?? '',
-      title: a.title,
-      eventDate: Math.floor(new Date(`${a.date}T12:00:00`).getTime() / 1000),
-      location: a.location,
-    }))
-    .filter((a) => a.id !== '')
+function hardcodedAlbums(): Array<PichausAlbum> {
+  return []
 }
 
 export const getWebAlbums = createServerFn().handler(async () => {
   const apiKey = process.env.PICHAUS_API_KEY
-  if (!apiKey) return { albums: hardcodedAlbums(), error: 'API key not configured' }
+  if (!apiKey)
+    return { albums: hardcodedAlbums(), error: 'API key not configured' }
   try {
     const response = await fetch(
       'https://p.ckl.moe/api/external/albums?tag=WEB&sortBy=eventDate&order=desc',
       { headers: { Authorization: `Bearer ${apiKey}` } },
     )
     if (!response.ok) {
-      console.warn('getWebAlbums API error', response.status, '– falling back to hardcoded list')
-      return { albums: hardcodedAlbums(), error: `API error: ${response.status}` }
+      console.warn(
+        'getWebAlbums API error',
+        response.status,
+        '– falling back to hardcoded list',
+      )
+      return {
+        albums: hardcodedAlbums(),
+        error: `API error: ${response.status}`,
+      }
     }
     const result = (await response.json()) as AlbumsApiResponse
-    if (!result.success || !result.data) return { albums: hardcodedAlbums(), error: 'Invalid response' }
-    const albums: PichausAlbum[] = result.data.map((a) => ({
+    if (!result.success || !result.data)
+      return { albums: hardcodedAlbums(), error: 'Invalid response' }
+    const albums: Array<PichausAlbum> = result.data.map((a) => ({
       id: a.id,
       title: a.title,
       eventDate: a.eventDate,
@@ -106,28 +107,54 @@ export const getAlbumPhotos = createServerFn()
   .handler(async ({ data }) => {
     const { albumId, page = 1, limit = 50 } = data
     const apiKey = process.env.PICHAUS_API_KEY
-    if (!apiKey) return { photos: [] as PichausPhoto[], total: null, hasMore: false, error: 'API key not configured' }
+    if (!apiKey)
+      return {
+        photos: [] as Array<PichausPhoto>,
+        total: null,
+        hasMore: false,
+        error: 'API key not configured',
+      }
     try {
       const response = await fetch(
         `https://p.ckl.moe/api/external/albums/${albumId}/photos?sortBy=dateTaken&page=${page}&limit=${limit}`,
         { headers: { Authorization: `Bearer ${apiKey}` } },
       )
-      if (!response.ok) return { photos: [] as PichausPhoto[], total: null, hasMore: false, error: `API error: ${response.status}` }
+      if (!response.ok)
+        return {
+          photos: [] as Array<PichausPhoto>,
+          total: null,
+          hasMore: false,
+          error: `API error: ${response.status}`,
+        }
       const result = (await response.json()) as ApiResponse
-      if (!result.success || !result.data) return { photos: [] as PichausPhoto[], total: null, hasMore: false, error: 'Invalid response' }
-      const photos: PichausPhoto[] = result.data.map((p) => ({
-        id: p.id, width: p.width, height: p.height,
-        blurhash: p.blurhash, dateTaken: p.dateTaken,
+      if (!result.success || !result.data)
+        return {
+          photos: [] as Array<PichausPhoto>,
+          total: null,
+          hasMore: false,
+          error: 'Invalid response',
+        }
+      const photos: Array<PichausPhoto> = result.data.map((p) => ({
+        id: p.id,
+        width: p.width,
+        height: p.height,
+        blurhash: p.blurhash,
+        dateTaken: p.dateTaken,
         album: { id: p.album?.id ?? albumId, title: p.album?.title ?? '' },
       }))
       return {
         photos,
         total: result.pagination?.total ?? null,
-        hasMore: result.pagination?.hasMore ?? (photos.length >= limit),
+        hasMore: result.pagination?.hasMore ?? photos.length >= limit,
         error: null,
       }
     } catch {
-      return { photos: [] as PichausPhoto[], total: null, hasMore: false, error: 'Failed to fetch' }
+      return {
+        photos: [] as Array<PichausPhoto>,
+        total: null,
+        hasMore: false,
+        error: 'Failed to fetch',
+      }
     }
   })
 
