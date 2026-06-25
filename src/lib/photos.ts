@@ -67,14 +67,42 @@ export const getWebAlbums = createServerFn().handler(async () => {
     const result = (await response.json()) as AlbumsApiResponse
     if (!result.success || !result.data)
       return { albums: hardcodedAlbums(), error: 'Invalid response' }
-    const albums: Array<PichausAlbum> = result.data.map((a) => ({
-      id: a.id,
-      title: a.title,
-      eventDate: a.eventDate,
-      location: a.location,
-      photoCount: a.photoCount,
-      coverPhoto: a.coverPhoto,
-    }))
+
+    // Fetch individual album details in parallel to retrieve coverPhoto
+    const albums: Array<PichausAlbum> = await Promise.all(
+      result.data.map(async (a) => {
+        try {
+          const detailResponse = await fetch(
+            `https://p.ckl.moe/api/external/albums/${a.id}`,
+            { headers: { Authorization: `Bearer ${apiKey}` } },
+          )
+          if (detailResponse.ok) {
+            const detailResult = await detailResponse.json()
+            if (detailResult.success && detailResult.data) {
+              return {
+                id: a.id,
+                title: a.title,
+                eventDate: a.eventDate,
+                location: a.location,
+                photoCount: a.photoCount,
+                coverPhoto: detailResult.data.coverPhoto || undefined,
+              }
+            }
+          }
+        } catch (e) {
+          console.warn(`Failed to fetch detail for album ${a.id}:`, e)
+        }
+        return {
+          id: a.id,
+          title: a.title,
+          eventDate: a.eventDate,
+          location: a.location,
+          photoCount: a.photoCount,
+          coverPhoto: undefined,
+        }
+      }),
+    )
+
     return { albums, error: null }
   } catch {
     return { albums: hardcodedAlbums(), error: 'Failed to fetch' }
