@@ -6,60 +6,68 @@ interface WaifuCornerProps {
   styles?: React.CSSProperties
 }
 
+const CORNER_POSITIONS = {
+  'top-left': { top: 0, left: 0 },
+  'top-right': { top: 0, right: 0 },
+  'bottom-left': { bottom: 0, left: 0 },
+  'bottom-right': { bottom: 0, right: 0 },
+} as const
+
+const HIDDEN_TRANSFORMS = {
+  'top-left': 'translate(-100%, -100%)',
+  'top-right': 'translate(100%, -100%)',
+  'bottom-left': 'translate(-100%, 100%)',
+  'bottom-right': 'translate(100%, 100%)',
+} as const
+
+const PROXIMITY_PX = 220
+
 export function WaifuCorner({ url, position, styles }: WaifuCornerProps) {
   const [isVisible, setIsVisible] = useState(false)
+  const [isRetreated, setIsRetreated] = useState(false)
 
   useEffect(() => {
-    // Trigger animation after mount
     const timer = setTimeout(() => setIsVisible(true), 100)
     return () => clearTimeout(timer)
   }, [])
 
-  // Position styles
-  const positionStyles = {
-    'top-left': {
-      top: 0,
-      left: 0,
-      transform: isVisible ? 'translate(0, 0)' : 'translate(-100%, -100%)',
-    },
-    'top-right': {
-      top: 0,
-      right: 0,
-      transform: isVisible ? 'translate(0, 0)' : 'translate(100%, -100%)',
-    },
-    'bottom-left': {
-      bottom: 0,
-      left: 0,
-      transform: isVisible ? 'translate(0, 0)' : 'translate(-100%, 100%)',
-    },
-    'bottom-right': {
-      bottom: 0,
-      right: 0,
-      transform: isVisible ? 'translate(0, 0)' : 'translate(100%, 100%)',
-    },
-  }
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const x = e.clientX
+      const y = e.clientY
+      const w = window.innerWidth
+      const h = window.innerHeight
 
-  const baseStyle = positionStyles[position]
+      const near =
+        (position === 'bottom-left' &&
+          x < PROXIMITY_PX &&
+          y > h - PROXIMITY_PX) ||
+        (position === 'bottom-right' &&
+          x > w - PROXIMITY_PX &&
+          y > h - PROXIMITY_PX) ||
+        (position === 'top-left' && x < PROXIMITY_PX && y < PROXIMITY_PX) ||
+        (position === 'top-right' && x > w - PROXIMITY_PX && y < PROXIMITY_PX)
 
-  // Merge base transform with custom transform if it exists
-  const combinedStyle = {
-    ...baseStyle,
-    ...styles,
-    // If we are visible, we want to allow custom transform.
-    // But standard slide-in uses transform too.
-    // Strategy: Apply slide-in logic to a wrapper, apply custom transforms to the inner image?
-    // OR: Just let the user control it fully.
-    // Better strategy for "sinking" fix: Let the container be fixed, apply offsets via margin/transform on the inner or outer.
-    // Let's apply custom styles to the OUTER container, but be careful about the transition.
-    transform: isVisible
-      ? styles?.transform || 'translate(0, 0)'
-      : baseStyle.transform,
-  }
+      setIsRetreated(near)
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [position])
+
+  const transform =
+    !isVisible || isRetreated
+      ? HIDDEN_TRANSFORMS[position]
+      : (styles?.transform ?? 'translate(0, 0)')
 
   return (
     <div
-      className="fixed z-50 pointer-events-none transition-transform duration-1000 cubic-bezier(0.34, 1.56, 0.64, 1)"
-      style={combinedStyle}
+      className="fixed z-50 pointer-events-none transition-transform duration-500 ease-in-out"
+      style={{
+        ...CORNER_POSITIONS[position],
+        ...styles,
+        transform,
+      }}
     >
       <img
         src={url}
