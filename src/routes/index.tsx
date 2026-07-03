@@ -25,6 +25,7 @@ import { SocialLinks } from '../components/SocialLinks'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { PhotoSlideshow } from '../components/PhotoSlideshow'
 import { Typewriter } from '../components/Typewriter'
+import { FloatingShapes } from '../components/FloatingShapes'
 import { experiences, profile, projects, socials, sshKey } from '../data/site'
 import { getRandomPhotos, getWebAlbums } from '../lib/photos'
 import type { PichausPhoto } from '../lib/photos'
@@ -106,14 +107,16 @@ function HomePage() {
       </nav>
 
       {/* Floating decorative blobs */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10 opacity-60">
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-80">
         <div className="absolute top-[-10%] left-[-10%] w-160 h-160 bg-sky-300/30 dark:bg-sky-500/10 rounded-full blur-[100px] animate-float" />
         <div className="absolute top-[20%] right-[-5%] w-120 h-120 bg-blue-200/30 dark:bg-blue-400/10 rounded-full blur-[80px] animate-float-slow" />
         <div className="absolute bottom-[-10%] left-[20%] w-140 h-140 bg-cyan-200/30 dark:bg-cyan-500/10 rounded-full blur-[90px] animate-float-delayed" />
+        <FloatingShapes />
       </div>
 
-      {/* ── Hero ─────────────────────────────────────────────── */}
-      <header
+      <div className="relative z-10">
+        {/* ── Hero ─────────────────────────────────────────────── */}
+        <header
         id="home"
         className="relative min-h-screen flex flex-col justify-center items-center px-6 pt-20 overflow-hidden"
       >
@@ -438,6 +441,8 @@ function HomePage() {
           </p>
         </div>
       </footer>
+
+      </div>
 
       <JumpNavigation sections={SECTIONS} />
     </div>
