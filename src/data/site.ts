@@ -41,10 +41,10 @@ export const socials = [
 // Add your projects here with the tech stack used
 export const projects = [
     {
-        name: 'EpNets',
-        description: 'MarTech Solutions Provider',
-        url: 'https://www.epnets.com/',
-        tech: ['MarTech', 'Digital Marketing', 'PHP', 'MySQL', 'Nginx'],
+        name: 'MCM',
+        description: 'Minecraft Container Manager, a self-hosted Minecraft server manager, powered by docker',
+        url: 'https://github.com/ChokunPlayZ/Minecraft-Container-Manager',
+        tech: ['Docker', 'Minecraft', 'Node.js', 'TypeScript', 'React', 'TailwindCSS', 'GO'],
     },
     {
         name: 'TopVery',
