@@ -82,11 +82,46 @@ interface AlbumsApiResponse {
   }>
 }
 
+// Server-side response cache. The API allows 120 reads/min per account and
+// one albums load alone costs 1 + N requests, so results are shared across
+// visitors for CACHE_TTL_MS. Signed URLs live ~5 min, so cached ones stay
+// valid. Only successful results are cached; on failure the last good value
+// (if any) is served instead of the error.
+const CACHE_TTL_MS = 2 * 60 * 1000
+const responseCache = new Map<string, { value: unknown; at: number }>()
+const responseInflight = new Map<string, Promise<unknown>>()
+
+async function cached<T extends { error: string | null }>(
+  key: string,
+  load: () => Promise<T>,
+): Promise<T> {
+  const hit = responseCache.get(key) as { value: T; at: number } | undefined
+  if (hit && Date.now() - hit.at < CACHE_TTL_MS) return hit.value
+
+  let pending = responseInflight.get(key) as Promise<T> | undefined
+  if (!pending) {
+    pending = load()
+      .then((value) => {
+        if (value.error === null)
+          responseCache.set(key, { value, at: Date.now() })
+        return value
+      })
+      .finally(() => responseInflight.delete(key))
+    responseInflight.set(key, pending)
+  }
+  const value = await pending
+  return value.error !== null && hit ? hit.value : value
+}
+
 function hardcodedAlbums(): Array<PichausAlbum> {
   return []
 }
 
-export const getWebAlbums = createServerFn().handler(async () => {
+export const getWebAlbums = createServerFn().handler(() =>
+  cached('albums', fetchWebAlbums),
+)
+
+async function fetchWebAlbums() {
   const apiKey = process.env.PICHAUS_API_KEY
   if (!apiKey)
     return { albums: hardcodedAlbums(), error: 'API key not configured' }
@@ -158,7 +193,7 @@ export const getWebAlbums = createServerFn().handler(async () => {
   } catch {
     return { albums: hardcodedAlbums(), error: 'Failed to fetch' }
   }
-})
+}
 
 interface ApiResponse {
   success: boolean
@@ -186,66 +221,76 @@ interface ApiResponse {
 
 export const getAlbumPhotos = createServerFn()
   .validator((data: { albumId: string; page?: number; limit?: number }) => data)
-  .handler(async ({ data }) => {
+  .handler(({ data }) => {
     const { albumId, page = 1, limit = 50 } = data
-    const apiKey = process.env.PICHAUS_API_KEY
-    if (!apiKey)
-      return {
-        photos: [] as Array<PichausPhoto>,
-        total: null,
-        hasMore: false,
-        error: 'API key not configured',
-      }
-    try {
-      const response = await fetch(
-        `${pichausApiBase()}/albums/${albumId}/photos?sortBy=dateTaken&page=${page}&limit=${Math.min(limit, 100)}`,
-        { headers: { Authorization: `Bearer ${apiKey}` } },
-      )
-      if (!response.ok)
-        return {
-          photos: [] as Array<PichausPhoto>,
-          total: null,
-          hasMore: false,
-          error: `API error: ${response.status}`,
-        }
-      const result = (await response.json()) as ApiResponse
-      if (!result.success || !result.data)
-        return {
-          photos: [] as Array<PichausPhoto>,
-          total: null,
-          hasMore: false,
-          error: 'Invalid response',
-        }
-      const photos: Array<PichausPhoto> = result.data.map((p) => ({
-        id: p.id,
-        width: p.width,
-        height: p.height,
-        blurhash: p.blurhash,
-        dateTaken: p.dateTaken,
-        album: { id: p.album?.id ?? albumId, title: p.album?.title ?? '' },
-        signedUrl: p.signedUrl ?? null,
-        signedThumbnailUrl: p.signedThumbnailUrl ?? null,
-      }))
-      return {
-        photos,
-        total: result.pagination?.total ?? null,
-        hasMore: result.pagination?.hasMore ?? photos.length >= limit,
-        error: null,
-      }
-    } catch {
-      return {
-        photos: [] as Array<PichausPhoto>,
-        total: null,
-        hasMore: false,
-        error: 'Failed to fetch',
-      }
-    }
+    return cached(`album:${albumId}:${page}:${limit}`, () =>
+      fetchAlbumPhotos(albumId, page, limit),
+    )
   })
+
+async function fetchAlbumPhotos(albumId: string, page: number, limit: number) {
+  const apiKey = process.env.PICHAUS_API_KEY
+  if (!apiKey)
+    return {
+      photos: [] as Array<PichausPhoto>,
+      total: null,
+      hasMore: false,
+      error: 'API key not configured',
+    }
+  try {
+    const response = await fetch(
+      `${pichausApiBase()}/albums/${albumId}/photos?sortBy=dateTaken&page=${page}&limit=${Math.min(limit, 100)}`,
+      { headers: { Authorization: `Bearer ${apiKey}` } },
+    )
+    if (!response.ok)
+      return {
+        photos: [] as Array<PichausPhoto>,
+        total: null,
+        hasMore: false,
+        error: `API error: ${response.status}`,
+      }
+    const result = (await response.json()) as ApiResponse
+    if (!result.success || !result.data)
+      return {
+        photos: [] as Array<PichausPhoto>,
+        total: null,
+        hasMore: false,
+        error: 'Invalid response',
+      }
+    const photos: Array<PichausPhoto> = result.data.map((p) => ({
+      id: p.id,
+      width: p.width,
+      height: p.height,
+      blurhash: p.blurhash,
+      dateTaken: p.dateTaken,
+      album: { id: p.album?.id ?? albumId, title: p.album?.title ?? '' },
+      signedUrl: p.signedUrl ?? null,
+      signedThumbnailUrl: p.signedThumbnailUrl ?? null,
+    }))
+    return {
+      photos,
+      total: result.pagination?.total ?? null,
+      hasMore: result.pagination?.hasMore ?? photos.length >= limit,
+      error: null,
+    }
+  } catch {
+    return {
+      photos: [] as Array<PichausPhoto>,
+      total: null,
+      hasMore: false,
+      error: 'Failed to fetch',
+    }
+  }
+}
 
 // Server function to fetch random photos from Pichaus API
 const RANDOM_BATCH_MAX = 50
 
-export const getRandomPhotos = createServerFn().handler(async () => {
+export const getRandomPhotos = createServerFn().handler(() =>
+  cached('random', fetchRandomPhotos),
+)
+
+async function fetchRandomPhotos() {
   const count = 120
   const apiKey = process.env.PICHAUS_API_KEY
 
@@ -320,4 +365,4 @@ export const getRandomPhotos = createServerFn().handler(async () => {
       error: 'Failed to fetch photos',
     }
   }
-})
+}
