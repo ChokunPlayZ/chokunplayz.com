@@ -41,16 +41,22 @@ export const socials = [
 // Add your projects here with the tech stack used
 export const projects = [
     {
+        name: 'PicHaus',
+        description: 'an Intelligent Photo hosting and sharing service, built by photographers for photographers',
+        url: 'https://pic.haus/',
+        tech: ['Docker', 'Astro', 'TanStack Start', 'ElysiaJS', 'PostgreSQL'],
+    },
+    {
         name: 'MCM',
         description: 'Minecraft Container Manager, a self-hosted Minecraft server manager, powered by docker',
         url: 'https://github.com/ChokunPlayZ/Minecraft-Container-Manager',
         tech: ['Docker', 'Minecraft', 'Node.js', 'TypeScript', 'React', 'TailwindCSS', 'GO'],
     },
-    {
-        name: 'TopVery',
-        description: 'Developed the backend infrastructure',
-        url: 'https://topvery.com/',
-        tech: ['Debian', 'Nginx', 'DirectAdmin', 'Docker', 'PHP'],
+        {
+        name: 'Tool',
+        description: 'a on device tech tool for everyone',
+        url: 'https://github.com/ChokunPlayZ/tool',
+        tech: ['Docker', 'Tanstack Start', 'React', 'TailwindCSS']
     },
     {
         name: 'ckl.moe',
@@ -59,22 +65,16 @@ export const projects = [
         tech: ['React', 'TailwindCSS', 'TanStack Start'],
     },
     {
-        name: 'PicHaus',
-        description: 'Photo hosting and sharing service',
-        url: 'https://pic.haus/',
-        tech: ['Docker', 'Astro', 'TanStack Start', 'ElysiaJS', 'PostgreSQL'],
+        name: 'TopVery',
+        description: 'Developed the backend infrastructure',
+        url: 'https://topvery.com/',
+        tech: ['Debian', 'Nginx', 'DirectAdmin', 'Docker', 'PHP'],
     },
     {
         name: 'PicHaus-OSS',
         description: '(Deprecated) The original self-hosted picture hosting service, succeeded by PicHaus',
         url: 'https://github.com/ChokunPlayZ/PicHaus',
         tech: ['Docker', 'Nuxt.JS', 'Prisma', 'PostgreSQL', 'TailwindCSS'],
-    },
-    {
-        name: 'Tool',
-        description: 'a on device tech tool for everyone',
-        url: 'https://github.com/ChokunPlayZ/tool',
-        tech: ['Docker', 'Tanstack Start', 'React', 'TailwindCSS']
     },
     {
         name: 'TangMa',
