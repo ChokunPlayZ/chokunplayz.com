@@ -60,7 +60,13 @@ export const projects = [
     },
     {
         name: 'PicHaus',
-        description: 'Self-hosted Picture hosting Service',
+        description: 'Photo hosting and sharing service',
+        url: 'https://pic.haus/',
+        tech: ['Docker', 'Astro', 'TanStack Start', 'ElysiaJS', 'PostgreSQL'],
+    },
+    {
+        name: 'PicHaus-OSS',
+        description: '(Deprecated) The original self-hosted picture hosting service, succeeded by PicHaus',
         url: 'https://github.com/ChokunPlayZ/PicHaus',
         tech: ['Docker', 'Nuxt.JS', 'Prisma', 'PostgreSQL', 'TailwindCSS'],
     },
