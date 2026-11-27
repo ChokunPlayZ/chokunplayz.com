@@ -6,8 +6,9 @@ import { Blurhash } from 'react-blurhash'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   getAlbumPhotos,
+  fallbackToProxy,
+  getPhotoProxyUrl,
   getPhotoThumbnailUrl,
-  getPhotoUrl,
 } from '../lib/photos'
 import { useTheme } from './ThemeProvider'
 import type { PichausAlbum, PichausPhoto } from '../lib/photos'
@@ -60,7 +61,7 @@ function PhotoTile({
   const [loaded, setLoaded] = useState(false)
   return (
     <a
-      href={getPhotoUrl(photo.id)}
+      href={getPhotoProxyUrl(photo.id)}
       target="_blank"
       rel="noopener noreferrer"
       className="absolute overflow-hidden group"
@@ -82,7 +83,8 @@ function PhotoTile({
         />
       )}
       <img
-        src={getPhotoThumbnailUrl(photo.id)}
+        src={getPhotoThumbnailUrl(photo)}
+        onError={fallbackToProxy(photo.id, 'thumb')}
         className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-[opacity,transform] duration-500"
         style={{ opacity: loaded ? 1 : 0 }}
         onLoad={() => setLoaded(true)}
@@ -760,7 +762,8 @@ function BgStrips({ photos }: { photos: Array<PichausPhoto> }) {
                   row.map((photo) => (
                     <img
                       key={`${ci}-${photo.id}`}
-                      src={getPhotoThumbnailUrl(photo.id)}
+                      src={getPhotoThumbnailUrl(photo)}
+                      onError={fallbackToProxy(photo.id, 'thumb')}
                       style={{
                         width: (photo.width / photo.height) * BG_HEIGHT,
                         height: BG_HEIGHT,

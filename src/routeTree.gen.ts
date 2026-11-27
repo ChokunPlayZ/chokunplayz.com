@@ -15,6 +15,7 @@ import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as ApiPhotoVariantIdRouteImport } from './routes/api/photo.$variant.$id'
 
 const PhotosRoute = PhotosRouteImport.update({
   id: '/photos',
@@ -46,6 +47,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPhotoVariantIdRoute = ApiPhotoVariantIdRouteImport.update({
+  id: '/api/photo/$variant/$id',
+  path: '/api/photo/$variant/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/photos': typeof PhotosRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/api/photo/$variant/$id': typeof ApiPhotoVariantIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/photos': typeof PhotosRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog': typeof BlogIndexRoute
+  '/api/photo/$variant/$id': typeof ApiPhotoVariantIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,6 +79,7 @@ export interface FileRoutesById {
   '/photos': typeof PhotosRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/api/photo/$variant/$id': typeof ApiPhotoVariantIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,8 +90,16 @@ export interface FileRouteTypes {
     | '/photos'
     | '/blog/$slug'
     | '/blog/'
+    | '/api/photo/$variant/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$' | '/partner-perks' | '/photos' | '/blog/$slug' | '/blog'
+  to:
+    | '/'
+    | '/$'
+    | '/partner-perks'
+    | '/photos'
+    | '/blog/$slug'
+    | '/blog'
+    | '/api/photo/$variant/$id'
   id:
     | '__root__'
     | '/'
@@ -91,6 +108,7 @@ export interface FileRouteTypes {
     | '/photos'
     | '/blog/$slug'
     | '/blog/'
+    | '/api/photo/$variant/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -100,6 +118,7 @@ export interface RootRouteChildren {
   PhotosRoute: typeof PhotosRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  ApiPhotoVariantIdRoute: typeof ApiPhotoVariantIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -146,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/photo/$variant/$id': {
+      id: '/api/photo/$variant/$id'
+      path: '/api/photo/$variant/$id'
+      fullPath: '/api/photo/$variant/$id'
+      preLoaderRoute: typeof ApiPhotoVariantIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -156,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   PhotosRoute: PhotosRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
+  ApiPhotoVariantIdRoute: ApiPhotoVariantIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

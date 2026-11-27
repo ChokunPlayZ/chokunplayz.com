@@ -4,7 +4,12 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Calendar, ExternalLink, Maximize2, X } from 'lucide-react'
 import { Blurhash } from 'react-blurhash'
-import { getPhotoThumbnailUrl, getPhotoUrl } from '../lib/photos'
+import {
+  fallbackToProxy,
+  getPhotoProxyUrl,
+  getPhotoThumbnailUrl,
+  getPhotoUrl,
+} from '../lib/photos'
 import type { PichausPhoto } from '../lib/photos'
 
 interface PhotoSlideshowProps {
@@ -182,7 +187,8 @@ function PhotoCard({
 
       {canLoad && (
         <img
-          src={getPhotoThumbnailUrl(photo.id)}
+          src={getPhotoThumbnailUrl(photo)}
+          onError={fallbackToProxy(photo.id, 'thumb')}
           alt={photo.album.title || 'Photo'}
           className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 pointer-events-auto ${
             isLoaded ? 'opacity-100' : 'opacity-0'
@@ -267,7 +273,8 @@ function PhotoViewer({
 
             {/* Main Image */}
             <img
-              src={getPhotoUrl(photo.id)}
+              src={getPhotoUrl(photo)}
+              onError={fallbackToProxy(photo.id, 'full')}
               alt={photo.album.title || 'Photo'}
               className={`absolute inset-0 w-full h-full object-contain rounded-sm transition-opacity duration-500 pointer-events-auto z-20 ${
                 isLoaded ? 'opacity-100' : 'opacity-0'
@@ -299,7 +306,7 @@ function PhotoViewer({
                     href={
                       photo.album.id
                         ? `https://p.ckl.moe/v/${photo.album.id}`
-                        : getPhotoUrl(photo.id)
+                        : getPhotoProxyUrl(photo.id)
                     }
                     target="_blank"
                     rel="noopener noreferrer"

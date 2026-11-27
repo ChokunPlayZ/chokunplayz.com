@@ -10,13 +10,50 @@ export interface PichausPhoto {
     id: string
     title: string
   }
+  // Presigned storage URLs (~5 min lifetime), null when storage can't serve
+  // directly. Prefer these; fall back to the proxy when missing or expired.
+  signedUrl?: string | null
+  signedThumbnailUrl?: string | null
 }
 
-export const getPhotoUrl = (id: string) =>
-  `https://p.ckl.moe/api/assets/full/${id}`
+type PhotoRef = Pick<PichausPhoto, 'id' | 'signedUrl' | 'signedThumbnailUrl'>
+type Variant = 'thumb' | 'full'
 
-export const getPhotoThumbnailUrl = (id: string) =>
-  `https://p.ckl.moe/api/assets/thumb/${id}`
+// PicHaus image endpoints require the Bearer key, so images are served
+// through our own proxy route (src/routes/api/photo.$variant.$id.ts).
+// Stable URL that never expires — use for links opened later (href).
+export const getPhotoProxyUrl = (id: string, variant: Variant = 'full') =>
+  `/api/photo/${variant}/${id}`
+
+export const getPhotoUrl = (photo: PhotoRef) =>
+  photo.signedUrl ?? getPhotoProxyUrl(photo.id, 'full')
+
+export const getPhotoThumbnailUrl = (photo: PhotoRef) =>
+  photo.signedThumbnailUrl ?? getPhotoProxyUrl(photo.id, 'thumb')
+
+// Signed URLs expire after ~5 min, so a lazy image that loads late can 403.
+// Swap to the proxy once; the guard stops a loop if the proxy fails too.
+export const fallbackToProxy =
+  (id: string, variant: Variant) =>
+  (e: { currentTarget: HTMLImageElement }) => {
+    const img = e.currentTarget
+    const proxy = getPhotoProxyUrl(id, variant)
+    if (!img.src.endsWith(proxy)) img.src = proxy
+  }
+
+// Server-only: this module is also imported by client components.
+export const pichausApiBase = () =>
+  process.env.PICHAUS_API_URL ?? 'https://marin.pic.haus/api/external'
+
+// The cover's id isn't guaranteed on `coverPhoto`; fall back to parsing it
+// out of `previewImageUrl` (…/photos/{id}/thumb).
+function coverIdFromDetail(detail: {
+  coverPhoto?: { id?: string } | null
+  previewImageUrl?: string | null
+}): string | undefined {
+  if (detail.coverPhoto?.id) return detail.coverPhoto.id
+  return detail.previewImageUrl?.match(/\/photos\/([^/]+)\/[^/]+$/)?.[1]
+}
 
 export interface PichausAlbum {
   id: string
@@ -24,7 +61,12 @@ export interface PichausAlbum {
   eventDate: number | null // Unix timestamp (seconds), null when unset
   location?: string
   photoCount?: number
-  coverPhoto?: { id: string; width: number; height: number }
+  coverPhoto?: {
+    id: string
+    width: number
+    height: number
+    signedThumbnailUrl?: string | null
+  }
 }
 
 interface AlbumsApiResponse {
@@ -50,7 +92,7 @@ export const getWebAlbums = createServerFn().handler(async () => {
     return { albums: hardcodedAlbums(), error: 'API key not configured' }
   try {
     const response = await fetch(
-      'https://p.ckl.moe/api/external/albums?tag=WEB&sortBy=eventDate&order=desc',
+      `${pichausApiBase()}/albums?tag=WEB&sortBy=eventDate&order=desc&limit=100`,
       { headers: { Authorization: `Bearer ${apiKey}` } },
     )
     if (!response.ok) {
@@ -73,19 +115,28 @@ export const getWebAlbums = createServerFn().handler(async () => {
       result.data.map(async (a) => {
         try {
           const detailResponse = await fetch(
-            `https://p.ckl.moe/api/external/albums/${a.id}`,
+            `${pichausApiBase()}/albums/${a.id}`,
             { headers: { Authorization: `Bearer ${apiKey}` } },
           )
           if (detailResponse.ok) {
             const detailResult = await detailResponse.json()
             if (detailResult.success && detailResult.data) {
+              const coverId = coverIdFromDetail(detailResult.data)
+              const cp = detailResult.data.coverPhoto
               return {
                 id: a.id,
                 title: a.title,
                 eventDate: a.eventDate,
                 location: a.location,
                 photoCount: a.photoCount,
-                coverPhoto: detailResult.data.coverPhoto || undefined,
+                coverPhoto: coverId
+                  ? {
+                      id: coverId,
+                      width: cp?.width ?? 0,
+                      height: cp?.height ?? 0,
+                      signedThumbnailUrl: cp?.signedThumbnailUrl ?? null,
+                    }
+                  : undefined,
               }
             }
           }
@@ -120,6 +171,9 @@ interface ApiResponse {
     height: number
     blurhash: string
     dateTaken: number
+    signedUrl?: string | null
+    signedThumbnailUrl?: string | null
+    signedUrlExpiresAt?: number | null
     album?: {
       id: string
       title: string
@@ -144,7 +198,7 @@ export const getAlbumPhotos = createServerFn()
       }
     try {
       const response = await fetch(
-        `https://p.ckl.moe/api/external/albums/${albumId}/photos?sortBy=dateTaken&page=${page}&limit=${limit}`,
+        `${pichausApiBase()}/albums/${albumId}/photos?sortBy=dateTaken&page=${page}&limit=${Math.min(limit, 100)}`,
         { headers: { Authorization: `Bearer ${apiKey}` } },
       )
       if (!response.ok)
@@ -169,6 +223,8 @@ export const getAlbumPhotos = createServerFn()
         blurhash: p.blurhash,
         dateTaken: p.dateTaken,
         album: { id: p.album?.id ?? albumId, title: p.album?.title ?? '' },
+        signedUrl: p.signedUrl ?? null,
+        signedThumbnailUrl: p.signedThumbnailUrl ?? null,
       }))
       return {
         photos,
@@ -187,6 +243,8 @@ export const getAlbumPhotos = createServerFn()
   })
 
 // Server function to fetch random photos from Pichaus API
+const RANDOM_BATCH_MAX = 50
+
 export const getRandomPhotos = createServerFn().handler(async () => {
   const count = 120
   const apiKey = process.env.PICHAUS_API_KEY
@@ -200,34 +258,47 @@ export const getRandomPhotos = createServerFn().handler(async () => {
   }
 
   try {
-    const response = await fetch(
-      `https://p.ckl.moe/api/external/photos/random?count=${count}`,
-      {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-        },
-      },
+    // The API caps `count` at 50 per request, so fetch in batches.
+    const batches: Array<number> = []
+    for (let left = count; left > 0; left -= RANDOM_BATCH_MAX)
+      batches.push(Math.min(left, RANDOM_BATCH_MAX))
+
+    const responses = await Promise.all(
+      batches.map((n) =>
+        fetch(`${pichausApiBase()}/photos/random?count=${n}`, {
+          headers: { Authorization: `Bearer ${apiKey}` },
+        }),
+      ),
     )
 
-    if (!response.ok) {
-      console.error('Pichaus API error:', response.status, response.statusText)
+    const failed = responses.find((r) => !r.ok)
+    if (failed) {
+      console.error('Pichaus API error:', failed.status, failed.statusText)
       return {
         photos: [] as Array<PichausPhoto>,
-        error: `API error: ${response.status}`,
+        error: `API error: ${failed.status}`,
       }
     }
 
-    const result = (await response.json()) as ApiResponse
+    const results = (await Promise.all(
+      responses.map((r) => r.json()),
+    )) as Array<ApiResponse>
 
-    if (!result.success || !result.data) {
+    if (results.some((r) => !r.success || !r.data)) {
       return {
         photos: [] as Array<PichausPhoto>,
         error: 'Invalid API response',
       }
     }
 
+    // Batches are sampled independently, so drop duplicates.
+    const seen = new Set<string>()
+    const data = results
+      .flatMap((r) => r.data ?? [])
+      .filter((p) => !seen.has(p.id) && seen.add(p.id))
+
     // Map and pick only necessary fields to reduce payload
-    const photos: Array<PichausPhoto> = result.data.map((photo) => ({
+    const photos: Array<PichausPhoto> = data.map((photo) => ({
       id: photo.id,
       width: photo.width,
       height: photo.height,
@@ -237,6 +308,8 @@ export const getRandomPhotos = createServerFn().handler(async () => {
         id: photo.album?.id ?? '',
         title: photo.album?.title ?? '',
       },
+      signedUrl: photo.signedUrl ?? null,
+      signedThumbnailUrl: photo.signedThumbnailUrl ?? null,
     }))
 
     return { photos, error: null }

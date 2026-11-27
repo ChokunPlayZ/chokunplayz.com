@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowUpRight, MapPin } from 'lucide-react'
-import { getPhotoThumbnailUrl } from '../lib/photos'
+import { fallbackToProxy, getPhotoThumbnailUrl } from '../lib/photos'
 import type { PichausAlbum } from '../lib/photos'
 
 function formatEventDate(ts: number | null | undefined): string {
@@ -33,7 +33,8 @@ export function PhotoAlbumCard({
       {hasCover ? (
         <div className="relative w-full aspect-video overflow-hidden bg-(--bg-secondary)">
           <img
-            src={getPhotoThumbnailUrl(coverPhoto.id)}
+            src={getPhotoThumbnailUrl(coverPhoto)}
+            onError={fallbackToProxy(coverPhoto.id, 'thumb')}
             alt={title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />

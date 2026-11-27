@@ -8,6 +8,7 @@ services:
     environment:
       - NODE_ENV=production
       - PICHAUS_API_KEY=${PICHAUS_API_KEY}
+      - PICHAUS_API_URL=${PICHAUS_API_URL:-https://marin.pic.haus/api/external}
     restart: unless-stopped
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:3000']
