@@ -117,6 +117,8 @@ function hardcodedAlbums(): Array<PichausAlbum> {
   return []
 }
 
+const WEB_ALBUM_TAG = 'WEB'
+
 export const getWebAlbums = createServerFn().handler(() =>
   cached('albums', fetchWebAlbums),
 )
@@ -127,7 +129,7 @@ async function fetchWebAlbums() {
     return { albums: hardcodedAlbums(), error: 'API key not configured' }
   try {
     const response = await fetch(
-      `${pichausApiBase()}/albums?tag=WEB&sortBy=eventDate&order=desc&limit=100`,
+      `${pichausApiBase()}/albums?tag=${WEB_ALBUM_TAG}&sortBy=eventDate&order=desc&limit=100`,
       { headers: { Authorization: `Bearer ${apiKey}` } },
     )
     if (!response.ok) {
@@ -310,9 +312,12 @@ async function fetchRandomPhotos() {
 
     const responses = await Promise.all(
       batches.map((n) =>
-        fetch(`${pichausApiBase()}/photos/random?count=${n}`, {
-          headers: { Authorization: `Bearer ${apiKey}` },
-        }),
+        fetch(
+          `${pichausApiBase()}/photos/random?count=${n}&tag=${WEB_ALBUM_TAG}`,
+          {
+            headers: { Authorization: `Bearer ${apiKey}` },
+          },
+        ),
       ),
     )
 
