@@ -6,6 +6,7 @@ import { Blurhash } from 'react-blurhash'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   getAlbumPhotos,
+  getAlbumShareLink,
   fallbackToProxy,
   getPhotoProxyUrl,
   getPhotoThumbnailUrl,
@@ -175,7 +176,18 @@ function AlbumView({
 }: AlbumViewProps) {
   const { month, day } = parseEventDate(album.eventDate)
   const year = getYear(album.eventDate)
-  const picHausUrl = `https://p.ckl.moe/v/${album.id}`
+  const [shareUrl, setShareUrl] = useState<string | null>(null)
+
+  useEffect(() => {
+    let stale = false
+    setShareUrl(null)
+    getAlbumShareLink({ data: { albumId: album.id } })
+      .then((r) => !stale && setShareUrl(r.url))
+      .catch(() => {})
+    return () => {
+      stale = true
+    }
+  }, [album.id])
 
   return (
     <div className="relative min-h-full">
@@ -223,15 +235,17 @@ function AlbumView({
               </div>
             </div>
           </div>
-          <a
-            href={picHausUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-(--border) hover:border-(--accent)/60 text-xs text-(--text-muted) hover:text-(--accent) transition-all duration-200 bg-(--bg-primary)/60 backdrop-blur-sm"
-          >
-            <ExternalLink className="w-3 h-3" />
-            <span className="hidden sm:inline">Open in Pichaus</span>
-          </a>
+          {shareUrl && (
+            <a
+              href={shareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-(--border) hover:border-(--accent)/60 text-xs text-(--text-muted) hover:text-(--accent) transition-all duration-200 bg-(--bg-primary)/60 backdrop-blur-sm"
+            >
+              <ExternalLink className="w-3 h-3" />
+              <span className="hidden sm:inline">Open in Pichaus</span>
+            </a>
+          )}
         </div>
       </div>
 
@@ -719,7 +733,10 @@ const BG_MIN_COVERAGE = 5000
 
 function BgStrips({ photos }: { photos: Array<PichausPhoto> }) {
   const rows = useMemo(() => {
-    const r: Array<Array<PichausPhoto>> = Array.from({ length: BG_ROWS }, () => [])
+    const r: Array<Array<PichausPhoto>> = Array.from(
+      { length: BG_ROWS },
+      () => [],
+    )
     photos.forEach((p, i) => r[i % BG_ROWS].push(p))
     return r
   }, [photos])

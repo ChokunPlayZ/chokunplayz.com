@@ -371,3 +371,58 @@ async function fetchRandomPhotos() {
     }
   }
 }
+
+interface ShareLink {
+  url: string
+  expiresAt: number | null
+  hasPassword: boolean
+  selectedPhotoCount: number | null
+}
+
+// Rank usable links: whole album over a photo subset, no password over a
+// password, then the one that stays valid longest (null = never expires).
+// The API already drops revoked, disabled and expired links.
+function pickShareLink(links: Array<ShareLink>): ShareLink | undefined {
+  const score = (l: ShareLink) => [
+    l.selectedPhotoCount === null ? 1 : 0,
+    l.hasPassword ? 0 : 1,
+    l.expiresAt ?? Infinity,
+  ]
+  return [...links].sort((a, b) => {
+    const sa = score(a)
+    const sb = score(b)
+    for (let i = 0; i < sa.length; i++)
+      if (sa[i] !== sb[i]) return sb[i] - sa[i]
+    return 0
+  })[0]
+}
+
+// Guest link for "Open in PicHaus". `url` is null when the album has no
+// usable share link, so the caller hides the button.
+export const getAlbumShareLink = createServerFn()
+  .validator((data: { albumId: string }) => data)
+  .handler(({ data }) =>
+    cached(`share:${data.albumId}`, () => fetchAlbumShareLink(data.albumId)),
+  )
+
+async function fetchAlbumShareLink(albumId: string) {
+  const apiKey = process.env.PICHAUS_API_KEY
+  if (!apiKey) return { url: null, error: 'API key not configured' }
+  try {
+    const response = await fetch(
+      `${pichausApiBase()}/albums/${encodeURIComponent(albumId)}/share-links?limit=100`,
+      { headers: { Authorization: `Bearer ${apiKey}` } },
+    )
+    if (!response.ok)
+      return { url: null, error: `API error: ${response.status}` }
+    const result = (await response.json()) as {
+      success: boolean
+      data?: Array<ShareLink>
+    }
+    if (!result.success || !result.data)
+      return { url: null, error: 'Invalid response' }
+    return { url: pickShareLink(result.data)?.url ?? null, error: null }
+  } catch {
+    return { url: null, error: 'Failed to fetch' }
+  }
+}
